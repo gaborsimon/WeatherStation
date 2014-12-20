@@ -1,0 +1,7 @@
+# Generated files
+*.elf
+*.lst
+*.map
+
+# Object files
+*.o
