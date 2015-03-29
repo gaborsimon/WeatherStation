@@ -11,7 +11,7 @@
 #*******************************************************************************
 
 # Project name
-PROJECT = main
+PROJECT = WeatherStation
 
 # Controller type
 MCU = atmega2560
@@ -67,7 +67,8 @@ CSTANDARD = gnu99
 
 # Programmer configuration
 PROG_TYPE = wiring
-PROG_PORT = COM1
+#PROG_PORT = COM1
+PROG_PORT = /dev/ttyACM0
 PROG_BAUD = 115200
 
 
