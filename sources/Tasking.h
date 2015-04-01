@@ -9,11 +9,12 @@
 
 #include "LCDCharacters_HD44780.h"
 #include "LCDDriver_HD44780.h"
+#include "LCDManager.h"
 #include "MicroControllerHAL.h"
 #include "MoonFractionCalculator.h"
 #include "RealTimeClock.h"
-#include "LCDManager.h"
-#include "TemperatureMeasureSensor.h"
+#include "Sensor_DS1621.h"
+#include "SunTimeCalculator.h"
 
 
 //====== Public Constants ======================================================

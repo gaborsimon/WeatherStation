@@ -1,5 +1,3 @@
-//v1.1
-
 //====== Header includes =======================================================
 #include "MicroControllerHAL.h"
 

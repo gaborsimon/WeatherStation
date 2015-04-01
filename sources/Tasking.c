@@ -1,15 +1,14 @@
-//v0.3
-
 //====== Header includes =======================================================
 #include "Tasking.h"
 
 
 //====== Private Constants =====================================================
+#define CPU_LOAD_MEASUREMENT
 
 
 //====== Private Signals =======================================================
-static volatile Flag L_TaskTrigger = Flag_CLEAR;
-static volatile Flag L_LED         = Flag_CLEAR;
+static volatile Flag L_Task_1SEC = Flag_CLEAR;
+static volatile Flag L_LED       = Flag_CLEAR;
 
 
 //====== Private Function Prototypes ===========================================
@@ -43,15 +42,13 @@ static volatile Flag L_LED         = Flag_CLEAR;
 
 ISR(TIMER1_COMPA_vect)
 {
-    L_TaskTrigger = Flag_SET;
+    L_Task_1SEC = Flag_SET;
 }
 
 
 void Task_Init(void)
 {
     DISABLE_INTERRUPT();
-
-    //MCH_Init_Watchdog();
 
     MCH_Init_Timer1CHA();
     MCH_Init_Pins();
@@ -65,9 +62,9 @@ void Task_Init(void)
 
     GPIO_PANEL_LED_OFF;
 
-    _delay_ms(2000u);
+    RTC_SetDate(2015u,4u,1u,23u,59u,50u);
 
-    RTC_SetDate(2013u,8u,16u,23u,59u,50u);
+    //MCH_Init_Watchdog();
 
     ENABLE_INTERRUPT();
 }
@@ -75,18 +72,20 @@ void Task_Init(void)
 
 void Task_Main(void)
 {
+#ifdef CPU_LOAD_MEASUREMENT
     static volatile uint16 timer_start = 0u;
     static volatile uint16 timer_stop  = 0u;
+#endif
 
     for (;;)
     {
-
-        //WD_RESET();
-        if (Flag_SET == L_TaskTrigger)
+        if (Flag_SET == L_Task_1SEC)
         {
+#ifdef CPU_LOAD_MEASUREMENT
             timer_start = TCNT1;
+#endif
 
-            L_TaskTrigger = Flag_CLEAR;
+            L_Task_1SEC = Flag_CLEAR;
             
             // Heartbeat on panel
             if (Flag_CLEAR == L_LED)
@@ -103,43 +102,48 @@ void Task_Main(void)
 
             RTC_Refresh();
             MFC_Refresh();
-            TMS_Refresh();
-
+            STC_Refresh();
+            //TMS_Refresh();
             LCM_Refresh();
 
+            
+#ifdef CPU_LOAD_MEASUREMENT
             timer_stop = TCNT1;
-
+#endif
 //******************************************************************************
 //****** CPU LOAD
 //******************************************************************************
+#ifdef CPU_LOAD_MEASUREMENT
             static volatile uint16 cpuload     = 0u;
             static volatile uint16 cpuload_max = 0u;
 
-            LCD_SetCursor(4u,1u);
-            LCD_WriteString("                    ");
-
-            cpuload = (uint16)((((float32)(timer_stop - timer_start)) / ((float32)(OCR1A))) * 10000.0f);
-            LCD_SetCursor(4u,1u);
-            LCD_WriteInt(cpuload / 100u);
-            LCD_WriteChar('.');
-            LCD_WriteInt(cpuload % 100u);
-
+            LCD_SetCursor(2u,10u);
+            LCD_WriteString("           ");
+            
+            //cpuload = (uint16)((((float32)(timer_stop - timer_start)) / ((float32)(OCR1A))) * 10000.0f);
+            cpuload = (uint16)((timer_stop - timer_start) * 0.000064f * 1000.0f);
+            LCD_SetCursor(2u,10u);
+            //LCD_WriteInt(cpuload / 100u);
+            //LCD_WriteChar('.');
+            //LCD_WriteInt(cpuload % 100u);
+            LCD_WriteInt(cpuload);
 
             if (cpuload > cpuload_max)
             {
                 cpuload_max = cpuload;
             }
 
-            LCD_SetCursor(4u,10u);
-            LCD_WriteInt(cpuload_max / 100u);
-            LCD_WriteChar('.');
-            LCD_WriteInt(cpuload_max % 100u);
+            LCD_SetCursor(2u,15u);
+            //LCD_WriteInt(cpuload_max / 100u);
+            //LCD_WriteChar('.');
+            //LCD_WriteInt(cpuload_max % 100u);
+            LCD_WriteInt(cpuload_max);
+#endif // CPU_LOAD_MEASUREMENT
 //******************************************************************************
 //****** CPU LOAD
 //******************************************************************************
-        } // 1sec
-        //WD_RESET();
+        } // Task_1SEC
 
     } // main end-less loop
     
-}
+} // Task_Main

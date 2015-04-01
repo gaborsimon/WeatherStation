@@ -1,5 +1,3 @@
-// v3.1
-
 //====== Header includes =======================================================
 #include "MoonFractionCalculator.h"
 
@@ -13,56 +11,12 @@
 
 
 //====== Private Function Prototypes ===========================================
-static float32 sind(float degree);
-static float32 cosd(float degree);
 static float32 CalculateJDE(uint16 year, uint16 month, uint16 day);
 static void    CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
                                   uint8 *fraction, uint8 *direction);
 
 
 //====== Private Functions =====================================================
-/*
- * Name: sind
- *
- * Description: This function returns the sine of the input angle which is
- *              expressed in degree dimension.
- *
- * Input: Angle in degree
- *
- * Output: Sine of angle
- */
-static float32 sind(float32 degree)
-{
-    float32 _result = INIT_VALUE_FLOAT;
-
-
-    _result = sin(degree * DEG_TO_RAD);
-
-    return _result;
-}
-
-
-/*
- * Name: cosd
- *
- * Description: This function returns the cosine of the input angle which is
- *              expressed in degree dimension.
- *
- * Input: Angle in degree
- *
- * Output: Cosine of angle
- */
-static float32 cosd(float32 degree)
-{
-    float32 _result = INIT_VALUE_FLOAT;
-
-
-    _result = cos(degree * DEG_TO_RAD);
-
-    return _result;
-}
-
-
 /*
  * Name: CalculateJDE
  *
@@ -195,24 +149,24 @@ static void CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
     //****** STEP 6. ***********************************************************
     // Calculation of "i": [deg] Phase Angle
     _i  = (180.000f - _D);
-    _i -= (  6.289f * sind(_Mm));
-    _i += (  2.100f * sind(_Ms));
-    _i -= (  1.274f * sind(2 * _D - _Mm));
-    _i -= (  0.658f * sind(2 * _D));
-    _i -= (  0.214f * sind(2 * _Mm));
-    _i -= (  0.110f * sind(_D));
+    _i -= (  6.289f * SIND(_Mm));
+    _i += (  2.100f * SIND(_Ms));
+    _i -= (  1.274f * SIND(2 * _D - _Mm));
+    _i -= (  0.658f * SIND(2 * _D));
+    _i -= (  0.214f * SIND(2 * _Mm));
+    _i -= (  0.110f * SIND(_D));
 
     //****** STEP 7. ***********************************************************
     // Calculation of "k": (1 + cos i) / 2
     // Illuminated Fraction of the disk of the Moon
-    _k = ((1.0f + cosd(_i)) * 0.5f);
+    _k = ((1.0f + COSD(_i)) * 0.5f);
 
     // Calculate the fraction in percent dimension
     *fraction = (uint8)(_k * 100.0f);
 
     //****** DIRECTION *********************************************************
-    if      (sind(_i) > 0.001f) { *direction = MOON_WAXES; }
-    else if (sind(_i) < 0.001f) { *direction = MOON_WANES; }
+    if      (SIND(_i) > 0.001f) { *direction = MOON_WAXES; }
+    else if (SIND(_i) < 0.001f) { *direction = MOON_WANES; }
     else                        { *direction = MOON_FULL_OR_NEW; }
 }
 
@@ -245,13 +199,13 @@ void MFC_Refresh(void)
     {
         FirstRun = FALSE;
 
-        CalculateMoonFraction(XRTC_GET_YEAR, XRTC_GET_MONTH, XRTC_GET_DAY,
+        CalculateMoonFraction(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
                               &MFC_Moon.Fraction, &MFC_Moon.Direction);
     }
     // In case of a new day the fraction of the moon shall be calculated.
-    else if (Flag_SET == XRTC_GET_NEWDAY)
+    else if (Flag_SET == XRTC_TIMEDATE_NEWDAY)
     {
-        CalculateMoonFraction(XRTC_GET_YEAR, XRTC_GET_MONTH, XRTC_GET_DAY,
+        CalculateMoonFraction(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
                               &MFC_Moon.Fraction, &MFC_Moon.Direction);
     }
 }

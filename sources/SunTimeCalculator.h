@@ -1,5 +1,5 @@
-#ifndef MOONFRACTIONCALCULATOR_H_
-#define MOONFRACTIONCALCULATOR_H_
+#ifndef SUNTIMECALCULATOR_H_
+#define SUNTIMECALCULATOR_H_
 
 
 //====== Header includes =======================================================
@@ -13,24 +13,25 @@
 
 
 //====== Public Constants ======================================================
-#define MOON_WAXES       (1u)
-#define MOON_WANES       (2u)
-#define MOON_FULL_OR_NEW (3u)
 
 
 //====== Public Signals ========================================================
 typedef struct
 {
-    uint8 Fraction;
-    uint8 Direction;
-} Moon;
+    uint8 RiseHour;
+    uint8 RiseMinute;
+    uint8 SetHour;
+    uint8 SetMinute;
+} Sun;
 
 
-#define XMFC_MOON_FRACTION   ((uint8) (MFC_Moon.Fraction))
-#define XMFC_MOON_DIRECTION  ((uint8) (MFC_Moon.Direction))
+#define XSTC_SUN_RISEHOUR    ((uint8) (STC_Sun.RiseHour))
+#define XSTC_SUN_RISEMINUTE  ((uint8) (STC_Sun.RiseMinute))
+#define XSTC_SUN_SETHOUR     ((uint8) (STC_Sun.SetHour))
+#define XSTC_SUN_SETMINUTE   ((uint8) (STC_Sun.SetMinute))
 
 
-extern Moon MFC_Moon;
+extern Sun STC_Sun;
 
 
 //====== Public Functions ======================================================
@@ -38,11 +39,11 @@ extern Moon MFC_Moon;
 extern "C" {
 #endif
 
-    extern void MFC_Refresh(void);
+    extern void STC_Refresh(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
 
-#endif /* MOONFRACTIONCALCULATOR_H_ */
+#endif /* SUNTIMECALCULATOR_H_ */

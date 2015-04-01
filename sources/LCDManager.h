@@ -8,8 +8,10 @@
 #include "typedef.h"
 #include "LCDCharacters_HD44780.h"
 #include "LCDDriver_HD44780.h"
+#include "MoonFractionCalculator.h"
 #include "RealTimeClock.h"
-#include "TemperatureMeasureSensor.h"
+#include "Sensor_DS1621.h"
+#include "SunTimeCalculator.h"
 
 
 //====== Public Constants ======================================================

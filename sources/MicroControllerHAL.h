@@ -50,6 +50,9 @@
 
 #define GPIO_PIN_WRITE_LCD(pin, value)  ((value) ? BIT_SET(PORTK, (pin)) : BIT_CLR(PORTK, (pin)))
 
+//******************************************************************************
+//****** PERIPHERAL CONSTANTS
+//******************************************************************************
 // I2C
 #define MCH_I2C_START_READ      (1u)
 #define MCH_I2C_START_WRITE     (0u)

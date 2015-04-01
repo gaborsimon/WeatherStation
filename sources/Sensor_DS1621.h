@@ -10,7 +10,7 @@
 
 
 //====== Public Constants ======================================================
-#define TMS_SENSOR_ADDR_OUTDOOR (0x92u)
+#define TMS_SENSOR_I2C_ADDR (0x92u)
 
 
 //====== Public Signals ========================================================
@@ -22,12 +22,12 @@ typedef struct
     sint8     Maximum;
 } Temperature;
 
-#define XTMS_TEMPERATURE_OUT_VALUE  ((sint8)     TMS_TemperatureOut.Value)
-#define XTMS_TEMPERATURE_OUT_QUAL   ((Qualifier) TMS_TemperatureOut.Qualifier)
-#define XTMS_TEMPERATURE_OUT_MIN    ((sint8)     TMS_TemperatureOut.Minimum)
-#define XTMS_TEMPERATURE_OUT_MAX    ((sint8)     TMS_TemperatureOut.Maximum)
+#define XTMS_TEMPERATURE_VALUE  ((sint8)     TMS_Temperature.Value)
+#define XTMS_TEMPERATURE_QUAL   ((Qualifier) TMS_Temperature.Qualifier)
+#define XTMS_TEMPERATURE_MIN    ((sint8)     TMS_Temperature.Minimum)
+#define XTMS_TEMPERATURE_MAX    ((sint8)     TMS_Temperature.Maximum)
 
-extern Temperature TMS_TemperatureOut;
+extern Temperature TMS_Temperature;
 
 
 //====== Public Functions ======================================================

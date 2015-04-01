@@ -1,6 +1,7 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+
 #define BIT_SET(reg,bit)    ((reg) |=  (1u << (bit)))
 #define BIT_CLR(reg,bit)    ((reg) &= ~(1u << (bit)))
 #define BIT_GET(reg,bit)    ((reg)  &  (1u << (bit)))
@@ -23,6 +24,13 @@
 #define HIGH    (1u)
 
 #define PI          ((float32) (3.141592654f))
-#define DEG_TO_RAD  ((float32) (PI / 180.0f))
+
+#define DEG_TO_RAD(degree)      ((float32)degree * (PI / 180.0f))
+#define RAD_TO_DEG(radian)      ((float32)radian * (180.0f / PI))
+
+#define SIND(degree)            (sin(DEG_TO_RAD(degree)))
+#define COSD(degree)            (cos(DEG_TO_RAD(degree)))
+#define NORMALIZE(raw_degree)   (raw_degree - (floor(raw_degree / 360.0f) * 360.0f))
+
 
 #endif /* UTILS_H_ */

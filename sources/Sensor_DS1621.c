@@ -1,7 +1,5 @@
-//v3.0
-
 //====== Header includes =======================================================
-#include "TemperatureMeasureSensor.h"
+#include "Sensor_DS1621.h"
 #include <stdlib.h>
 
 //====== Private Constants =====================================================
@@ -60,14 +58,14 @@ static void ReadTemperature(void);
  */
 static void CalculateMinMax(void)
 {
-    if (TMS_TemperatureOut.Value < TMS_TemperatureOut.Minimum)
+    if (TMS_Temperature.Value < TMS_Temperature.Minimum)
     {
-        TMS_TemperatureOut.Minimum = TMS_TemperatureOut.Value;
+        TMS_Temperature.Minimum = TMS_Temperature.Value;
     }
 
-    if (TMS_TemperatureOut.Value > TMS_TemperatureOut.Maximum)
+    if (TMS_Temperature.Value > TMS_Temperature.Maximum)
     {
-        TMS_TemperatureOut.Maximum = TMS_TemperatureOut.Value;
+        TMS_Temperature.Maximum = TMS_Temperature.Value;
     }
 }
 
@@ -113,7 +111,7 @@ static void ReadTemperature(void)
 
         case L_State_START_CONVERSION:
         {
-            _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_WRITE);
+            _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_WRITE);
             
             if (MCH_I2C_NO_ERROR == _res)
             {
@@ -138,7 +136,7 @@ static void ReadTemperature(void)
 
         case L_State_READ_TEMP:
         {
-            _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_WRITE);
+            _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_WRITE);
             
             if (MCH_I2C_NO_ERROR == _res)
             {
@@ -146,7 +144,7 @@ static void ReadTemperature(void)
                 
                 if (MCH_I2C_NO_ERROR == _res)
                 {
-                    _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_READ);
+                    _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_READ);
                     
                     if (MCH_I2C_NO_ERROR == _res)
                     {
@@ -154,7 +152,7 @@ static void ReadTemperature(void)
                         MCH_I2C_Read(&_data2, MCH_I2C_READ_STOP);
                         MCH_I2C_Stop();
 
-                        _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_WRITE);
+                        _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_WRITE);
                         
                         if (MCH_I2C_NO_ERROR == _res)
                         {
@@ -162,7 +160,7 @@ static void ReadTemperature(void)
                             
                             if (MCH_I2C_NO_ERROR == _res)
                             {
-                                _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_READ);
+                                _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_READ);
                                 
                                 if (MCH_I2C_NO_ERROR == _res)
                                 {
@@ -184,7 +182,7 @@ static void ReadTemperature(void)
                             L_State = L_State_CUT_OFF;
                         }
 
-                        _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_WRITE);
+                        _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_WRITE);
                         
                         if (MCH_I2C_NO_ERROR == _res)
                         {
@@ -192,7 +190,7 @@ static void ReadTemperature(void)
                             
                             if (MCH_I2C_NO_ERROR == _res)
                             {
-                                _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_READ);
+                                _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_READ);
                                 
                                 if (MCH_I2C_NO_ERROR == _res)
                                 {
@@ -214,8 +212,8 @@ static void ReadTemperature(void)
                             L_State = L_State_CUT_OFF;
                         }
 
-                        TMS_TemperatureOut.Value = ((sint8) _data1);
-                        TMS_TemperatureOut.Qualifier = Signal_RELIABLE;
+                        TMS_Temperature.Value = ((sint8) _data1);
+                        TMS_Temperature.Qualifier = Signal_RELIABLE;
 
 
                         _temp = ((float32) (_data1)) - 0.25f + ((((float32) (_CountPerC)) - ((float32) (_CountRemain))) / ((float32)(_CountPerC)));
@@ -247,14 +245,14 @@ static void ReadTemperature(void)
 
         case L_State_CUT_OFF:
         {
-            TMS_TemperatureOut.Qualifier = Signal_NOT_RELIABLE;
+            TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
             TMS_Init();
         }
         break;
 
         default:
         {
-            TMS_TemperatureOut.Qualifier = Signal_NOT_RELIABLE;
+            TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
             L_State = L_State_CUT_OFF;
         }
         break;
@@ -263,7 +261,7 @@ static void ReadTemperature(void)
 
 
 //====== Public Signals ========================================================
-Temperature TMS_TemperatureOut;
+Temperature TMS_Temperature;
 
 
 //====== Public Functions ======================================================
@@ -282,17 +280,17 @@ void TMS_Init()
 
     
     // Temperature signal initialization
-    TMS_TemperatureOut.Value     =   0;
-    TMS_TemperatureOut.Qualifier = Signal_NOT_RELIABLE;
-    TMS_TemperatureOut.Minimum   =  99;
-    TMS_TemperatureOut.Maximum   = -99;
+    TMS_Temperature.Value     =   0;
+    TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
+    TMS_Temperature.Minimum   =  99;
+    TMS_Temperature.Maximum   = -99;
 
     L_State = L_State_CUT_OFF;
 
     // DS1621 sensor initialization
     // Low polarity
     // 1 Shot mode - temperature conversion for trigger
-    _res = MCH_I2C_Start(TMS_SENSOR_ADDR_OUTDOOR, MCH_I2C_START_WRITE);
+    _res = MCH_I2C_Start(TMS_SENSOR_I2C_ADDR, MCH_I2C_START_WRITE);
 
     if (MCH_I2C_NO_ERROR == _res)
     {
