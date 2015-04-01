@@ -3,5 +3,9 @@
 *.lst
 *.map
 
+# Upload files
+*.eep
+*.hex
+
 # Object files
 *.o
