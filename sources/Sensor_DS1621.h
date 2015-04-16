@@ -1,12 +1,13 @@
-#ifndef TEMPERATUREMEASURESENSOR_H_
-#define TEMPERATUREMEASURESENSOR_H_
+#ifndef SENSORDS1621_H_
+#define SENSORDS1621_H_
 
 
 //====== Header includes =======================================================
 #include "typedef.h"
 #include "utils.h"
-#include "MicroControllerHAL.h"
+
 #include "LCDDriver_HD44780.h"
+#include "MicroControllerHAL.h"
 
 
 //====== Public Constants ======================================================
@@ -16,18 +17,19 @@
 //====== Public Signals ========================================================
 typedef struct
 {
-    sint8     Value;
+    float32   TemperatureValue;
+    float32   TemperatureMinimum;
+    float32   TemperatureMaximum;
     Qualifier Qualifier;
-    sint8     Minimum;
-    sint8     Maximum;
-} Temperature;
+} DS1621_data;
 
-#define XTMS_TEMPERATURE_VALUE  ((sint8)     TMS_Temperature.Value)
-#define XTMS_TEMPERATURE_QUAL   ((Qualifier) TMS_Temperature.Qualifier)
-#define XTMS_TEMPERATURE_MIN    ((sint8)     TMS_Temperature.Minimum)
-#define XTMS_TEMPERATURE_MAX    ((sint8)     TMS_Temperature.Maximum)
 
-extern Temperature TMS_Temperature;
+#define XDS1621_TEMPERATURE_VALUE  ((float32)   DS1621_Data.TemperatureValue)
+#define XDS1621_TEMPERATURE_MIN    ((float32)   DS1621_Data.TemperatureMinimum)
+#define XDS1621_TEMPERATURE_MAX    ((float32)   DS1621_Data.TemperatureMaximum)
+#define XDS1621_DATA_QUALIFIER     ((Qualifier) DS1621_Data.Qualifier)
+
+extern DS1621_data DS1621_Data;
 
 
 //====== Public Functions ======================================================
@@ -35,12 +37,12 @@ extern Temperature TMS_Temperature;
 extern "C" {
 #endif
 
-    extern void TMS_Init(void);
-    extern void TMS_Refresh(void);
+    extern void DS1621_Init(void);
+    extern void DS1621_Refresh(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
 
-#endif /* TEMPERATUREMEASURESENSOR_H_ */
+#endif /* SENSORDS1621_H_ */

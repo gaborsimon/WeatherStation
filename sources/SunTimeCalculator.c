@@ -8,9 +8,9 @@
 #define L_LATITUDE  ((float32) 47.0f)
 
 // GMT offset is set to Hungary
-#define L_GMT_OFFSET  ((uint8) 1u)
+#define L_GMT_OFFSET ((uint8) 1u)
 
-#define L_SUN_BELOW_HORIZON_DEG     ((float32) -0.8333f)
+#define L_SUN_BELOW_HORIZON_DEG ((float32) -0.8333f)
 
 
 //====== Private Signals =======================================================
@@ -26,27 +26,12 @@ static void    CalculateSunTime(uint16 year, uint16 month, uint16 day,
 /*
  * Name: CalculateSunTime
  *
- * Description: This function calculates the illuminated fraction (k) of the
- *              disk of the Moon depends on the selenocentric elongation of the
- *              Earth from the Sun, called the Phase Angle (i).
- *              Selenocentric means 'as seen from the center of the Moon'.
- *
- *              The used algorithm is an approximate calculation with lower
- *              accuracy but still a good result. The geocentric position of
- *              the Sun and the Moon are not needed.
- *
- *              The calculation is based on the book:
- *              Jean Meeus 'Astronomical Algorithms' First English Edition
- *              Chapter  7: Julian Day
- *              Chapter 45: Position of the Moon
- *              Chapter 46: Illuminated Fraction of the Moon's Disk
- *
- *              To test it: http://aa.usno.navy.mil/data/docs/MoonFraction.php
+ * Description: 
  *
  * Input: Year, Month, Day
  *
- * Output: Fraction  = Illuminated Fraction in % dimension
- *         Direction = Moon wanes (shrinks) or waxes (grows) or full or new
+ * Output: 
+ *        
  */
 static void CalculateSunTime(uint16 year, uint16 month, uint16 day,
                              uint8 *RiseHour, uint8 *RiseMinute,
@@ -156,7 +141,7 @@ Sun STC_Sun;
 
 //====== Public Functions ======================================================
 /*
- * Name: MFC_Refresh
+ * Name: STC_Refresh
  *
  * Description: This function is the refresh of the component.
  *
@@ -164,8 +149,8 @@ Sun STC_Sun;
  *        Month
  *        Day
  *
- * Output: Fraction  = Illuminated Fraction in % dimension
- *         Direction = Moon wanes (shrinks) or waxes (grows) or full or new
+ * Output: 
+ *         
  */
 void STC_Refresh(void)
 {
@@ -180,13 +165,13 @@ void STC_Refresh(void)
 
         CalculateSunTime(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
                          &STC_Sun.RiseHour, &STC_Sun.RiseMinute,
-                         &STC_Sun.SetHour, &STC_Sun.SetMinute);
+                         &STC_Sun.SetHour,  &STC_Sun.SetMinute);
     }
     // In case of a new day the sun time shall be calculated.
     else if (Flag_SET == XRTC_TIMEDATE_NEWDAY)
     {
         CalculateSunTime(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
                          &STC_Sun.RiseHour, &STC_Sun.RiseMinute,
-                         &STC_Sun.SetHour, &STC_Sun.SetMinute);
+                         &STC_Sun.SetHour,  &STC_Sun.SetMinute);
     }
 }

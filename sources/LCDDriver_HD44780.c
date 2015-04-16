@@ -43,11 +43,13 @@
 #define L_LCD_FUNCTION_5x10_DOTS    (0x04u)
 #define L_LCD_FUNCTION_5x8_DOTS     (0x00u)
 
-
 #define L_LCD_RS_COMMAND (0u)
 #define L_LCD_RS_DATA    (1u)
 #define L_LCD_RW_WRITE   (0u)
 #define L_LCD_RW_READ    (1u)
+
+#define L_COMMAND        (0u)
+#define L_DATA           (1u)
 
 
 //====== Private Signals =======================================================
@@ -55,8 +57,7 @@
 
 //====== Private Function Prototypes ===========================================
 static void EnableTransfer(void);
-static void SendCommand(uint8 command);
-static void SendData(uint8 data);
+static void Send(uint8 type, uint8 package);
 
 
 //====== Private Functions =====================================================
@@ -74,14 +75,14 @@ static void SendData(uint8 data);
 static void EnableTransfer(void)
 {
     // Enable the sending
-    GPIO_PIN_WRITE_LCD(PIN_LCD_EN, LOW);
+    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
     _delay_us(1u);
 
     // EN pulse shall be greater than 450ns
-    GPIO_PIN_WRITE_LCD(PIN_LCD_EN, HIGH);
+    GPIO_WRITE(PORT_LCD, P_LCD_EN, HIGH);
     _delay_us(1u);
 
-    GPIO_PIN_WRITE_LCD(PIN_LCD_EN, LOW);
+    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
 
     // Commands need more than 37us to settle
     _delay_us(100u);
@@ -89,82 +90,56 @@ static void EnableTransfer(void)
 
 
 /*
- * Name: SendCommand
+ * Name: Send
  *
- * Description: This function sends the given command to the LCD controller
- *              in 4-bit mode.
+ * Description: This function sends the given command or data to the LCD
+ *              controller in 4-bit mode.
  *              Execution time: ~200us
  *
- * Input: Requested command
+ * Input: type - command or data
+          package - sent command or data
  *
  * Output: None
  */
-static void SendCommand(uint8 command)
+static void Send(uint8 type, uint8 package)
 {
-    // Command & Write
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RS, L_LCD_RS_COMMAND);
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RW, L_LCD_RW_WRITE);
+    
+    // Command/Data & Write
+    switch (type)
+    {
+        case L_COMMAND:
+        {
+            GPIO_WRITE(PORT_LCD, P_LCD_RS, L_LCD_RS_COMMAND);
+        }
+        break;
+        
+        case L_DATA:
+        {
+            GPIO_WRITE(PORT_LCD, P_LCD_RS, L_LCD_RS_DATA);
+        }
+        break;
+    }    
+    GPIO_WRITE(PORT_LCD, P_LCD_RW, L_LCD_RW_WRITE);
 
     // Just to be sure, set data pins to output
-    GPIO_LCD_D4_OUTPUT;
-    GPIO_LCD_D5_OUTPUT;
-    GPIO_LCD_D6_OUTPUT;
-    GPIO_LCD_D7_OUTPUT;
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D4, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D5, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D6, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D7, OUTPUT);
 
     // Send the MSB 4 bits
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D4, ((command >> 4u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D5, ((command >> 5u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D6, ((command >> 6u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D7, ((command >> 7u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D4, ((package >> 4u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D5, ((package >> 5u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D6, ((package >> 6u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D7, ((package >> 7u) & 0x01u));
 
     EnableTransfer();
 
     // Send the LSB 4 bits
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D4, ((command >> 0u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D5, ((command >> 1u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D6, ((command >> 2u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D7, ((command >> 3u) & 0x01u));
-
-    EnableTransfer();
-}
-
-
-/*
- * Name: SendData
- *
- * Description: This function sends the given data to the LCD controller
- *              in 4-bit mode.
- *              Execution time: ~200us
- *
- * Input: Data
- *
- * Output: None
- */
-static void SendData(uint8 data)
-{
-    // data & Write
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RS, L_LCD_RS_DATA);
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RW, L_LCD_RW_WRITE);
-
-    // Just to be sure, set data pins to output
-    GPIO_LCD_D4_OUTPUT;
-    GPIO_LCD_D5_OUTPUT;
-    GPIO_LCD_D6_OUTPUT;
-    GPIO_LCD_D7_OUTPUT;
-
-    // Send the MSB 4 bits
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D4, ((data >> 4u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D5, ((data >> 5u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D6, ((data >> 6u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D7, ((data >> 7u) & 0x01u));
-
-    EnableTransfer();
-
-    // Send the LSB 4 bits
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D4, ((data >> 0u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D5, ((data >> 1u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D6, ((data >> 2u) & 0x01u));
-    GPIO_PIN_WRITE_LCD(PIN_LCD_D7, ((data >> 3u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D4, ((package >> 0u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D5, ((package >> 1u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D6, ((package >> 2u) & 0x01u));
+    GPIO_WRITE(PORT_LCD, P_LCD_D7, ((package >> 3u) & 0x01u));
 
     EnableTransfer();
 }
@@ -191,39 +166,41 @@ void LCD_Init(void)
     // Wait more than 15ms after Vdd rises to 4.5V
     _delay_ms(50u);
 
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RS, LOW);
-    GPIO_PIN_WRITE_LCD(PIN_LCD_RW, LOW);
-    GPIO_PIN_WRITE_LCD(PIN_LCD_EN, LOW);
+    GPIO_WRITE(PORT_LCD, P_LCD_RS, LOW);
+    GPIO_WRITE(PORT_LCD, P_LCD_RW, LOW);
+    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
 
     //****** STEP 2. **********************************************************/
     // 4-bit mode initialization according to datasheet p46
-    SendCommand(0x03u);
+    Send(L_COMMAND, 0x03u);
     _delay_ms(5u);
-    SendCommand(0x03u);
+    Send(L_COMMAND, 0x03u);
     _delay_ms(5u);
-    SendCommand(0x03u);
+    Send(L_COMMAND, 0x03u);
     _delay_us(500u);
-    SendCommand(0x02u);
+    Send(L_COMMAND, 0x02u);
 
     //****** STEP 3. **********************************************************/
     // Function set: 0 0 1 DL N F 0 0
     //                      | | |------ = 0 : 5x8 dots character font
     //                      | |-------- = 1 : 2-line mode
     //                      |---------- = 0 : 4-bit mode
-    SendCommand(L_LCD_CMD_FUNCTION_SET   |
-                L_LCD_FUNCTION_4BIT_MODE |
-                L_LCD_FUNCTION_2LINE     |
-                L_LCD_FUNCTION_5x8_DOTS);
+    Send(L_COMMAND,
+         L_LCD_CMD_FUNCTION_SET   |
+         L_LCD_FUNCTION_4BIT_MODE |
+         L_LCD_FUNCTION_2LINE     |
+         L_LCD_FUNCTION_5x8_DOTS);
 
     //****** STEP 4. **********************************************************/
     // Display control: 0 0 0 0 1 D C B
     //                            | | |-- = 0 : Cursor Blink OFF
     //                            | |---- = 0 : Cursor OFF
     //                            |------ = 0 : Display OFF
-    SendCommand(L_LCD_CMD_DISPLAY_CONTROL |
-                L_LCD_DISPLAY_OFF         |
-                L_LCD_CURSOR_OFF          |
-                L_LCD_CURSOR_BLINK_OFF);
+    Send(L_COMMAND,
+         L_LCD_CMD_DISPLAY_CONTROL |
+         L_LCD_DISPLAY_OFF         |
+         L_LCD_CURSOR_OFF          |
+         L_LCD_CURSOR_BLINK_OFF);
 
     //****** STEP 5. **********************************************************/
     // Display clear
@@ -233,9 +210,10 @@ void LCD_Init(void)
     // Entry mode set: 0 0 0 0 0 0 1 I/D S
     //                                |  |-- = 0 : Cursor moves not the display
     //                                |----- = 1 : Increment cursor move
-    SendCommand(L_LCD_CMD_ENTRY_MODE_SET   |
-                L_LCD_ENTRY_MODE_INCREMENT |
-                L_LCD_CURSOR_MOVE);
+    Send(L_COMMAND,
+         L_LCD_CMD_ENTRY_MODE_SET   |
+         L_LCD_ENTRY_MODE_INCREMENT |
+         L_LCD_CURSOR_MOVE);
 }
 
 
@@ -251,7 +229,7 @@ void LCD_Init(void)
  */
 void LCD_SwitchOn(void)
 {
-    SendCommand(L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_ON);
+    Send(L_COMMAND, L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_ON);
 }
 
 
@@ -267,7 +245,7 @@ void LCD_SwitchOn(void)
  */
 void LCD_SwitchOff(void)
 {
-    SendCommand(L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_OFF);
+    Send(L_COMMAND, L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_OFF);
 }
 
 
@@ -283,7 +261,7 @@ void LCD_SwitchOff(void)
  */
 void LCD_Clear(void)
 {
-    SendCommand(L_LCD_CMD_CLEAR_DISPLAY);
+    Send(L_COMMAND, L_LCD_CMD_CLEAR_DISPLAY);
     _delay_ms(2u);
 }
 
@@ -326,7 +304,7 @@ void LCD_SetCursor(uint8 row, uint8 column)
     _position_address = row + column;
 
     // Sending the DDRAM address to the LCD controller
-    SendCommand(L_LCD_CMD_SET_DDRAM | _position_address);
+    Send(L_COMMAND, L_LCD_CMD_SET_DDRAM | _position_address);
 }
 
 
@@ -341,7 +319,7 @@ void LCD_SetCursor(uint8 row, uint8 column)
  */
 void LCD_WriteChar(uint8 character)
 {
-    SendData(character);
+    Send(L_DATA, character);
 }
 
 
@@ -412,11 +390,11 @@ void LCD_StoreCustomChar(uint8 location, const uint8 custom_charmap[])
     
     location &= 0x07u;
 
-    SendCommand(L_LCD_CMD_SET_CGRAM | (location << 3u));
+    Send(L_COMMAND, L_LCD_CMD_SET_CGRAM | (location << 3u));
 
     for (_loop_counter = 0u; _loop_counter < 8u; _loop_counter++)
     {
-        SendData(custom_charmap[_loop_counter]);
+        Send(L_DATA, custom_charmap[_loop_counter]);
     }
 }
 
@@ -433,5 +411,5 @@ void LCD_StoreCustomChar(uint8 location, const uint8 custom_charmap[])
  */
 void LCD_WriteCustomChar(uint8 location)
 {
-    SendData(location);
+    Send(L_DATA, location);
 }

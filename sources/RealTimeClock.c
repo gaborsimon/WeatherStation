@@ -6,6 +6,7 @@
 #define L_FEB_IN_LEAP_YEAR (0u)
 #define L_FEB              (2u)
 
+
 static const uint8 L_DayNumberOfMonth[13] =
 {
     29u,    // February in a leap Year
@@ -123,6 +124,11 @@ void RTC_Refresh(void)
     RTC_TimeDate.Second++;
     RTC_TimeDate.NewSecond = Flag_SET;
 
+    /* HACK for test -- Day is incremented in every seconds */
+    /* HACK for test -- Day is incremented in every seconds */
+    /* HACK for test -- Day is incremented in every seconds */
+    /* HACK for test */
+    /* HACK for test */
     /* HACK for test */
                 RTC_TimeDate.Day++;
                 RTC_TimeDate.NewDay = Flag_SET;
@@ -146,6 +152,11 @@ void RTC_Refresh(void)
                         RTC_TimeDate.NewYear = Flag_SET;
                     } // Year
                 } // Month
+    /* HACK for test */
+    /* HACK for test */
+    /* HACK for test */
+    /* HACK for test */
+    /* HACK for test */
     /* HACK for test */
     
     //**************************************************************************

@@ -3,7 +3,7 @@
 
 
 //====== Private Constants =====================================================
-#define CPU_LOAD_MEASUREMENT
+//#define CPU_LOAD_MEASUREMENT
 
 
 //====== Private Signals =======================================================
@@ -15,37 +15,25 @@ static volatile Flag L_LED       = Flag_CLEAR;
 
 
 //====== Private Functions =====================================================
-/*
- * Name:
- *
- * Description:
- *
- * Input:
- *
- * Output:
- */
 
 
 //====== Public Signals ========================================================
 
 
 //====== Public Functions ======================================================
-/*
- * Name:
- *
- * Description:
- *
- * Input:
- *
- * Output:
- */
 
+//******************************************************************************
+//****** INTERRUPT HANDLER
+//******************************************************************************
 ISR(TIMER1_COMPA_vect)
 {
     L_Task_1SEC = Flag_SET;
 }
 
 
+//******************************************************************************
+//****** INIT
+//******************************************************************************
 void Task_Init(void)
 {
     DISABLE_INTERRUPT();
@@ -58,9 +46,10 @@ void Task_Init(void)
     LCD_SwitchOn();
     LCD_Clear();
 
-    TMS_Init();
+    DHT22_Init();
+    //DS1621_Init();
 
-    GPIO_PANEL_LED_OFF;
+    GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, LOW);
 
     RTC_SetDate(2015u,4u,1u,23u,59u,50u);
 
@@ -70,12 +59,16 @@ void Task_Init(void)
 }
 
 
+//******************************************************************************
+//****** MAIN
+//******************************************************************************
 void Task_Main(void)
 {
 #ifdef CPU_LOAD_MEASUREMENT
     static volatile uint16 timer_start = 0u;
     static volatile uint16 timer_stop  = 0u;
 #endif
+
 
     for (;;)
     {
@@ -84,26 +77,26 @@ void Task_Main(void)
 #ifdef CPU_LOAD_MEASUREMENT
             timer_start = TCNT1;
 #endif
-
             L_Task_1SEC = Flag_CLEAR;
-            
-            // Heartbeat on panel
+
+            //-- Heartbeat on panel
             if (Flag_CLEAR == L_LED)
             {
                 L_LED = Flag_SET;
-                GPIO_PANEL_LED_ON;
+                GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, HIGH);
             }
             else if (Flag_SET == L_LED)
             {
                 L_LED = Flag_CLEAR;
-                GPIO_PANEL_LED_OFF;
+                GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, LOW);
             }
-            //---------------------------- Heartbeat on panel
+            //-- Heartbeat on panel
 
             RTC_Refresh();
             MFC_Refresh();
             STC_Refresh();
-            //TMS_Refresh();
+            DHT22_Refresh();
+            //DS1621_Refresh();
             LCM_Refresh();
 
             
@@ -111,7 +104,7 @@ void Task_Main(void)
             timer_stop = TCNT1;
 #endif
 //******************************************************************************
-//****** CPU LOAD
+//****** CPU LOAD in ms
 //******************************************************************************
 #ifdef CPU_LOAD_MEASUREMENT
             static volatile uint16 cpuload     = 0u;

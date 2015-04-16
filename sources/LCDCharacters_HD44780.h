@@ -1,8 +1,11 @@
 #ifndef LCDCHARACTERS_H_
 #define LCDCHARACTERS_H_
 
-#include <avr/pgmspace.h>
 
+//====== Header includes =======================================================
+
+
+//====== Public Constants ======================================================
 #define L_LCD_CHARACTER_ROW_SIZE (8u)
 
 
@@ -34,6 +37,7 @@ static const uint8 lcd_char_sunset[L_LCD_CHARACTER_ROW_SIZE] =
     0b01110,
     0b00100
 };
+
 
 /*
  *******************************************************************************
@@ -227,6 +231,12 @@ static const uint8 lcd_char_battery_100[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 */
+
+
+//====== Public Signals ========================================================
+
+
+//====== Public Functions ======================================================
 
 
 #endif /* LCDCHARACTERS_H_ */

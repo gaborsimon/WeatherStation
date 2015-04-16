@@ -23,7 +23,7 @@
 #define LOW     (0u)
 #define HIGH    (1u)
 
-#define PI          ((float32) (3.141592654f))
+#define PI ((float32) (3.141592654f))
 
 #define DEG_TO_RAD(degree)      ((float32)degree * (PI / 180.0f))
 #define RAD_TO_DEG(radian)      ((float32)radian * (180.0f / PI))

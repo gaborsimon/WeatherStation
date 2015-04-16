@@ -1,11 +1,10 @@
 //====== Header includes =======================================================
 #include "Sensor_DS1621.h"
-#include <stdlib.h>
+
 
 //====== Private Constants =====================================================
-
-// Temperature conversion in every x second
-#define L_TEMP_CONV_PERIODE_TIME_SEC (3u)
+// Sensor read in every x second
+#define L_SENSOR_READ_PERIODE_TIME_SEC (5u)
 
 // Temperature Conversion command
 #define L_COMMAND_READ_TEMPERATURE  (0xAAu)
@@ -43,43 +42,46 @@ static L_State_t L_State = L_State_CUT_OFF;
 
 //====== Private Function Prototypes ===========================================
 static void CalculateMinMax(void);
-static void ReadTemperature(void);
+static void ReadSensor(void);
 
 
 //====== Private Functions =====================================================
 /*
- * Name:
+ * Name: CalculateMinMax
  *
- * Description:
+ * Description: The function calculates the minimum and the maximum values
+ *              of the temperature data.
  *
- * Input:
+ * Input: None
  *
- * Output:
+ * Output: None
  */
 static void CalculateMinMax(void)
 {
-    if (TMS_Temperature.Value < TMS_Temperature.Minimum)
+    if (DS1621_Data.TemperatureValue < DS1621_Data.TemperatureMinimum)
     {
-        TMS_Temperature.Minimum = TMS_Temperature.Value;
+        DS1621_Data.TemperatureMinimum = DS1621_Data.TemperatureValue;
     }
 
-    if (TMS_Temperature.Value > TMS_Temperature.Maximum)
+    if (DS1621_Data.TemperatureValue > DS1621_Data.TemperatureMaximum)
     {
-        TMS_Temperature.Maximum = TMS_Temperature.Value;
+        DS1621_Data.TemperatureMaximum = DS1621_Data.TemperatureValue;
     }
 }
 
 
 /*
- * Name:
+ * Name: ReadSensor
  *
- * Description:
+ * Description: The function reads out the temperature data of DS1621 sensor
+ *              via I2C communication interface. The action is performed
+ *              through an internal state manchine.
  *
- * Input:
+ * Input: None
  *
- * Output:
+ * Output: None
  */
-static void ReadTemperature(void)
+static void ReadSensor(void)
 {
     uint8        _data1         = INIT_VALUE_UINT;
     uint8        _data2         = INIT_VALUE_UINT;
@@ -100,7 +102,7 @@ static void ReadTemperature(void)
 
         case L_State_IDLE:
         {
-            if ((L_TEMP_CONV_PERIODE_TIME_SEC - 2u) == tick)
+            if ((L_SENSOR_READ_PERIODE_TIME_SEC - 2u) == tick)
             {
                 tick = 0u;
                 L_State = L_State_START_CONVERSION;
@@ -212,15 +214,10 @@ static void ReadTemperature(void)
                             L_State = L_State_CUT_OFF;
                         }
 
-                        TMS_Temperature.Value = ((sint8) _data1);
-                        TMS_Temperature.Qualifier = Signal_RELIABLE;
-
-
                         _temp = ((float32) (_data1)) - 0.25f + ((((float32) (_CountPerC)) - ((float32) (_CountRemain))) / ((float32)(_CountPerC)));
-                        LCD_SetCursor(3u, 2u);
-                        LCD_WriteInt((sint16) _temp);
-                        LCD_WriteChar('.');
-                        LCD_WriteInt((sint16) ((_temp - ((sint16)_temp)) * 10.0f));
+                        
+                        DS1621_Data.TemperatureValue = _temp;
+                        DS1621_Data.Qualifier        = Signal_RELIABLE;
 
                         CalculateMinMax();
 
@@ -245,14 +242,14 @@ static void ReadTemperature(void)
 
         case L_State_CUT_OFF:
         {
-            TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
-            TMS_Init();
+            DS1621_Data.Qualifier = Signal_NOT_RELIABLE;
+            DS1621_Init();
         }
         break;
 
         default:
         {
-            TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
+            DS1621_Data.Qualifier = Signal_NOT_RELIABLE;
             L_State = L_State_CUT_OFF;
         }
         break;
@@ -261,29 +258,30 @@ static void ReadTemperature(void)
 
 
 //====== Public Signals ========================================================
-Temperature TMS_Temperature;
+DS1621_data DS1621_Data;
 
 
 //====== Public Functions ======================================================
 /*
- * Name:
+ * Name: DS1621_Init
  *
- * Description:
+ * Description: The function initializes the global variables and the sensor
+ *              via I2C communication interface.
  *
- * Input:
+ * Input: None
  *
- * Output:
+ * Output: None
  */
-void TMS_Init()
+void DS1621_Init()
 {
     uint8 _res = MCH_I2C_ERROR;
 
     
     // Temperature signal initialization
-    TMS_Temperature.Value     =   0;
-    TMS_Temperature.Qualifier = Signal_NOT_RELIABLE;
-    TMS_Temperature.Minimum   =  99;
-    TMS_Temperature.Maximum   = -99;
+    DS1621_Data.Qualifier            = Signal_NOT_RELIABLE;
+    DS1621_Data.TemperatureValue     = INIT_VALUE_FLOAT;
+    DS1621_Data.TemperatureMinimum   =  99.0f;
+    DS1621_Data.TemperatureMaximum   = -99.0f;
 
     L_State = L_State_CUT_OFF;
 
@@ -321,7 +319,17 @@ void TMS_Init()
     }
 }
 
-void TMS_Refresh(void)
+
+/*
+ * Name: DS1621_Refresh
+ *
+ * Description: The function performs periodically the sensor read action.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
+void DS1621_Refresh(void)
 {
-    ReadTemperature();
+    ReadSensor();
 }

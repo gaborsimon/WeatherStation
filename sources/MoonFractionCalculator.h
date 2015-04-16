@@ -8,8 +8,8 @@
 #include "typedef.h"
 #include "utils.h"
 
-#include "RealTimeClock.h"
 #include "LCDDriver_HD44780.h"
+#include "RealTimeClock.h"
 
 
 //====== Public Constants ======================================================

@@ -27,6 +27,7 @@ typedef struct
     Flag   NewYear;
 } TimeDate;
 
+
 #define XRTC_TIMEDATE_SECOND ((uint8)  (RTC_TimeDate.Second))
 #define XRTC_TIMEDATE_MINUTE ((uint8)  (RTC_TimeDate.Minute))
 #define XRTC_TIMEDATE_HOUR   ((uint8)  (RTC_TimeDate.Hour))

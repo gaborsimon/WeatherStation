@@ -6,10 +6,12 @@
 #include <avr/pgmspace.h>
 
 #include "typedef.h"
+
 #include "LCDCharacters_HD44780.h"
 #include "LCDDriver_HD44780.h"
 #include "MoonFractionCalculator.h"
 #include "RealTimeClock.h"
+#include "Sensor_DHT22.h"
 #include "Sensor_DS1621.h"
 #include "SunTimeCalculator.h"
 

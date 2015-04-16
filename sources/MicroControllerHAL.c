@@ -27,21 +27,21 @@
 
 
 //====== Private Functions =====================================================
-/*
- * Name:
- *
- * Description:
- *
- * Input:
- *
- * Output:
- */
 
 
 //====== Public Signals ========================================================
 
 
 //====== Public Functions ======================================================
+/*
+ * Name: MCH_Init_Watchdog
+ *
+ * Description: This function initializes the Watchdog timer.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
 void MCH_Init_Watchdog(void)
 {
     WD_RESET();
@@ -100,15 +100,18 @@ void MCH_Init_Timer1CHA(void)
  */
 void MCH_Init_Pins(void)
 {
-    GPIO_PANEL_LED_OUTPUT;
+    GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT);
+    GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH);
+        
+    GPIO_DIRECTION(DDR_PANEL_LED, P_PANEL_LED, OUTPUT);
 
-    GPIO_LCD_RS_OUTPUT;
-    GPIO_LCD_RW_OUTPUT;
-    GPIO_LCD_EN_OUTPUT;
-    GPIO_LCD_D4_OUTPUT;
-    GPIO_LCD_D5_OUTPUT;
-    GPIO_LCD_D6_OUTPUT;
-    GPIO_LCD_D7_OUTPUT;
+    GPIO_DIRECTION(DDR_LCD, P_LCD_RS, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_RW, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_EN, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D4, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D5, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D6, OUTPUT);
+    GPIO_DIRECTION(DDR_LCD, P_LCD_D7, OUTPUT);
 }
 
 
@@ -124,10 +127,10 @@ void MCH_Init_Pins(void)
 void MCH_Init_I2C(uint16 scl_freq_in_khz)
 {
     // Enable internal pull-up resistors
-    BIT_CLR(DDRD,PIN_I2C_SCL);
-    BIT_SET(PORTD,PIN_I2C_SCL);
-    BIT_CLR(DDRD,PIN_I2C_SDA);
-    BIT_SET(PORTD,PIN_I2C_SDA);
+    BIT_CLR(DDR_I2C,  P_I2C_SCL);
+    BIT_SET(PORT_I2C, P_I2C_SCL);
+    BIT_CLR(DDR_I2C,  P_I2C_SDA);
+    BIT_SET(PORT_I2C, P_I2C_SDA);
 
     // Setting the Bit Rate Generator Unit
     // SCL [Hz] = CPU [Hz] / (16 + 2x(TWBR)x4^(TWPS))

@@ -8,8 +8,8 @@
 #include "typedef.h"
 #include "utils.h"
 
-#include "RealTimeClock.h"
 #include "LCDDriver_HD44780.h"
+#include "RealTimeClock.h"
 
 
 //====== Public Constants ======================================================
@@ -29,7 +29,6 @@ typedef struct
 #define XSTC_SUN_RISEMINUTE  ((uint8) (STC_Sun.RiseMinute))
 #define XSTC_SUN_SETHOUR     ((uint8) (STC_Sun.SetHour))
 #define XSTC_SUN_SETMINUTE   ((uint8) (STC_Sun.SetMinute))
-
 
 extern Sun STC_Sun;
 
