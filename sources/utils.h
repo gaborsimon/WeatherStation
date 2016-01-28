@@ -4,7 +4,7 @@
 
 #define BIT_SET(reg,bit)    ((reg) |=  (1u << (bit)))
 #define BIT_CLR(reg,bit)    ((reg) &= ~(1u << (bit)))
-#define BIT_GET(reg,bit)    ((reg)  &  (1u << (bit)))
+#define BIT_GET(reg,bit)    (((reg)  &  (1u << (bit))) >> (bit))
 
 #define DISABLE_INTERRUPT() __asm__ __volatile__("cli")
 #define ENABLE_INTERRUPT()  __asm__ __volatile__("sei")
