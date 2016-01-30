@@ -66,10 +66,11 @@ FORMAT = ihex
 CSTANDARD = gnu99
 
 # Programmer configuration
-PROG_TYPE = wiring
+PROG_TYPE = usbasp
+#PROG_TYPE = wiring
 #PROG_PORT = COM1
-PROG_PORT = /dev/ttyACM0
-PROG_BAUD = 115200
+#PROG_PORT = /dev/ttyACM0
+#PROG_BAUD = 115200
 
 
 #*******************************************************************************

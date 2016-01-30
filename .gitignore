@@ -9,3 +9,6 @@
 
 # Object files
 *.o
+
+# Temprary file of GVim editor
+*.swp
