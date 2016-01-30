@@ -13,41 +13,36 @@
 //******************************************************************************
 //****** PROCESSOR CONFIGURATION
 //******************************************************************************
-#define F_CPU (16000000UL)
+#define F_CPU (8000000UL)
 
 //******************************************************************************
 //****** PIN CONFIGURATION
 //******************************************************************************
-// Built-in LED of Arduino panel
-#define P_PANEL_LED     (PB7)   // PIN 026
-#define DDR_PANEL_LED   (DDRB)
-#define PIN_PANEL_LED   (PINB)
-#define PORT_PANEL_LED  (PORTB)
 
 // LCD panel
-#define P_LCD_RS        (PK0)   // PIN 089 :: A08
-#define P_LCD_RW        (PK1)   // PIN 088 :: A09
-#define P_LCD_EN        (PK2)   // PIN 087 :: A10
-#define P_LCD_D4        (PK3)   // PIN 086 :: A11
-#define P_LCD_D5        (PK4)   // PIN 085 :: A12
-#define P_LCD_D6        (PK5)   // PIN 084 :: A13
-#define P_LCD_D7        (PK6)   // PIN 083 :: A14
-#define DDR_LCD         (DDRK)
-#define PIN_LCD         (PINK)
-#define PORT_LCD        (PORTK)
+#define P_LCD_RS        (PA0)   // PIN 040
+#define P_LCD_RW        (PA1)   // PIN 039
+#define P_LCD_EN        (PA2)   // PIN 038
+#define P_LCD_D4        (PA3)   // PIN 037
+#define P_LCD_D5        (PA4)   // PIN 036
+#define P_LCD_D6        (PA5)   // PIN 035
+#define P_LCD_D7        (PA6)   // PIN 034
+#define DDR_LCD         (DDRA)
+#define PIN_LCD         (PINA)
+#define PORT_LCD        (PORTA)
 
 // I2C
-#define P_I2C_SCL       (PD0)   // PIN 043 :: SCL 21
-#define P_I2C_SDA       (PD1)   // PIN 044 :: SDA 20
-#define DDR_I2C         (DDRD)
-#define PIN_I2C         (PIND)
-#define PORT_I2C        (PORTD)
+#define P_I2C_SCL       (PC0)   // PIN 022
+#define P_I2C_SDA       (PC1)   // PIN 023
+#define DDR_I2C         (DDRC)
+#define PIN_I2C         (PINC)
+#define PORT_I2C        (PORTC)
 
 // DHT22
-#define P_DHT22_DATA    (PK7)   // PIN 082 :: A15
-#define DDR_DHT22       (DDRK)
-#define PIN_DHT22       (PINK)
-#define PORT_DHT22      (PORTK)
+#define P_DHT22_DATA    (PA7)   // PIN 033
+#define DDR_DHT22       (DDRA)
+#define PIN_DHT22       (PINA)
+#define PORT_DHT22      (PORTA)
 
 //******************************************************************************
 //****** PIN CONTROL

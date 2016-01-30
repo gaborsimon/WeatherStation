@@ -49,8 +49,6 @@ void Task_Init(void)
     DHT22_Init();
     //DS1621_Init();
 
-    GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, LOW);
-
     RTC_SetDate(2015u,4u,1u,23u,59u,50u);
 
     //MCH_Init_Watchdog();
@@ -79,19 +77,6 @@ void Task_Main(void)
 #endif
             L_Task_1SEC = Flag_CLEAR;
 
-            //-- Heartbeat on panel
-            if (Flag_CLEAR == L_LED)
-            {
-                L_LED = Flag_SET;
-                GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, HIGH);
-            }
-            else if (Flag_SET == L_LED)
-            {
-                L_LED = Flag_CLEAR;
-                GPIO_WRITE(PORT_PANEL_LED, P_PANEL_LED, LOW);
-            }
-            //-- Heartbeat on panel
-
             RTC_Refresh();
             MFC_Refresh();
             STC_Refresh();
@@ -110,27 +95,29 @@ void Task_Main(void)
             static volatile uint16 cpuload     = 0u;
             static volatile uint16 cpuload_max = 0u;
 
-            LCD_SetCursor(2u,10u);
-            LCD_WriteString("           ");
+            LCD_SetCursor(2u,1u);
+            LCD_WriteString("                    ");
             
             //cpuload = (uint16)((((float32)(timer_stop - timer_start)) / ((float32)(OCR1A))) * 10000.0f);
-            cpuload = (uint16)((timer_stop - timer_start) * 0.000064f * 1000.0f);
-            LCD_SetCursor(2u,10u);
+            cpuload = (uint16)((timer_stop - timer_start) * (256.0f / (float32)F_CPU) * 1000.0f);
+            LCD_SetCursor(2u,7u);
             //LCD_WriteInt(cpuload / 100u);
             //LCD_WriteChar('.');
             //LCD_WriteInt(cpuload % 100u);
             LCD_WriteInt(cpuload);
-
+            LCD_WriteString("ms");
+			
             if (cpuload > cpuload_max)
             {
                 cpuload_max = cpuload;
             }
 
-            LCD_SetCursor(2u,15u);
+            LCD_SetCursor(2u,13u);
             //LCD_WriteInt(cpuload_max / 100u);
             //LCD_WriteChar('.');
             //LCD_WriteInt(cpuload_max % 100u);
             LCD_WriteInt(cpuload_max);
+            LCD_WriteString("ms");
 #endif // CPU_LOAD_MEASUREMENT
 //******************************************************************************
 //****** CPU LOAD

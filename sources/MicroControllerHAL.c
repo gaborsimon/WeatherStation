@@ -42,6 +42,7 @@
  *
  * Output: None
  */
+/*
 void MCH_Init_Watchdog(void)
 {
     WD_RESET();
@@ -57,7 +58,7 @@ void MCH_Init_Watchdog(void)
     BIT_SET(WDTCSR, WDP1);
     BIT_CLR(WDTCSR, WDP0);
 }
-
+*/
 
 /*
  * Name: MCH_Init_Timer1CHA
@@ -75,16 +76,19 @@ void MCH_Init_Timer1CHA(void)
     // Normal port operation OCnX are disconnected
     TCCR1A = 0x00u;
     TCCR1B = 0x00u;
-    TCCR1C = 0x00u;
-    // Prescaler = 1024
+
+    // Prescaler = 256
     BIT_SET(TCCR1B, CS12);
-    BIT_SET(TCCR1B, CS10);
+    BIT_CLR(TCCR1B, CS11);
+    BIT_CLR(TCCR1B, CS10);
+    // N = (F_CPU / prescaler) - 1
+    OCR1A = (F_CPU / 256u) - 1u;
+
     // Turn on CTC mode
     BIT_SET(TCCR1B, WGM12);
-    // 1Hz = 16MHz / [1024 x (1 + N)] => N = 15624
-    OCR1A = 15624u;
+
     // Enable the Timer compare interrupt
-    BIT_SET(TIMSK1, OCIE1A);
+    BIT_SET(TIMSK, OCIE1A);
 }
 
 
@@ -103,8 +107,6 @@ void MCH_Init_Pins(void)
     GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT);
     GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH);
         
-    GPIO_DIRECTION(DDR_PANEL_LED, P_PANEL_LED, OUTPUT);
-
     GPIO_DIRECTION(DDR_LCD, P_LCD_RS, OUTPUT);
     GPIO_DIRECTION(DDR_LCD, P_LCD_RW, OUTPUT);
     GPIO_DIRECTION(DDR_LCD, P_LCD_EN, OUTPUT);

@@ -14,7 +14,7 @@
 PROJECT = WeatherStation
 
 # Controller type
-MCU = atmega2560
+MCU = atmega16
 
 # Optimization level
 OPT_LEVEL  = -Os
@@ -178,7 +178,7 @@ program:
 	@echo $(TXT_LINE_LONG)
 	@echo
 	@$(PROG) -p $(MCU) -c $(PROG_TYPE) -P $(PROG_PORT) -b $(PROG_BAUD) \
-    -D -U flash:w:$(HEX):i
+    -U flash:w:$(HEX):i
 	@echo
 	@echo $(TXT_LINE_LONG)
 	@echo $(TXT_PROGRAM_END)

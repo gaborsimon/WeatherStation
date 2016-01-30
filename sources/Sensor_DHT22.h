@@ -3,11 +3,13 @@
 
 
 //====== Header includes =======================================================
+#include <stdlib.h>
+//-- CPU clock define is needed for "delay.h" functions
+#include "MicroControllerHAL.h"
+#include <util/delay.h>
+
 #include "typedef.h"
 #include "utils.h"
-
-#include "LCDDriver_HD44780.h"
-#include "MicroControllerHAL.h"
 
 
 //====== Public Constants ======================================================

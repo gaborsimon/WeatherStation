@@ -1,12 +1,11 @@
 //====== Header includes =======================================================
 #include "Sensor_DHT22.h"
-#include <stdlib.h>
 
 
 //====== Private Constants =====================================================
 // Sensor read in every x second
 #define L_SENSOR_READ_PERIODE_TIME_SEC   (5u)
-#define L_DHT22_BIT_TIME_THRESHOLD      (40u)
+#define L_DHT22_BIT_TIME_THRESHOLD      (25u)
 #define L_DHT22_DATA_BIT_COUNT          (40u)
 
 // Port macros
@@ -58,6 +57,9 @@ static L_Error_t ReadSensor(void)
     uint16 _dataT        = INIT_VALUE_UINT;
     uint8  _dataCS       = INIT_VALUE_UINT;
 
+/* DEBUG */
+uint8 ize = 0u;
+/* DEBUG */
 
     //****** STEP 1. **********************************************************/
     // Send activate signal
@@ -126,6 +128,9 @@ static L_Error_t ReadSensor(void)
 
         // Measure the width of the data pulse
         _bitTime = INIT_VALUE_UINT;
+/* DEBUG */
+ize = 0u;
+/* DEBUG */
         do
         {
             if (_bitTime > 150u)
@@ -133,6 +138,9 @@ static L_Error_t ReadSensor(void)
                 return L_Error_CUT_OFF;
             }
             _bitTime++;
+/* DEBUG */
+ize++;
+/* DEBUG */
             _delay_us(1u);
         } while(DHT22_READ == HIGH);
 
@@ -161,6 +169,13 @@ static L_Error_t ReadSensor(void)
     // Release the bus - idle state
     DHT22_OUTPUT;
     DHT22_HIGH;
+
+/* DEBUG */
+LCD_SetCursor(2u,1u);
+LCD_WriteString("                    ");
+LCD_SetCursor(2u,10u);
+LCD_WriteInt(ize);
+/* DEBUG */
 
     //****** STEP 6. **********************************************************/
     // Calculate the Check Sum
