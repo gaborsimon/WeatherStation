@@ -4,7 +4,7 @@
 
 //====== Private Constants =====================================================
 // Sensor read in every x second
-#define L_SENSOR_READ_PERIODE_TIME_SEC (5u)
+#define L_SENSOR_READ_PERIOD_TIME_SEC (5u)
 
 // Temperature Conversion command
 #define L_COMMAND_READ_TEMPERATURE  (0xAAu)
@@ -102,7 +102,7 @@ static void ReadSensor(void)
 
         case L_State_IDLE:
         {
-            if ((L_SENSOR_READ_PERIODE_TIME_SEC - 2u) == tick)
+            if ((L_SENSOR_READ_PERIOD_TIME_SEC - 2u) == tick)
             {
                 tick = 0u;
                 L_State = L_State_START_CONVERSION;

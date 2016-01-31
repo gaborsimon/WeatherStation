@@ -4,7 +4,7 @@
 
 //====== Private Constants =====================================================
 // Sensor read in every x second
-#define L_SENSOR_READ_PERIODE_TIME_SEC   (5u)
+#define L_SENSOR_READ_PERIOD_TIME_SEC   (5u)
 #define L_DHT22_BIT_TIME_THRESHOLD      (25u)
 #define L_DHT22_DATA_BIT_COUNT          (40u)
 
@@ -247,7 +247,7 @@ void DHT22_Refresh(void)
     {
         case L_State_IDLE:
         {
-            if ((L_SENSOR_READ_PERIODE_TIME_SEC - 1u) == tick)
+            if ((L_SENSOR_READ_PERIOD_TIME_SEC - 1u) == tick)
             {
                 tick = INIT_VALUE_UINT;
                 L_State = L_State_READ_SENSOR;
