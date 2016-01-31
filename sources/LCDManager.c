@@ -59,7 +59,7 @@ void LCM_Refresh(void)
     //**************************************************************************
     //****** DATE
     //**************************************************************************
-    if ((Flag_SET == FirstRun) || (Flag_SET == XRTC_TIMEDATE_NEWMONTH))
+    if ((Flag_SET == FirstRun) || (Flag_SET == XRTC_TIMEDATE_NEWYEAR))
     {
         LCD_SetCursor(L_POS_ROW_DATE, L_POS_COL_DATE);
         LCD_WriteInt(XRTC_TIMEDATE_YEAR);
