@@ -157,19 +157,12 @@ void STC_Refresh(void)
     static Flag FirstRun = Flag_SET;
 
     
-    // In case of the first run the sun time shall be calculated
+    // In case of the first run or new day the sun time shall be calculated
     // and the Previous Day shall be set to the current day.
-    if (Flag_SET == FirstRun)
+    if ((Flag_SET == FirstRun) || (Flag_SET == XRTC_TIMEDATE_NEWDAY))
     {
         FirstRun = Flag_CLEAR;
 
-        CalculateSunTime(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
-                         &STC_Sun.RiseHour, &STC_Sun.RiseMinute,
-                         &STC_Sun.SetHour,  &STC_Sun.SetMinute);
-    }
-    // In case of a new day the sun time shall be calculated.
-    else if (Flag_SET == XRTC_TIMEDATE_NEWDAY)
-    {
         CalculateSunTime(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
                          &STC_Sun.RiseHour, &STC_Sun.RiseMinute,
                          &STC_Sun.SetHour,  &STC_Sun.SetMinute);
