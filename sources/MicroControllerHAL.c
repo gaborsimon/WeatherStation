@@ -61,18 +61,17 @@ void MCH_Init_Watchdog(void)
 */
 
 /*
- * Name: MCH_Init_Timer1CHA
+ * Name: MCH_Init_Timer1
  *
- * Description: This function initializes the Timer1 channel "A" periphery for
- *              the main scheduler.
+ * Description: This function initializes the Timer1 periphery
  *
  * Input: None
  *
  * Output: None
  */
-void MCH_Init_Timer1CHA(void)
+void MCH_Init_Timer1(void)
 {
-    // Setting TIMER1 "A" channel to 1Hz (1sec) frequency
+    // Setting Timer to 1Hz (1sec) frequency
     // Normal port operation OCnX are disconnected
     TCCR1A = 0x00u;
     TCCR1B = 0x00u;
@@ -91,6 +90,35 @@ void MCH_Init_Timer1CHA(void)
     BIT_SET(TIMSK, OCIE1A);
 }
 
+/*
+ * Name: MCH_Init_Timer2
+ *
+ * Description: This function initializes the Timer2 periphery for
+ *              the main scheduler. It has its own external watch
+ *              crystal (32.768kHz) clock source.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
+void MCH_Init_Timer2(void)
+{
+    // Setting Timer to 1Hz (1sec) frequency
+    // Normal port operation OCnX are disconnected
+    TCCR2 = 0x00u;
+    ASSR  = 0x00u;
+
+    // Prescaler = 128
+    BIT_SET(TCCR2, CS22);
+    BIT_CLR(TCCR2, CS21);
+    BIT_SET(TCCR2, CS20);
+
+    // Timer is clocked from external Watch Crystal Oscillator
+    BIT_SET(ASSR,AS2);
+
+    // Enable the Timer overflow interrupt
+    BIT_SET(TIMSK, TOIE2);
+}
 
 /*
  * Name: MCH_Init_Pins

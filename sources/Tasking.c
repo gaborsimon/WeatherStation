@@ -27,9 +27,12 @@ static volatile Flag L_LED       = Flag_CLEAR;
 //******************************************************************************
 ISR(TIMER1_COMPA_vect)
 {
-    L_Task_1SEC = Flag_SET;
 }
 
+ISR(TIMER2_OVF_vect)
+{
+    L_Task_1SEC = Flag_SET;
+}
 
 //******************************************************************************
 //****** INIT
@@ -38,9 +41,10 @@ void Task_Init(void)
 {
     DISABLE_INTERRUPT();
 
-    MCH_Init_Timer1CHA();
+//    MCH_Init_Timer1();
+    MCH_Init_Timer2();
     MCH_Init_Pins();
-    MCH_Init_I2C(100u);
+//    MCH_Init_I2C(100u);
 
     LCD_Init();
     LCD_SwitchOn();

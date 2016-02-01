@@ -49,7 +49,7 @@
 //******************************************************************************
 #define GPIO_DIRECTION(ddr, p, dir)     ((dir)   ? BIT_SET(ddr,  p) : BIT_CLR(ddr,  p))
 #define GPIO_WRITE(port, p, value)      ((value) ? BIT_SET(port, p) : BIT_CLR(port, p))
-#define GPIO_READ(pin, p)               (BIT_GET(pin, p) >> p)
+#define GPIO_READ(pin, p)               (BIT_GET(pin, p))
 
 //******************************************************************************
 //****** PERIPHERAL CONSTANTS
@@ -72,7 +72,8 @@ extern "C" {
 #endif
 
     extern void  MCH_Init_Watchdog(void);
-    extern void  MCH_Init_Timer1CHA(void);
+    extern void  MCH_Init_Timer1(void);
+    extern void  MCH_Init_Timer2(void);
     extern void  MCH_Init_Pins(void);
     extern void  MCH_Init_I2C(uint16 scl_freq_in_khz);
     extern uint8 MCH_I2C_Start(uint8 address, uint8 read_or_write);
