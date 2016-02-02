@@ -18,6 +18,11 @@
 //******************************************************************************
 //****** PIN CONFIGURATION
 //******************************************************************************
+// DCF77 receiver
+#define P_DCF77_DATA    (PD6)   // PIN 020
+#define DDR_DCF77       (DDRD)
+#define PIN_DCF77       (PIND)
+#define PORT_DCF77      (PORTD)
 
 // LCD panel
 #define P_LCD_RS        (PA0)   // PIN 040

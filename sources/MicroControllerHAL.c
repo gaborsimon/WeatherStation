@@ -63,7 +63,8 @@ void MCH_Init_Watchdog(void)
 /*
  * Name: MCH_Init_Timer1
  *
- * Description: This function initializes the Timer1 periphery
+ * Description: This function initializes the Timer1 periphery for receiving
+ *              the signal of DCF77.
  *
  * Input: None
  *
@@ -71,7 +72,6 @@ void MCH_Init_Watchdog(void)
  */
 void MCH_Init_Timer1(void)
 {
-    // Setting Timer to 1Hz (1sec) frequency
     // Normal port operation OCnX are disconnected
     TCCR1A = 0x00u;
     TCCR1B = 0x00u;
@@ -80,15 +80,24 @@ void MCH_Init_Timer1(void)
     BIT_SET(TCCR1B, CS12);
     BIT_CLR(TCCR1B, CS11);
     BIT_CLR(TCCR1B, CS10);
-    // N = (F_CPU / prescaler) - 1
-    OCR1A = (F_CPU / 256u) - 1u;
+    
+    // Set to 1500ms to catch minute mark
+    OCR1A = 46875u;
 
     // Turn on CTC mode
     BIT_SET(TCCR1B, WGM12);
 
-    // Enable the Timer compare interrupt
+    // Input Capture Noise Canceler is enabled
+    BIT_SET(TCCR1B, ICNC1);
+    // Input Capture is set to falling (negative) edge
+    BIT_CLR(TCCR1B, ICES1);
+    
+    // Enable the Timer Compare interrupt
     BIT_SET(TIMSK, OCIE1A);
+    // Enable the Input Capture interrupt
+    BIT_SET(TIMSK, TICIE1);
 }
+
 
 /*
  * Name: MCH_Init_Timer2
@@ -103,7 +112,6 @@ void MCH_Init_Timer1(void)
  */
 void MCH_Init_Timer2(void)
 {
-    // Setting Timer to 1Hz (1sec) frequency
     // Normal port operation OCnX are disconnected
     TCCR2 = 0x00u;
     ASSR  = 0x00u;
@@ -116,9 +124,11 @@ void MCH_Init_Timer2(void)
     // Timer is clocked from external Watch Crystal Oscillator
     BIT_SET(ASSR,AS2);
 
-    // Enable the Timer overflow interrupt
+    // Enable the Timer Overflow interrupt
+    // This will count seconds: 32.768kHz / 128 = 256
     BIT_SET(TIMSK, TOIE2);
 }
+
 
 /*
  * Name: MCH_Init_Pins
@@ -132,6 +142,8 @@ void MCH_Init_Timer2(void)
  */
 void MCH_Init_Pins(void)
 {
+    GPIO_DIRECTION(DDR_DCF77, P_DCF77_DATA, INPUT);
+
     GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT);
     GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH);
         
