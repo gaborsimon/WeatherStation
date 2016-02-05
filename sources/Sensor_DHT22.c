@@ -239,45 +239,18 @@ void DHT22_Init(void)
  */
 void DHT22_Refresh(void)
 {
-    uint8        _res = INIT_VALUE_UINT;
-    static uint8 tick = INIT_VALUE_UINT;
+    uint8 _res = INIT_VALUE_UINT;
 
-    
-    switch (L_State)
+
+    _res = ReadSensor();
+
+    if (_res == L_Error_NONE)
     {
-        case L_State_IDLE:
-        {
-            if ((L_SENSOR_READ_PERIOD_TIME_SEC - 1u) == tick)
-            {
-                tick = INIT_VALUE_UINT;
-                L_State = L_State_READ_SENSOR;
-            }
-            tick++;
-        }
-        break;
-        
-        case L_State_READ_SENSOR:
-        {
-            _res = ReadSensor();
-
-            if (_res == L_Error_NONE)
-            {
-                DHT22_Data.Qualifier = Signal_RELIABLE; 
-            }
-            else
-            {
-                DHT22_Data.Qualifier = Signal_NOT_RELIABLE; 
-            }
-            
-            L_State = L_State_IDLE;
-        }
-        break;
-        
-        default:
-        {
-            DHT22_Data.Qualifier = Signal_NOT_RELIABLE; 
-            L_State = L_State_IDLE;
-        }
-        break;
+        DHT22_Data.Qualifier = Signal_RELIABLE; 
     }
+    else
+    {
+        DHT22_Data.Qualifier = Signal_NOT_RELIABLE; 
+    }
+
 }

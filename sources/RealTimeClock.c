@@ -130,7 +130,7 @@ void RTC_Refresh(void)
     /* HACK for test */
     /* HACK for test */
     /* HACK for test */
-                RTC_TimeDate.Day++;
+/*                RTC_TimeDate.Day++;
                 RTC_TimeDate.NewDay = Flag_SET;
 
                 //**************************************************************
@@ -152,6 +152,7 @@ void RTC_Refresh(void)
                         RTC_TimeDate.NewYear = Flag_SET;
                     } // Year
                 } // Month
+*/
     /* HACK for test */
     /* HACK for test */
     /* HACK for test */

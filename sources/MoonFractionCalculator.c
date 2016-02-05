@@ -190,16 +190,6 @@ Moon MFC_Moon;
  */
 void MFC_Refresh(void)
 {
-    static uint8 FirstRun = TRUE;
-
-    
-    // In case of the first run or new day the fraction of the moon shall be calculated
-    // and the Previous Day shall be set to the current day.
-    if ((TRUE == FirstRun) || (Flag_SET == XRTC_TIMEDATE_NEWDAY))
-    {
-        FirstRun = FALSE;
-
-        CalculateMoonFraction(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
-                              &MFC_Moon.Fraction, &MFC_Moon.Direction);
-    }
+    CalculateMoonFraction(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
+                          &MFC_Moon.Fraction, &MFC_Moon.Direction);
 }
