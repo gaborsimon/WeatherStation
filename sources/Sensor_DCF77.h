@@ -1,28 +1,23 @@
-#ifndef TASKING_H_
-#define TASKING_H_
+#ifndef SENSORDCF77_H_
+#define SENSORDCF77_H_
 
 
 //====== Header includes =======================================================
-#include <avr/interrupt.h>
-
-#include "typedef.h"
-
-#include "LCDCharacters_HD44780.h"
-#include "LCDDriver_HD44780.h"
 #include "LCDManager.h"
 #include "MicroControllerHAL.h"
-#include "MoonFractionCalculator.h"
 #include "RealTimeClock.h"
-#include "Sensor_DCF77.h"
-#include "Sensor_DHT22.h"
-#include "Sensor_DS1621.h"
-#include "SunTimeCalculator.h"
+
+#include "typedef.h"
+#include "utils.h"
 
 
 //====== Public Constants ======================================================
 
 
 //====== Public Signals ========================================================
+#define XDCF77_SYNCH_DONE ((Flag) DCF77_SynchDone)
+
+extern Flag DCF77_SyncDone;
 
 
 //====== Public Functions ======================================================
@@ -30,12 +25,12 @@
 extern "C" {
 #endif
 
-    extern void Task_Init(void);
-    extern void Task_Main(void);
+    extern void DCF77_Callback_TimerOverflow(void);
+    extern void DCF77_Callback_InputCapture(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
 
-#endif /* TASKING_H_ */
+#endif /* SENSORDCF77_H_ */

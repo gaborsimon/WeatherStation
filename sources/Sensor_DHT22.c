@@ -4,16 +4,15 @@
 
 //====== Private Constants =====================================================
 // Sensor read in every x second
-#define L_SENSOR_READ_PERIOD_TIME_SEC   (5u)
 #define L_DHT22_BIT_TIME_THRESHOLD      (25u)
 #define L_DHT22_DATA_BIT_COUNT          (40u)
 
 // Port macros
-#define DHT22_OUTPUT    GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT)
-#define DHT22_INPUT     GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, INPUT)
-#define DHT22_HIGH      GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH)    
-#define DHT22_LOW       GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, LOW)    
-#define DHT22_READ      GPIO_READ(PIN_DHT22, P_DHT22_DATA) 
+#define L_DHT22_OUTPUT    GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT)
+#define L_DHT22_INPUT     GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, INPUT)
+#define L_DHT22_HIGH      GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH)    
+#define L_DHT22_LOW       GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, LOW)    
+#define L_DHT22_READ      GPIO_READ(PIN_DHT22, P_DHT22_DATA) 
 
 
 //====== Private Signals =======================================================
@@ -23,14 +22,6 @@ typedef enum L_Error_enum
     L_Error_CUT_OFF     = 2u,
     L_Error_CHECKSUM    = 3u
 } L_Error_t;
-
-typedef enum L_State_enum
-{
-    L_State_IDLE        = 1u,
-    L_State_READ_SENSOR = 2u
-} L_State_t;
-
-static L_State_t L_State = L_State_IDLE;
 
 
 //====== Private Function Prototypes ===========================================
@@ -63,14 +54,14 @@ uint8 ize = 0u;
 
     //****** STEP 1. **********************************************************/
     // Send activate signal
-    DHT22_OUTPUT;
-    DHT22_HIGH;
+    L_DHT22_OUTPUT;
+    L_DHT22_HIGH;
     _delay_ms(1u);
-    DHT22_LOW;
+    L_DHT22_LOW;
     _delay_ms(10u);
-    DHT22_HIGH;
+    L_DHT22_HIGH;
     _delay_us(40u);
-    DHT22_INPUT;
+    L_DHT22_INPUT;
 
     //****** STEP 2. **********************************************************/
     // Find the start of the ACK signal
@@ -83,7 +74,7 @@ uint8 ize = 0u;
         }
         _bitTime++;
         _delay_us(1u);
-    } while(DHT22_READ == HIGH);
+    } while(L_DHT22_READ == HIGH);
 
     //****** STEP 3. **********************************************************/
     // Response signal: 80us LOW
@@ -96,7 +87,7 @@ uint8 ize = 0u;
         }
         _bitTime++;
         _delay_us(1u);
-    } while(DHT22_READ == LOW);
+    } while(L_DHT22_READ == LOW);
     
     // Response signal: 80us HIGH
     _bitTime = INIT_VALUE_UINT;
@@ -108,7 +99,7 @@ uint8 ize = 0u;
         }
         _bitTime++;
         _delay_us(1u);
-    } while(DHT22_READ == HIGH);
+    } while(L_DHT22_READ == HIGH);
     
     //****** STEP 4. **********************************************************/
     // Read the 40 bit data stream
@@ -124,7 +115,7 @@ uint8 ize = 0u;
             }
             _bitTime++;
             _delay_us(1u);
-        } while(DHT22_READ == LOW);
+        } while(L_DHT22_READ == LOW);
 
         // Measure the width of the data pulse
         _bitTime = INIT_VALUE_UINT;
@@ -142,7 +133,7 @@ ize = 0u;
 ize++;
 /* DEBUG */
             _delay_us(1u);
-        } while(DHT22_READ == HIGH);
+        } while(L_DHT22_READ == HIGH);
 
         // Identify the bit values
         if (_bitTime > L_DHT22_BIT_TIME_THRESHOLD)
@@ -167,8 +158,8 @@ ize++;
 
     //****** STEP 5. **********************************************************/
     // Release the bus - idle state
-    DHT22_OUTPUT;
-    DHT22_HIGH;
+    L_DHT22_OUTPUT;
+    L_DHT22_HIGH;
 
 /* DEBUG */
 LCD_SetCursor(2u,1u);
@@ -239,7 +230,7 @@ void DHT22_Init(void)
  */
 void DHT22_Refresh(void)
 {
-    uint8 _res = INIT_VALUE_UINT;
+    L_Error_t  _res = INIT_VALUE_UINT;
 
 
     _res = ReadSensor();

@@ -124,42 +124,6 @@ void RTC_Refresh(void)
     RTC_TimeDate.Second++;
     RTC_TimeDate.NewSecond = Flag_SET;
 
-    /* HACK for test -- Day is incremented in every seconds */
-    /* HACK for test -- Day is incremented in every seconds */
-    /* HACK for test -- Day is incremented in every seconds */
-    /* HACK for test */
-    /* HACK for test */
-    /* HACK for test */
-/*                RTC_TimeDate.Day++;
-                RTC_TimeDate.NewDay = Flag_SET;
-
-                //**************************************************************
-                //****** Counting the months
-                //**************************************************************
-                if ((EndDayOfMonth() + 1) == RTC_TimeDate.Day)
-                {
-                    RTC_TimeDate.Day = 1u;
-                    RTC_TimeDate.Month++;
-                    RTC_TimeDate.NewMonth = Flag_SET;
-
-                    //**********************************************************
-                    //****** Counting the years
-                    //**********************************************************
-                    if (13u == RTC_TimeDate.Month)
-                    {
-                        RTC_TimeDate.Month = 1u;
-                        RTC_TimeDate.Year++;
-                        RTC_TimeDate.NewYear = Flag_SET;
-                    } // Year
-                } // Month
-*/
-    /* HACK for test */
-    /* HACK for test */
-    /* HACK for test */
-    /* HACK for test */
-    /* HACK for test */
-    /* HACK for test */
-    
     //**************************************************************************
     //****** Counting the minutes
     //**************************************************************************
