@@ -21,8 +21,9 @@
 
 
 //====== Private Signals =======================================================
-static uint8  BitPos        = INIT_VALUE_UINT;
-static uint8  BitArray[60u] = { 0u };
+static uint8    BitPos              = INIT_VALUE_UINT;
+static uint8    BitArray[60u]       = { LOW };
+static Flag     DCF77_DecodeDone    = Flag_CLEAR;    
 
 
 //====== Private Function Prototypes ===========================================
@@ -40,7 +41,7 @@ static Flag ParityCheck(uint8 start, uint8 stop)
 
     for (_loop_cnt = start; _loop_cnt < stop; _loop_cnt++)
     {
-        if (BitArray[_loop_cnt] == 1u) { _p ^= 1u; }
+        if (BitArray[_loop_cnt] == HIGH) { _p ^= 1u; }
     }
     
     if (_p != BitArray[stop])
@@ -51,7 +52,8 @@ static Flag ParityCheck(uint8 start, uint8 stop)
     {
         _ret = Flag_CLEAR;
     }
-    
+   
+
     return _ret;
 }
 
@@ -122,7 +124,10 @@ static void SignalDecode(void)
     _y += BitArray[L_START_YEAR + 7u] * 80u;
 
     RTC_SetDate((uint16)(2000u + _y), _m, _d, _h, _min, 0u);
+
+    DCF77_DecodeDone = Flag_SET;
 }
+
 
 //====== Public Signals ========================================================
 Flag DCF77_SyncDone = Flag_CLEAR;    
@@ -131,13 +136,18 @@ Flag DCF77_SyncDone = Flag_CLEAR;
 //====== Public Functions ======================================================
 void DCF77_Callback_TimerOverflow(void)
 {
-    if ((BitPos == L_MINUTE_MARK) &&
+    // This is the end of the minute.
+    // Start parity check and decode the received bits.
+    if ((L_MINUTE_MARK == BitPos) &&
         (Flag_CLEAR == SignalParityCheck()))
     {
         SignalDecode();
     }
+    // There was some error, reset the receiving procedure 
     else
     {
+        LCM_Refresh(LCM_RX_NO);
+        
         BitPos = INIT_VALUE_UINT;
     }
 }
@@ -149,19 +159,30 @@ void DCF77_Callback_InputCapture(void)
     
 
     // Start of pulse - Falling (negative) edge
-    if (0u == BIT_GET(TCCR1B, ICES1))
+    if (LOW == BIT_GET(TCCR1B, ICES1))
     {
         // Start the Timer1 from zero
         TCNT1 = 0u;
         
-        if (BitPos == L_MINUTE_MARK)
+        // Decoding was OK, turn off the receiving 
+        if (Flag_SET == DCF77_DecodeDone)
         {
+            // Enable the Timer Compare interrupt
+            BIT_CLR(TIMSK, OCIE1A);
+            // Enable the Input Capture interrupt
+            BIT_CLR(TIMSK, TICIE1);
+    
             BitPos = INIT_VALUE_UINT;
             TCNT2 = 0u;
+            
+            // Synchronization has been finished
             DCF77_SyncDone = Flag_SET;    
         }
+        // Normal receiving
         else
         {
+            LCM_Refresh(LCM_RX_NO);
+            
             // Set to rising edge
             BIT_SET(TCCR1B, ICES1);
         }
@@ -177,28 +198,18 @@ void DCF77_Callback_InputCapture(void)
         // Set to falling edge
         BIT_CLR(TCCR1B, ICES1);
         
+        LCM_Refresh(LCM_RX_OK);
+        
         // Captured bit is "0" (~100ms) 
         if ((L_PULSE_ZERO_MIN_TIME < _pulse_width) && (_pulse_width < L_PULSE_ZERO_MAX_TIME))
         {
-            BitArray[BitPos] = 0u;
-/* DEBUG */
-            LCD_SetCursor(2u,19u);
-            LCD_WriteString("  ");
-            LCD_SetCursor(2u,19u);
-            LCD_WriteInt(BitPos);
-/* DEBUG */
+            BitArray[BitPos] = LOW;
             BitPos++;
         }
         // Captured bit is "1" (~200ms) 
         else if ((L_PULSE_ONE_MIN_TIME < _pulse_width) && (_pulse_width < L_PULSE_ONE_MAX_TIME))
         {
-            BitArray[BitPos] = 1u;
-/* DEBUG */
-            LCD_SetCursor(2u,19u);
-            LCD_WriteString("  ");
-            LCD_SetCursor(2u,19u);
-            LCD_WriteInt(BitPos);
-/* DEBUG */
+            BitArray[BitPos] = HIGH;
             BitPos++;
         }
         else

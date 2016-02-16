@@ -3,6 +3,9 @@
 
 
 //====== Private Constants =====================================================
+#define L_POS_ROW_RX                 (2u)
+#define L_POS_COL_RX                 (18u)
+
 #define L_POS_ROW_DATE               (1u)
 #define L_POS_COL_DATE               (1u)
 
@@ -27,6 +30,13 @@
 #define L_POS_ROW_DHT22_HUM          (4u)
 #define L_POS_COL_DHT22_HUM         (15u)
 
+#define L_CUSTOM_CHAR_POS_SUNRISE       (1u)
+#define L_CUSTOM_CHAR_POS_SUNSET        (2u)
+#define L_CUSTOM_CHAR_POS_MOON_L        (3u)
+#define L_CUSTOM_CHAR_POS_MOON_R        (4u)
+#define L_CUSTOM_CHAR_POS_DCF77_RX_OK   (5u)
+#define L_CUSTOM_CHAR_POS_DCF77_RX_NO   (6u)
+
 
 //====== Private Signals =======================================================
 
@@ -35,6 +45,18 @@
 
 
 //====== Private Functions =====================================================
+void RefreshRxOK(void)
+{
+    LCD_SetCursor(L_POS_ROW_RX, L_POS_COL_RX);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_OK);
+}
+
+void RefreshRxNO(void)
+{
+    LCD_SetCursor(L_POS_ROW_RX, L_POS_COL_RX);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_NO);
+}
+
 void RefreshYear(void)
 {
     LCD_SetCursor(L_POS_ROW_DATE, L_POS_COL_DATE);
@@ -88,13 +110,11 @@ void RefreshMinute(void)
 
 void RefreshSunTime(void)
 {
-    LCD_StoreCustomChar(1u, lcd_char_sunrise);
     LCD_SetCursor(L_POS_ROW_SUN_TIME_RISE, L_POS_COL_SUN_TIME_RISE);
-    LCD_WriteCustomChar(1u);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_SUNRISE);
 
-    LCD_StoreCustomChar(2u, lcd_char_sunset);
     LCD_SetCursor(L_POS_ROW_SUN_TIME_SET, L_POS_COL_SUN_TIME_SET);
-    LCD_WriteCustomChar(2u);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_SUNSET);
 
     LCD_SetCursor(L_POS_ROW_SUN_TIME_RISE, L_POS_COL_SUN_TIME_RISE + 1u);
     if (XSTC_SUN_RISEHOUR < 10u)
@@ -131,28 +151,28 @@ void RefreshMoonFraction(void)
         {
             if (XMFC_MOON_FRACTION <= 10u)
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
             }
             else if ((XMFC_MOON_FRACTION > 10u) && (XMFC_MOON_FRACTION <= 40u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_75);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_75);
             }
             else if ((XMFC_MOON_FRACTION > 40u) && (XMFC_MOON_FRACTION <= 60u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
             }
             else if ((XMFC_MOON_FRACTION > 60u) && (XMFC_MOON_FRACTION <= 90u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_25);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_25);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
             }
             else if (XMFC_MOON_FRACTION > 90u)
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
             }
             else
             {
@@ -165,28 +185,28 @@ void RefreshMoonFraction(void)
         {
             if (XMFC_MOON_FRACTION <= 10u)
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
             }
             else if ((XMFC_MOON_FRACTION > 10u) && (XMFC_MOON_FRACTION <= 40u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_75);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_75);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
             }
             else if ((XMFC_MOON_FRACTION > 40u) && (XMFC_MOON_FRACTION <= 60u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
             }
             else if ((XMFC_MOON_FRACTION > 60u) && (XMFC_MOON_FRACTION <= 90u))
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_25);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_25);
             }
             else if (XMFC_MOON_FRACTION > 90u)
             {
-                LCD_StoreCustomChar(3u, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(4u, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
+                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
             }
             else
             {
@@ -197,16 +217,16 @@ void RefreshMoonFraction(void)
 
         default:
         {
-            LCD_StoreCustomChar(3u, lcd_char_moon_left_100);
-            LCD_StoreCustomChar(4u, lcd_char_moon_right_100);
+            LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
+            LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
         }
         break;
     } 
 
     LCD_SetCursor(L_POS_ROW_MOON_ICON, L_POS_COL_MOON_ICON);
-    LCD_WriteCustomChar(3u);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_MOON_L);
     LCD_SetCursor(L_POS_ROW_MOON_ICON, L_POS_COL_MOON_ICON + 1u);
-    LCD_WriteCustomChar(4u);
+    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_MOON_R);
 
     LCD_SetCursor(L_POS_ROW_MOON_PERC, L_POS_COL_MOON_PERC);
     if ((100u > XMFC_MOON_FRACTION) && (10u < XMFC_MOON_FRACTION))
@@ -312,6 +332,29 @@ void RefreshDHT22(void)
 
 //====== Public Functions ======================================================
 /*
+ * Name: LCM_Init
+ *
+ * Description: This is the initialization function that set the custom
+ *              characters and init and clear the LCD.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
+void LCM_Init(void)
+{
+    LCD_Init();
+    LCD_SwitchOn();
+    LCD_Clear();
+
+    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_SUNRISE, lcd_char_sunrise);
+    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_SUNSET, lcd_char_sunset);
+    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_OK, lcd_char_dcf77_rx_ok);
+    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_NO, lcd_char_dcf77_rx_no);
+}
+
+
+/*
  * Name: LCM_Refresh
  *
  * Description: This is the main function that is responsible for putting
@@ -325,6 +368,18 @@ void LCM_Refresh(uint8 element)
 {
     switch (element)
     {
+        case LCM_RX_OK:
+        {
+            RefreshRxOK();
+        }
+        break;
+
+        case LCM_RX_NO:
+        {
+            RefreshRxNO();
+        }
+        break;
+
         case LCM_DATETIME:
         {
             RefreshYear();

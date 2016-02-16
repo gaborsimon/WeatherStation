@@ -3,19 +3,21 @@
 
 
 //====== Header includes =======================================================
+#include "typedef.h"
+#include "utils.h"
+
+#include "LCDCharacters_HD44780.h"
 #include "LCDManager.h"
 #include "MicroControllerHAL.h"
 #include "RealTimeClock.h"
 
-#include "typedef.h"
-#include "utils.h"
 
 
 //====== Public Constants ======================================================
 
 
 //====== Public Signals ========================================================
-#define XDCF77_SYNCH_DONE ((Flag) DCF77_SynchDone)
+#define XDCF77_SYNC_DONE ((Flag) DCF77_SyncDone)
 
 extern Flag DCF77_SyncDone;
 

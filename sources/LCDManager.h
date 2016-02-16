@@ -17,15 +17,17 @@
 
 
 //====== Public Constants ======================================================
-#define LCM_DATETIME        (1u)
-#define LCM_YEAR            (2u)
-#define LCM_MONTH           (3u)
-#define LCM_DAY             (4u)
-#define LCM_HOUR            (5u)
-#define LCM_MINUTE          (6u)
-#define LCM_SUNTIME         (7u)
-#define LCM_MOONFRACTION    (8u)
-#define LCM_DHT22           (9u)
+#define LCM_DATETIME         (1u)
+#define LCM_YEAR             (2u)
+#define LCM_MONTH            (3u)
+#define LCM_DAY              (4u)
+#define LCM_HOUR             (5u)
+#define LCM_MINUTE           (6u)
+#define LCM_SUNTIME          (7u)
+#define LCM_MOONFRACTION     (8u)
+#define LCM_DHT22            (9u)
+#define LCM_RX_OK           (10u)
+#define LCM_RX_NO           (11u)
 
 
 //====== Public Signals ========================================================
@@ -36,6 +38,7 @@
 extern "C" {
 #endif
 
+    extern void LCM_Init(void);
     extern void LCM_Refresh(uint8 element);
 
 #ifdef __cplusplus

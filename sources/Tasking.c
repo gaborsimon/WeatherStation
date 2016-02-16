@@ -54,9 +54,7 @@ void Task_Init(void)
     MCH_Init_Pins();
     //MCH_Init_I2C(100u);
 
-    LCD_Init();
-    LCD_SwitchOn();
-    LCD_Clear();
+    LCM_Init();
 
     DHT22_Init();
     //DS1621_Init();
@@ -84,10 +82,12 @@ void Task_Main(void)
 
     for (;;)
     {
-        if (Flag_SET == DCF77_SyncDone)
+        if (Flag_SET == XDCF77_SYNC_DONE)
         {
             DCF77_SyncDone = Flag_CLEAR;
             FirstRun       = Flag_SET;
+    
+            LCM_Refresh(LCM_RX_OK);
             LCM_Refresh(LCM_DATETIME);
         }
         
