@@ -59,7 +59,7 @@ void Task_Init(void)
     DHT22_Init();
     //DS1621_Init();
 
-    RTC_SetDate(2000u,1u,1u,0u,0u,0u);
+    RTC_SetDate(2000u,1u,1u,1u,0u,0u,0u);
 
     //MCH_Init_Watchdog();
 

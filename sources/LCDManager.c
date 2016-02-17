@@ -9,6 +9,9 @@
 #define L_POS_ROW_DATE               (1u)
 #define L_POS_COL_DATE               (1u)
 
+#define L_POS_ROW_DAYNAME            (1u)
+#define L_POS_COL_DAYNAME           (12u)
+
 #define L_POS_ROW_TIME               (1u)
 #define L_POS_COL_TIME              (16u)
 
@@ -83,6 +86,10 @@ void RefreshDay(void)
         LCD_WriteChar('0');
     }
     LCD_WriteInt(XRTC_TIMEDATE_DAY);
+    
+    LCD_SetCursor(L_POS_ROW_DAYNAME, L_POS_COL_DAYNAME);
+    LCD_WriteChar(XRTC_DAYNAME_1(XRTC_TIMEDATE_DAYNUMBER));
+    LCD_WriteChar(XRTC_DAYNAME_2(XRTC_TIMEDATE_DAYNUMBER));
 }
 
 void RefreshHour(void)

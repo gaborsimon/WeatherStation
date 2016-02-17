@@ -162,8 +162,8 @@ ize++;
     L_DHT22_HIGH;
 
 /* DEBUG */
-LCD_SetCursor(2u,1u);
-LCD_WriteString("                    ");
+LCD_SetCursor(2u,10u);
+LCD_WriteString("  ");
 LCD_SetCursor(2u,10u);
 LCD_WriteInt(ize);
 /* DEBUG */
@@ -182,7 +182,7 @@ LCD_WriteInt(ize);
         DHT22_Data.HumidityValue    = ((float32)(_dataRH / 10.0f));
         DHT22_Data.TemperatureValue = ((float32)((_dataT & 0x7FFFu) / 10.0f));
 
-        if(_dataT & 0x8000)
+        if(_dataT & 0x8000u)
         {
             DHT22_Data.TemperatureValue *= -1.0f;
         }

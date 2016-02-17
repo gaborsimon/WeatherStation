@@ -123,7 +123,7 @@ static void SignalDecode(void)
     _y += BitArray[L_START_YEAR + 6u] * 40u;
     _y += BitArray[L_START_YEAR + 7u] * 80u;
 
-    RTC_SetDate((uint16)(2000u + _y), _m, _d, _h, _min, 0u);
+    RTC_SetDate((uint16)(2000u + _y), _m, _d, _dn, _h, _min, 0u);
 
     DCF77_DecodeDone = Flag_SET;
 }

@@ -89,6 +89,18 @@ static uint8 IsLeapYear(void)
 //====== Public Signals ========================================================
 TimeDate RTC_TimeDate;
 
+const char RTC_DayName[8u][2u] =
+{
+    {"ER"},
+    {"MO"},
+    {"TU"},
+    {"WE"},
+    {"TH"},
+    {"FR"},
+    {"SA"},
+    {"SU"}
+};
+
 
 //====== Public Functions ======================================================
 /*
@@ -149,6 +161,11 @@ void RTC_Refresh(void)
             {
                 RTC_TimeDate.Hour = 0u;
                 RTC_TimeDate.Day++;
+                RTC_TimeDate.DayNumber++;
+                if (8u == RTC_TimeDate.DayNumber)
+                {
+                    RTC_TimeDate.DayNumber = 1u;
+                }
                 RTC_TimeDate.NewDay = Flag_SET;
 
                 //**************************************************************
@@ -191,12 +208,14 @@ void RTC_Refresh(void)
  * Output: None
  */
 void RTC_SetDate(uint16 year, uint8 month,  uint8 day,
+                 uint8  daynumber,
                  uint8  hour, uint8 minute, uint8 second)
 {
-    RTC_TimeDate.Year   = year;
-    RTC_TimeDate.Month  = month;
-    RTC_TimeDate.Day    = day;
-    RTC_TimeDate.Hour   = hour;
-    RTC_TimeDate.Minute = minute;
-    RTC_TimeDate.Second = second;
+    RTC_TimeDate.Year       = year;
+    RTC_TimeDate.Month      = month;
+    RTC_TimeDate.Day        = day;
+    RTC_TimeDate.DayNumber  = daynumber;
+    RTC_TimeDate.Hour       = hour;
+    RTC_TimeDate.Minute     = minute;
+    RTC_TimeDate.Second     = second;
 }
