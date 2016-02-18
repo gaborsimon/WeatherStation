@@ -88,18 +88,7 @@ static uint8 IsLeapYear(void)
 
 //====== Public Signals ========================================================
 TimeDate RTC_TimeDate;
-
-const char* RTC_DayName[8u] =
-{
-    "ER",
-    "MO",
-    "TU",
-    "WE",
-    "TH",
-    "FR",
-    "SA",
-    "SU"
-};
+const char* RTC_DayName[8u] = {"ER","MO","TU","WE","TH","FR","SA","SU"};
 
 
 //====== Public Functions ======================================================
