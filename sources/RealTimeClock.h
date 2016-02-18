@@ -43,11 +43,10 @@ typedef struct
 #define XRTC_TIMEDATE_NEWMONTH  ((Flag)   (RTC_TimeDate.NewMonth))
 #define XRTC_TIMEDATE_NEWYEAR   ((Flag)   (RTC_TimeDate.NewYear))
 
-#define XRTC_DAYNAME_1(x)       ((const char) (RTC_DayName[(x)][0u]))
-#define XRTC_DAYNAME_2(x)       ((const char) (RTC_DayName[(x)][1u]))
+#define XRTC_DAYNAME(x)         ((const char*)(RTC_DayName[(x)]))
 
 extern TimeDate     RTC_TimeDate;
-extern const char   RTC_DayName[8u][2u];
+extern const char*  RTC_DayName[8u];
 
 
 //====== Public Functions ======================================================

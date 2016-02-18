@@ -88,8 +88,15 @@ void RefreshDay(void)
     LCD_WriteInt(XRTC_TIMEDATE_DAY);
     
     LCD_SetCursor(L_POS_ROW_DAYNAME, L_POS_COL_DAYNAME);
-    LCD_WriteChar(XRTC_DAYNAME_1(XRTC_TIMEDATE_DAYNUMBER));
-    LCD_WriteChar(XRTC_DAYNAME_2(XRTC_TIMEDATE_DAYNUMBER));
+    
+    if ((0u < XRTC_TIMEDATE_DAYNUMBER) && (XRTC_TIMEDATE_DAYNUMBER < 9u))
+    {
+        LCD_WriteString(XRTC_DAYNAME(XRTC_TIMEDATE_DAYNUMBER));
+    }
+    else
+    {
+        LCD_WriteString(XRTC_DAYNAME(0u));
+    }
 }
 
 void RefreshHour(void)

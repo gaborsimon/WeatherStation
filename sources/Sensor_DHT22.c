@@ -48,9 +48,6 @@ static L_Error_t ReadSensor(void)
     uint16 _dataT        = INIT_VALUE_UINT;
     uint8  _dataCS       = INIT_VALUE_UINT;
 
-/* DEBUG */
-uint8 ize = 0u;
-/* DEBUG */
 
     //****** STEP 1. **********************************************************/
     // Send activate signal
@@ -119,9 +116,7 @@ uint8 ize = 0u;
 
         // Measure the width of the data pulse
         _bitTime = INIT_VALUE_UINT;
-/* DEBUG */
-ize = 0u;
-/* DEBUG */
+
         do
         {
             if (_bitTime > 150u)
@@ -129,9 +124,6 @@ ize = 0u;
                 return L_Error_CUT_OFF;
             }
             _bitTime++;
-/* DEBUG */
-ize++;
-/* DEBUG */
             _delay_us(1u);
         } while(L_DHT22_READ == HIGH);
 
@@ -160,13 +152,6 @@ ize++;
     // Release the bus - idle state
     L_DHT22_OUTPUT;
     L_DHT22_HIGH;
-
-/* DEBUG */
-LCD_SetCursor(2u,10u);
-LCD_WriteString("  ");
-LCD_SetCursor(2u,10u);
-LCD_WriteInt(ize);
-/* DEBUG */
 
     //****** STEP 6. **********************************************************/
     // Calculate the Check Sum

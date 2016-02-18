@@ -4,6 +4,7 @@
 
 //====== Private Constants =====================================================
 //#define CPU_LOAD_MEASUREMENT
+#define L_DHT22_READ_PERIOD_SEC     (10u)
 
 
 //====== Private Signals =======================================================
@@ -104,7 +105,7 @@ void Task_Main(void)
             RTC_Refresh();
 
             // LCD refresh, only the relevant data has to be updated 
-            if (5u == DHT22Counter)
+            if (L_DHT22_READ_PERIOD_SEC == DHT22Counter)
             {
                 DHT22Counter = INIT_VALUE_UINT;
                 DHT22_Refresh();
