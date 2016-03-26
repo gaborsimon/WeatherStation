@@ -4,7 +4,7 @@
 
 #define BIT_SET(reg,bit)    ((reg) |=  (1u << (bit)))
 #define BIT_CLR(reg,bit)    ((reg) &= ~(1u << (bit)))
-#define BIT_GET(reg,bit)    (((reg)  &  (1u << (bit))) >> (bit))
+#define BIT_GET(reg,bit)    (((reg) >> (bit)) & 0x01u)
 
 #define DISABLE_INTERRUPT() __asm__ __volatile__("cli")
 #define ENABLE_INTERRUPT()  __asm__ __volatile__("sei")
@@ -14,14 +14,17 @@
 #define INIT_VALUE_UINT    (0u)
 #define INIT_VALUE_SINT    (0)
 
-#define TRUE    (1u)
 #define FALSE   (0u)
+#define TRUE    (1u)
 
 #define INPUT   (0u)
 #define OUTPUT  (1u)
 
 #define LOW     (0u)
 #define HIGH    (1u)
+
+#define DISABLE (0u)
+#define ENABLE  (1u)
 
 #define PI ((float32) (3.141592654f))
 
