@@ -4,7 +4,6 @@
 
 //====== Private Constants =====================================================
 //#define CPU_LOAD_MEASUREMENT
-#define L_DHT22_READ_PERIOD_SEC     (10u)
 
 
 //====== Private Signals =======================================================
@@ -50,13 +49,14 @@ void Task_Init(void)
 {
     DISABLE_INTERRUPT();
 
+    MCH_Init_Pins();
+    MCH_Init_Timer0();
     MCH_Init_Timer1();
     MCH_Init_Timer2();
-    MCH_Init_Pins();
+    MCH_Init_ADC(); 
     //MCH_Init_I2C(100u);
 
     LCM_Init();
-
     DHT22_Init();
     //DS1621_Init();
 
@@ -73,45 +73,90 @@ void Task_Init(void)
 //******************************************************************************
 void Task_Main(void)
 {
-    static Flag  FirstRun       = Flag_SET;
-    static uint8 DHT22Counter   = INIT_VALUE_UINT;
+    static Flag FirstRun = Flag_SET;
 
 #ifdef CPU_LOAD_MEASUREMENT
     static volatile uint16 timer_start = 0u;
     static volatile uint16 timer_stop  = 0u;
 #endif
 
+    static uint8 ize = LOW;
+
     for (;;)
     {
+
+/******************************************************************/
+/****** Event Triggered Jobs */
+/******************************************************************/
         if (Flag_SET == XDCF77_SYNC_DONE)
         {
             DCF77_SyncDone = Flag_CLEAR;
             FirstRun       = Flag_SET;
-    
+            
             LCM_Refresh(LCM_RX_OK);
             LCM_Refresh(LCM_DATETIME);
         }
         
+/******************************************************************/
+/****** Time Triggered Jobs */
+/******************************************************************/
         if (Flag_SET == L_Task_1SEC)
         {
 
 #ifdef CPU_LOAD_MEASUREMENT
             timer_start = TCNT1;
 #endif
-
+            
             L_Task_1SEC = Flag_CLEAR;
-            DHT22Counter++;
 
-            RTC_Refresh();
 
-            // LCD refresh, only the relevant data has to be updated 
-            if (L_DHT22_READ_PERIOD_SEC == DHT22Counter)
+            if (ize == HIGH)
             {
-                DHT22Counter = INIT_VALUE_UINT;
-                DHT22_Refresh();
-                LCM_Refresh(LCM_DHT22);
+                ize = LOW;
+                //OCR0 = 50u;
+                //if (XDCF77_SYNC_DONE == Flag_CLEAR)
+                //{
+                    LCM_Refresh(LCM_RX_OK);
+                    LCD_WriteInt(BitPos);   
+                //}
+            }
+            else
+            {
+                ize = HIGH;
+                //OCR0 = 200u;
+                //if (XDCF77_SYNC_DONE == Flag_CLEAR)
+                //{
+                    LCM_Refresh(LCM_RX_NO);
+                    LCD_WriteInt(BitPos);
+                //}
             }
 
+            
+        /******************************************************************/
+        /****** PWM backlight control */
+        /******************************************************************/
+            uint8 _AmbientLight = INIT_VALUE_UINT;
+
+            _AmbientLight = MCH_Read_ADC(MCH_ADC_CHANNEL_7);
+            OCR0 = _AmbientLight;
+
+            LCD_SetCursor(2,1);
+            LCD_WriteString("    ");
+            LCD_SetCursor(2,1);
+            LCD_WriteInt(_AmbientLight);
+        /******************************************************************/
+        /****** PWM backlight control */
+        /******************************************************************/
+
+
+            RTC_Refresh();
+            DHT22_Refresh();
+
+            if (Flag_SET == XDHT22_DATA_UPDATED)
+            {
+                LCM_Refresh(LCM_DHT22);
+            }
+            
             if ((Flag_SET == FirstRun) || (Flag_SET == XRTC_TIMEDATE_NEWMINUTE))
             {
                 LCM_Refresh(LCM_MINUTE);
@@ -141,7 +186,12 @@ void Task_Main(void)
                 LCM_Refresh(LCM_YEAR);
             }
 
-            FirstRun = Flag_CLEAR;            
+            if (Flag_SET == FirstRun)
+            {
+                FirstRun = Flag_CLEAR;
+                DCF77_Receiving(ENABLE);
+            }            
+
 #ifdef CPU_LOAD_MEASUREMENT
 //******************************************************************************
 //****** CPU LOAD in ms

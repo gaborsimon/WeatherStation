@@ -3,9 +3,11 @@
 
 
 //====== Private Constants =====================================================
-// Sensor read in every x second
-#define L_DHT22_BIT_TIME_THRESHOLD      (25u)
-#define L_DHT22_DATA_BIT_COUNT          (40u)
+// Read sensor in every N second
+#define L_DHT22_READ_PERIOD_SEC     (10u)
+
+#define L_DHT22_BIT_TIME_THRESHOLD  (25u)
+#define L_DHT22_DATA_BIT_COUNT      (40u)
 
 // Port macros
 #define L_DHT22_OUTPUT    GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT)
@@ -200,6 +202,7 @@ void DHT22_Init(void)
     DHT22_Data.Qualifier        = Signal_NOT_RELIABLE;
     DHT22_Data.TemperatureValue = INIT_VALUE_FLOAT;
     DHT22_Data.HumidityValue    = INIT_VALUE_FLOAT;
+    DHT22_Data.Updated          = Flag_CLEAR;
 }
 
 
@@ -215,18 +218,40 @@ void DHT22_Init(void)
  */
 void DHT22_Refresh(void)
 {
-    L_Error_t  _res = INIT_VALUE_UINT;
+    static uint8        L_DHT22_Counter = INIT_VALUE_UINT;
+           L_Error_t    _res            = INIT_VALUE_UINT;
 
 
-    _res = ReadSensor();
-
-    if (_res == L_Error_NONE)
+    L_DHT22_Counter++;
+    
+    // Turn on the sensor, measurement needs 2-3 seconds
+    if ((L_DHT22_READ_PERIOD_SEC - 3u) == L_DHT22_Counter)
     {
-        DHT22_Data.Qualifier = Signal_RELIABLE; 
+        DHT22_CONTROL(ENABLE);
     }
+    // Read out the conversion data
+    else if (L_DHT22_READ_PERIOD_SEC == L_DHT22_Counter)
+    {
+        L_DHT22_Counter = INIT_VALUE_UINT;
+        
+        _res = ReadSensor();
+
+        if (L_Error_NONE == _res)
+        {
+            DHT22_Data.Qualifier = Signal_RELIABLE; 
+        }
+        else
+        {
+            DHT22_Data.Qualifier = Signal_NOT_RELIABLE; 
+        }
+        
+        DHT22_Data.Updated = Flag_SET;
+
+        DHT22_CONTROL(DISABLE);
+    }
+    /* IDLE mode */
     else
     {
-        DHT22_Data.Qualifier = Signal_NOT_RELIABLE; 
+        DHT22_Data.Updated = Flag_CLEAR;
     }
-
 }

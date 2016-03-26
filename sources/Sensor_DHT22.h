@@ -13,6 +13,9 @@
 
 
 //====== Public Constants ======================================================
+#define DHT22_CONTROL(ctrl) ( ((ctrl) == ENABLE) ? \
+                              GPIO_WRITE(PORT_DHT22_CTRL, P_DHT22_CTRL, LOW) : \
+                              GPIO_WRITE(PORT_DHT22_CTRL, P_DHT22_CTRL, HIGH) )
 
 
 //====== Public Signals ========================================================
@@ -21,12 +24,14 @@ typedef struct
     float32   TemperatureValue;
     float32   HumidityValue;
     Qualifier Qualifier;
+    Flag      Updated;
 } DHT22_data;
 
 
 #define XDHT22_TEMPERATURE_VALUE    ((float32)   DHT22_Data.TemperatureValue)
 #define XDHT22_HUMIDITY_VALUE       ((float32)   DHT22_Data.HumidityValue)
 #define XDHT22_DATA_QUALIFIER       ((Qualifier) DHT22_Data.Qualifier)
+#define XDHT22_DATA_UPDATED         ((Flag)      DHT22_Data.Updated)
 
 extern DHT22_data DHT22_Data;
 

@@ -14,13 +14,16 @@
 
 
 //====== Public Constants ======================================================
+#define DCF77_CONTROL(ctrl) ( ((ctrl) == ENABLE) ? \
+                              GPIO_WRITE(PORT_DCF77_CTRL, P_DCF77_CTRL, LOW) : \
+                              GPIO_WRITE(PORT_DCF77_CTRL, P_DCF77_CTRL, HIGH) )
 
 
 //====== Public Signals ========================================================
 #define XDCF77_SYNC_DONE ((Flag) DCF77_SyncDone)
 
 extern Flag DCF77_SyncDone;
-
+extern uint8 BitPos; 
 
 //====== Public Functions ======================================================
 #ifdef __cplusplus
@@ -29,6 +32,7 @@ extern "C" {
 
     extern void DCF77_Callback_TimerOverflow(void);
     extern void DCF77_Callback_InputCapture(void);
+    extern void DCF77_Receiving(uint8 _control);
 
 #ifdef __cplusplus
 } // extern "C"

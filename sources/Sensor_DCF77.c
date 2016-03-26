@@ -21,7 +21,7 @@
 
 
 //====== Private Signals =======================================================
-static uint8    BitPos              = INIT_VALUE_UINT;
+uint8    BitPos              = INIT_VALUE_UINT;
 static uint8    BitArray[60u]       = { LOW };
 static Flag     DCF77_DecodeDone    = Flag_CLEAR;    
 
@@ -136,18 +136,16 @@ Flag DCF77_SyncDone = Flag_CLEAR;
 //====== Public Functions ======================================================
 void DCF77_Callback_TimerOverflow(void)
 {
-    // This is the end of the minute.
-    // Start parity check and decode the received bits.
+    // This is the end of the minute
+    // Start parity check and decode the received bits
     if ((L_MINUTE_MARK == BitPos) &&
-        (Flag_CLEAR == SignalParityCheck()))
+        (Flag_CLEAR    == SignalParityCheck()))
     {
         SignalDecode();
     }
     // There was some error, reset the receiving procedure 
     else
     {
-        LCM_Refresh(LCM_RX_NO);
-        
         BitPos = INIT_VALUE_UINT;
     }
 }
@@ -164,16 +162,16 @@ void DCF77_Callback_InputCapture(void)
         // Start the Timer1 from zero
         TCNT1 = 0u;
         
-        // Decoding was OK, turn off the receiving 
+        // Decoding was OK
         if (Flag_SET == DCF77_DecodeDone)
         {
-            // Enable the Timer Compare interrupt
-            BIT_CLR(TIMSK, OCIE1A);
-            // Enable the Input Capture interrupt
-            BIT_CLR(TIMSK, TICIE1);
-    
-            BitPos = INIT_VALUE_UINT;
+            DCF77_DecodeDone = Flag_CLEAR;
+            
+            // Reset main scheduler Timer Register
             TCNT2 = 0u;
+            
+            // Turn off the receiving
+            DCF77_Receiving(DISABLE);
             
             // Synchronization has been finished
             DCF77_SyncDone = Flag_SET;    
@@ -181,8 +179,6 @@ void DCF77_Callback_InputCapture(void)
         // Normal receiving
         else
         {
-            LCM_Refresh(LCM_RX_NO);
-            
             // Set to rising edge
             BIT_SET(TCCR1B, ICES1);
         }
@@ -192,13 +188,12 @@ void DCF77_Callback_InputCapture(void)
     {
         // Capture the timer value
         _pulse_width = ICR1;
-        // Reset the timer counter
+        
+        // Reset Timer Register
         TCNT1 = 0u;
 
         // Set to falling edge
         BIT_CLR(TCCR1B, ICES1);
-        
-        LCM_Refresh(LCM_RX_OK);
         
         // Captured bit is "0" (~100ms) 
         if ((L_PULSE_ZERO_MIN_TIME < _pulse_width) && (_pulse_width < L_PULSE_ZERO_MAX_TIME))
@@ -219,3 +214,49 @@ void DCF77_Callback_InputCapture(void)
     }
 }
 
+
+void DCF77_Receiving(uint8 _control)
+{
+    switch (_control)
+    {
+        case ENABLE:
+        {
+            // Reset decoder array
+            BitPos = INIT_VALUE_UINT;
+        
+            // Module turned on
+            DCF77_CONTROL(ENABLE);
+
+            // Reset Timer Register
+            TCNT1 = 0u;
+            
+            // Clock Select: CLK / 256 = 31.250kHz = 32us
+            BIT_SET(TCCR1B, CS12);
+            BIT_CLR(TCCR1B, CS11);
+            BIT_CLR(TCCR1B, CS10);
+    
+            // Output Compare Interrupt: Enabled
+            BIT_SET(TIMSK, OCIE1A);
+            // Timer Input Capture Interrupt: Enabled
+            BIT_SET(TIMSK, TICIE1);
+        }
+        break;
+
+        case DISABLE:
+        {
+            // Module turned off
+            DCF77_CONTROL(DISABLE);
+    
+            // Clock Select: CLK / 256 = 31.250kHz = 32us
+            BIT_CLR(TCCR1B, CS12);
+            BIT_CLR(TCCR1B, CS11);
+            BIT_CLR(TCCR1B, CS10);
+    
+            // Output Compare Interrupt: Disabled
+            BIT_CLR(TIMSK, OCIE1A);
+            // Timer Input Capture Interrupt: Disabled
+            BIT_CLR(TIMSK, TICIE1);
+        }
+        break;
+    }
+}
