@@ -230,6 +230,7 @@ void DCF77_Receiving(uint8 _control)
             // Reset Timer Register
             TCNT1 = 0u;
             
+            // Timer1 turned on
             // Clock Select: CLK / 256 = 31.250kHz = 32us
             BIT_SET(TCCR1B, CS12);
             BIT_CLR(TCCR1B, CS11);
@@ -247,7 +248,7 @@ void DCF77_Receiving(uint8 _control)
             // Module turned off
             DCF77_CONTROL(DISABLE);
     
-            // Clock Select: CLK / 256 = 31.250kHz = 32us
+            // Timer1 turned off
             BIT_CLR(TCCR1B, CS12);
             BIT_CLR(TCCR1B, CS11);
             BIT_CLR(TCCR1B, CS10);
