@@ -193,8 +193,7 @@ readfuse:
 	@echo
 	@$(PROG) -p $(MCU) -c $(PROG_TYPE) -P $(PROG_PORT) -b $(PROG_BAUD) -D \
     -U lfuse:r:$(LFUSE):h \
-    -U hfuse:r:$(HFUSE):h \
-    -U efuse:r:$(EFUSE):h
+    -U hfuse:r:$(HFUSE):h
 	@echo
 	@echo $(TXT_LINE_LONG)
 	@echo $(TXT_PROGRAM_END)
@@ -207,8 +206,8 @@ readeeprom:
 	@echo $(TXT_PROGRAM_START)
 	@echo $(TXT_LINE_LONG)
 	@echo
-	@$(PROG) -p $(MCU) -c $(PROG_TYPE) -P $(PROG_PORT) -b $(PROG_BAUD) \
-    -D -U eeprom:r:$(EEPROM):i
+	@$(PROG) -p $(MCU) -c $(PROG_TYPE) -P $(PROG_PORT) -b $(PROG_BAUD) -D \
+    -U eeprom:r:$(EEPROM):i
 	@echo
 	@echo $(TXT_LINE_LONG)
 	@echo $(TXT_PROGRAM_END)

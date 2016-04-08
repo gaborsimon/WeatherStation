@@ -30,10 +30,10 @@
 #define P_LCD_RS        (PA0)   // PIN 040
 #define P_LCD_RW        (PA1)   // PIN 039
 #define P_LCD_EN        (PA2)   // PIN 038
-#define P_LCD_D4        (PA3)   // PIN 037
-#define P_LCD_D5        (PA4)   // PIN 036
-#define P_LCD_D6        (PA5)   // PIN 035
-#define P_LCD_D7        (PA6)   // PIN 034
+#define P_LCD_D7        (PA3)   // PIN 037
+#define P_LCD_D6        (PA4)   // PIN 036
+#define P_LCD_D5        (PA5)   // PIN 035
+#define P_LCD_D4        (PA6)   // PIN 034
 #define P_LCD_CTRL      (PB3)   // PIN 004
 #define DDR_LCD         (DDRA)
 #define DDR_LCD_CTRL    (DDRB)
