@@ -13,40 +13,40 @@
 //====== Public Signals ========================================================
 typedef struct
 {
-    uint8  Second;
-    Flag   NewSecond;
-    uint8  Minute;
-    Flag   NewMinute;
-    uint8  Hour;
-    Flag   NewHour;
-    uint8  Day;
-    Flag   NewDay;
-    uint8  DayNumber;
-    uint8  Month ;
-    Flag   NewMonth;
-    uint16 Year;
-    Flag   NewYear;
-} TimeDate;
+    uint8       Second;
+    G_Flag_e    NewSecond;
+    uint8       Minute;
+    G_Flag_e    NewMinute;
+    uint8       Hour;
+    G_Flag_e    NewHour;
+    uint8       Day;
+    G_Flag_e    NewDay;
+    uint8       DayNumber;
+    uint8       Month ;
+    G_Flag_e    NewMonth;
+    uint16      Year;
+    G_Flag_e    NewYear;
+} RTC_TimeDate_s;
 
-#define XRTC_TIMEDATE_SECOND    ((uint8)  (RTC_TimeDate.Second))
-#define XRTC_TIMEDATE_MINUTE    ((uint8)  (RTC_TimeDate.Minute))
-#define XRTC_TIMEDATE_HOUR      ((uint8)  (RTC_TimeDate.Hour))
-#define XRTC_TIMEDATE_DAY       ((uint8)  (RTC_TimeDate.Day))
-#define XRTC_TIMEDATE_DAYNUMBER ((uint8)  (RTC_TimeDate.DayNumber))
-#define XRTC_TIMEDATE_MONTH     ((uint8)  (RTC_TimeDate.Month))
-#define XRTC_TIMEDATE_YEAR      ((uint16) (RTC_TimeDate.Year))
+#define XRTC__TIMEDATE_SECOND       ((uint8)    (RTC_TimeDate.Second))
+#define XRTC__TIMEDATE_MINUTE       ((uint8)    (RTC_TimeDate.Minute))
+#define XRTC__TIMEDATE_HOUR         ((uint8)    (RTC_TimeDate.Hour))
+#define XRTC__TIMEDATE_DAY          ((uint8)    (RTC_TimeDate.Day))
+#define XRTC__TIMEDATE_DAYNUMBER    ((uint8)    (RTC_TimeDate.DayNumber))
+#define XRTC__TIMEDATE_MONTH        ((uint8)    (RTC_TimeDate.Month))
+#define XRTC__TIMEDATE_YEAR         ((uint16)   (RTC_TimeDate.Year))
 
-#define XRTC_TIMEDATE_NEWSECOND ((Flag)   (RTC_TimeDate.NewSecond))
-#define XRTC_TIMEDATE_NEWMINUTE ((Flag)   (RTC_TimeDate.NewMinute))
-#define XRTC_TIMEDATE_NEWHOUR   ((Flag)   (RTC_TimeDate.NewHour))
-#define XRTC_TIMEDATE_NEWDAY    ((Flag)   (RTC_TimeDate.NewDay))
-#define XRTC_TIMEDATE_NEWMONTH  ((Flag)   (RTC_TimeDate.NewMonth))
-#define XRTC_TIMEDATE_NEWYEAR   ((Flag)   (RTC_TimeDate.NewYear))
+#define XRTC__TIMEDATE_NEWSECOND    ((G_Flag_e) (RTC_TimeDate.NewSecond))
+#define XRTC__TIMEDATE_NEWMINUTE    ((G_Flag_e) (RTC_TimeDate.NewMinute))
+#define XRTC__TIMEDATE_NEWHOUR      ((G_Flag_e) (RTC_TimeDate.NewHour))
+#define XRTC__TIMEDATE_NEWDAY       ((G_Flag_e) (RTC_TimeDate.NewDay))
+#define XRTC__TIMEDATE_NEWMONTH     ((G_Flag_e) (RTC_TimeDate.NewMonth))
+#define XRTC__TIMEDATE_NEWYEAR      ((G_Flag_e) (RTC_TimeDate.NewYear))
 
-#define XRTC_DAYNAME(x)         ((const char*)(RTC_DayName[(x)]))
+#define XRTC__DAYNAME(x)            ((const char*)(RTC_DayName[(x)]))
 
-extern TimeDate     RTC_TimeDate;
-extern const char*  RTC_DayName[8u];
+extern RTC_TimeDate_s   RTC_TimeDate;
+extern const char*      RTC_DayName[8u];
 
 
 //====== Public Functions ======================================================
@@ -55,9 +55,9 @@ extern "C" {
 #endif
 
     extern void RTC_Refresh(void);
-    extern void RTC_SetDate(uint16 year, uint8 month,  uint8 day,
-                             uint8 daynumber,
-                             uint8 hour, uint8 minute, uint8 second);
+    extern void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
+                             uint8 _DayNumber,
+                             uint8 _Hour, uint8 _Minute, uint8 _Second);
 
 #ifdef __cplusplus
 } // extern "C"

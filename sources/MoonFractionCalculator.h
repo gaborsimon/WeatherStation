@@ -13,9 +13,9 @@
 
 
 //====== Public Constants ======================================================
-#define MOON_WAXES       (1u)
-#define MOON_WANES       (2u)
-#define MOON_FULL_OR_NEW (3u)
+#define MFC__MOON_WAXES         (1u)
+#define MFC__MOON_WANES         (2u)
+#define MFC__MOON_FULL_OR_NEW   (3u)
 
 
 //====== Public Signals ========================================================
@@ -23,14 +23,14 @@ typedef struct
 {
     uint8 Fraction;
     uint8 Direction;
-} Moon;
+} MFC_Moon_s;
 
 
-#define XMFC_MOON_FRACTION   ((uint8) (MFC_Moon.Fraction))
-#define XMFC_MOON_DIRECTION  ((uint8) (MFC_Moon.Direction))
+#define XMFC__MOON_FRACTION     ((uint8) (MFC_Moon.Fraction))
+#define XMFC__MOON_DIRECTION    ((uint8) (MFC_Moon.Direction))
 
 
-extern Moon MFC_Moon;
+extern MFC_Moon_s MFC_Moon;
 
 
 //====== Public Functions ======================================================

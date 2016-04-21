@@ -11,25 +11,25 @@
 
 
 //====== Public Constants ======================================================
-#define TMS_SENSOR_I2C_ADDR (0x92u)
+#define TMS__SENSOR_I2C_ADDR    (0x92u)
 
 
 //====== Public Signals ========================================================
 typedef struct
 {
-    float32   TemperatureValue;
-    float32   TemperatureMinimum;
-    float32   TemperatureMaximum;
-    Qualifier Qualifier;
-} DS1621_data;
+    float32         TemperatureValue;
+    float32         TemperatureMinimum;
+    float32         TemperatureMaximum;
+    G_Qualifier_e   Qualifier;
+} DS1621_Data_s;
 
 
-#define XDS1621_TEMPERATURE_VALUE  ((float32)   DS1621_Data.TemperatureValue)
-#define XDS1621_TEMPERATURE_MIN    ((float32)   DS1621_Data.TemperatureMinimum)
-#define XDS1621_TEMPERATURE_MAX    ((float32)   DS1621_Data.TemperatureMaximum)
-#define XDS1621_DATA_QUALIFIER     ((Qualifier) DS1621_Data.Qualifier)
+#define XDS1621__TEMPERATURE_VALUE  ((float32)          DS1621_Data.TemperatureValue)
+#define XDS1621__TEMPERATURE_MIN    ((float32)          DS1621_Data.TemperatureMinimum)
+#define XDS1621__TEMPERATURE_MAX    ((float32)          DS1621_Data.TemperatureMaximum)
+#define XDS1621__DATA_QUALIFIER     ((G_Qualifier_e)    DS1621_Data.Qualifier)
 
-extern DS1621_data DS1621_Data;
+extern DS1621_Data_s DS1621_Data;
 
 
 //====== Public Functions ======================================================

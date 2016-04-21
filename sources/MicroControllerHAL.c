@@ -3,21 +3,21 @@
 
 
 //====== Private Constants =====================================================
-#define L_I2C_TWSR_STATUS_MASK      (0xF8u)
+#define L__I2C_TWSR_STATUS_MASK      (0xF8u)
 
-#define L_I2C_STATUS_START          (0x08u)
-#define L_I2C_STATUS_REP_START      (0x10u)
-#define L_I2C_STATUS_W_ADDR_ACK     (0x18u)
-#define L_I2C_STATUS_W_ADDR_NOTACK  (0x20u)
-#define L_I2C_STATUS_W_DATA_ACK     (0x28u)
-#define L_I2C_STATUS_W_DATA_NOTACK  (0x30u)
-#define L_I2C_STATUS_ARBIT_LOST     (0x38u)
-#define L_I2C_STATUS_R_ADDR_ACK     (0x40u)
-#define L_I2C_STATUS_R_ADDR_NOTACK  (0x48u)
-#define L_I2C_STATUS_R_DATA_ACK     (0x50u)
-#define L_I2C_STATUS_R_DATA_NOTACK  (0x58u)
+#define L__I2C_STATUS_START          (0x08u)
+#define L__I2C_STATUS_REP_START      (0x10u)
+#define L__I2C_STATUS_W_ADDR_ACK     (0x18u)
+#define L__I2C_STATUS_W_ADDR_NOTACK  (0x20u)
+#define L__I2C_STATUS_W_DATA_ACK     (0x28u)
+#define L__I2C_STATUS_W_DATA_NOTACK  (0x30u)
+#define L__I2C_STATUS_ARBIT_LOST     (0x38u)
+#define L__I2C_STATUS_R_ADDR_ACK     (0x40u)
+#define L__I2C_STATUS_R_ADDR_NOTACK  (0x48u)
+#define L__I2C_STATUS_R_DATA_ACK     (0x50u)
+#define L__I2C_STATUS_R_DATA_NOTACK  (0x58u)
 
-#define L_I2C_RETRY_MAX_NUMBER      (1000u)
+#define L__I2C_RETRY_MAX_NUMBER      (1000u)
 
 
 //====== Private Signals =======================================================
@@ -34,7 +34,7 @@
 
 //====== Public Functions ======================================================
 /*
- * Name: MCH_Init_Pins
+ * Name: MCH_InitPins
  *
  * Description: This function initializes uC pins by setting them to digital or
  *              analogue / input or output.
@@ -43,37 +43,37 @@
  *
  * Output: None
  */
-void MCH_Init_Pins(void)
+void MCH_InitPins(void)
 {
     /* DCF77 */
-    GPIO_DIRECTION  (DDR_DCF77,         P_DCF77_DATA,   INPUT);
-    GPIO_DIRECTION  (DDR_DCF77_CTRL,    P_DCF77_CTRL,   OUTPUT);
-    GPIO_WRITE      (PORT_DCF77_CTRL,   P_DCF77_CTRL,   HIGH);
+    MCH__GPIO_DIRECTION  (MCH__DDR_DCF77,         MCH__P_DCF77_DATA,   U__INPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_DCF77_CTRL,    MCH__P_DCF77_CTRL,   U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_DCF77_CTRL,   MCH__P_DCF77_CTRL,   U__HIGH);
 
     /* DHT22 */
-    GPIO_DIRECTION  (DDR_DHT22,         P_DHT22_DATA,   OUTPUT);
-    GPIO_DIRECTION  (DDR_DHT22_CTRL,    P_DHT22_CTRL,   OUTPUT);
-    GPIO_WRITE      (PORT_DHT22,        P_DHT22_DATA,   HIGH);
-    GPIO_WRITE      (PORT_DHT22_CTRL,   P_DHT22_CTRL,   HIGH);
+    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,         MCH__P_DHT22_DATA,   U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_DHT22_CTRL,    MCH__P_DHT22_CTRL,   U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_DHT22,        MCH__P_DHT22_DATA,   U__HIGH);
+    MCH__GPIO_WRITE      (MCH__PORT_DHT22_CTRL,   MCH__P_DHT22_CTRL,   U__HIGH);
 
     /* LCD DISPLAY */
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_RS,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_RW,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_EN,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_D4,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_D5,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_D6,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD,           P_LCD_D7,       OUTPUT);
-    GPIO_DIRECTION  (DDR_LCD_CTRL,      P_LCD_CTRL,     OUTPUT);
-    GPIO_WRITE      (PORT_LCD_CTRL,     P_LCD_CTRL,     LOW);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_RS,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_RW,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_EN,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_D4,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_D5,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_D6,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD,           MCH__P_LCD_D7,       U__OUTPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_LCD_CTRL,      MCH__P_LCD_CTRL,     U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_LCD_CTRL,     MCH__P_LCD_CTRL,     U__LOW);
 
     /* Ambient Light Sensor */
-    GPIO_DIRECTION  (DDR_ALS,           P_ALS,          INPUT);
+    MCH__GPIO_DIRECTION  (MCH__DDR_ALS,           MCH__P_ALS,          U__INPUT);
 }
 
 
 /*
- * Name: MCH_Init_Watchdog
+ * Name: MCH_InitWatchdog
  *
  * Description: This function initializes the Watchdog timer.
  *
@@ -82,26 +82,26 @@ void MCH_Init_Pins(void)
  * Output: None
  */
 /*
-void MCH_Init_Watchdog(void)
+void MCH_InitWatchdog(void)
 {
-    WD_RESET();
+    U__WD_RESET();
 
     // Watchdog Change enabled
-    BIT_SET(WDTCSR, WDCE);
+    U__BIT_SET(WDTCSR, WDCE);
     // Watchdog System Reset enabled
-    BIT_SET(WDTCSR, WDE);
+    U__BIT_SET(WDTCSR, WDE);
     // Watchdog Timeout: 0110 = 128k (131072 cycle) = 1sec
-    BIT_SET(WDTCSR, WDE);
-    BIT_CLR(WDTCSR, WDP3);
-    BIT_SET(WDTCSR, WDP2);
-    BIT_SET(WDTCSR, WDP1);
-    BIT_CLR(WDTCSR, WDP0);
+    U__BIT_SET(WDTCSR, WDE);
+    U__BIT_CLR(WDTCSR, WDP3);
+    U__BIT_SET(WDTCSR, WDP2);
+    U__BIT_SET(WDTCSR, WDP1);
+    U__BIT_CLR(WDTCSR, WDP0);
 }
 */
 
 
 /*
- * Name: MCH_Init_Timer0
+ * Name: MCH_InitTimer0
  *
  * Description: This function initializes the Timer0 peripheral
  *              for PWM generation of LCD backlight.
@@ -110,40 +110,40 @@ void MCH_Init_Watchdog(void)
  *
  * Output: None
  */
-void MCH_Init_Timer0(void)
+void MCH_InitTimer0(void)
 {
     // Reset control register
     TCCR0 = 0x00u;
    
     // Waveform Generation Mode: 3 - Fast PWM, update of OCR0 at BOTTOM 
-    BIT_SET(TCCR0, WGM01);
-    BIT_SET(TCCR0, WGM00);
+    U__BIT_SET(TCCR0, WGM01);
+    U__BIT_SET(TCCR0, WGM00);
     
     // Compare Output Mode: Non-inverting - clear OC0 on compare match, Set OC0 at BOTTOM
-    BIT_SET(TCCR0, COM01);
-    BIT_CLR(TCCR0, COM00);
+    U__BIT_SET(TCCR0, COM01);
+    U__BIT_CLR(TCCR0, COM00);
 
-#define PWM_3
+#define PWM_2
 
 #ifdef PWM_1   
     // Clock Select: CLK / 64 => PWM frequency = 488Hz 
-    BIT_CLR(TCCR0, CS02);
-    BIT_SET(TCCR0, CS01);
-    BIT_SET(TCCR0, CS00);
+    U__BIT_CLR(TCCR0, CS02);
+    U__BIT_SET(TCCR0, CS01);
+    U__BIT_SET(TCCR0, CS00);
 #endif
 
 #ifdef PWM_2   
     // Clock Select: CLK / 256 => PWM frequency = 122Hz 
-    BIT_SET(TCCR0, CS02);
-    BIT_CLR(TCCR0, CS01);
-    BIT_CLR(TCCR0, CS00);
+    U__BIT_SET(TCCR0, CS02);
+    U__BIT_CLR(TCCR0, CS01);
+    U__BIT_CLR(TCCR0, CS00);
 #endif
 
 #ifdef PWM_3   
     // Clock Select: CLK / 1024 => PWM frequency = 31Hz 
-    BIT_SET(TCCR0, CS02);
-    BIT_CLR(TCCR0, CS01);
-    BIT_SET(TCCR0, CS00);
+    U__BIT_SET(TCCR0, CS02);
+    U__BIT_CLR(TCCR0, CS01);
+    U__BIT_SET(TCCR0, CS00);
 #endif
 
     // Reset Timer Register
@@ -152,14 +152,14 @@ void MCH_Init_Timer0(void)
     OCR0 = 0u;
     
     // Output Compare Match Interrupt: Disabled
-    BIT_CLR(TIMSK, OCIE0);
+    U__BIT_CLR(TIMSK, OCIE0);
     // Timer Overflow Interrupt: Disabled
-    BIT_CLR(TIMSK, TOIE0);
+    U__BIT_CLR(TIMSK, TOIE0);
 }
 
 
 /*
- * Name: MCH_Init_Timer1
+ * Name: MCH_InitTimer1
  *
  * Description: This function initializes the Timer1 peripheral
  *              for receiving the signal of DCF77.
@@ -168,34 +168,34 @@ void MCH_Init_Timer0(void)
  *
  * Output: None
  */
-void MCH_Init_Timer1(void)
+void MCH_InitTimer1(void)
 {
     // Reset control registers
     TCCR1A = 0x00u;
     TCCR1B = 0x00u;
 
     // Compare Output Mode for Channel A/B: Normal port operation, OC1A/OC1B disconnected
-    BIT_CLR(TCCR1A, COM1A1);
-    BIT_CLR(TCCR1A, COM1A0);
-    BIT_CLR(TCCR1A, COM1B1);
-    BIT_CLR(TCCR1A, COM1B0);
+    U__BIT_CLR(TCCR1A, COM1A1);
+    U__BIT_CLR(TCCR1A, COM1A0);
+    U__BIT_CLR(TCCR1A, COM1B1);
+    U__BIT_CLR(TCCR1A, COM1B0);
 
     // Waveform Generation Mode: CTC, update of OCR1x Immediate
-    BIT_CLR(TCCR1B, WGM13);
-    BIT_SET(TCCR1B, WGM12);
-    BIT_CLR(TCCR1A, WGM11);
-    BIT_CLR(TCCR1A, WGM10);
+    U__BIT_CLR(TCCR1B, WGM13);
+    U__BIT_SET(TCCR1B, WGM12);
+    U__BIT_CLR(TCCR1A, WGM11);
+    U__BIT_CLR(TCCR1A, WGM10);
     
     // Input Capture Noise Canceler: Enabled
-    BIT_SET(TCCR1B, ICNC1);
+    U__BIT_SET(TCCR1B, ICNC1);
     
     // Input Capture Edge Select: Falling (negative) edge
-    BIT_CLR(TCCR1B, ICES1);
+    U__BIT_CLR(TCCR1B, ICES1);
     
     // Clock Select: CLK / 256 = 31.250kHz = 32us
-    BIT_SET(TCCR1B, CS12);
-    BIT_CLR(TCCR1B, CS11);
-    BIT_CLR(TCCR1B, CS10);
+    U__BIT_SET(TCCR1B, CS12);
+    U__BIT_CLR(TCCR1B, CS11);
+    U__BIT_CLR(TCCR1B, CS10);
     
     // Reset Timer Register
     TCNT1 = 0u;
@@ -205,18 +205,18 @@ void MCH_Init_Timer1(void)
     OCR1B = 0u;
 
     // Timer Input Capture Interrupt: Disabled
-    BIT_CLR(TIMSK, TICIE1);
+    U__BIT_CLR(TIMSK, TICIE1);
     // Output Compare A Match Interrupt: Disabled
-    BIT_CLR(TIMSK, OCIE1A);
+    U__BIT_CLR(TIMSK, OCIE1A);
     // Output Compare B Match Interrupt: Disabled
-    BIT_CLR(TIMSK, OCIE1B);
+    U__BIT_CLR(TIMSK, OCIE1B);
     // Timer Overflow Interrupt: Disabled
-    BIT_CLR(TIMSK, TOIE1);
+    U__BIT_CLR(TIMSK, TOIE1);
 }
 
 
 /*
- * Name: MCH_Init_Timer2
+ * Name: MCH_InitTimer2
  *
  * Description: This function initializes the Timer2 peripheral for
  *              the main scheduler for counting seconds.
@@ -226,24 +226,24 @@ void MCH_Init_Timer1(void)
  *
  * Output: None
  */
-void MCH_Init_Timer2(void)
+void MCH_InitTimer2(void)
 {
     // Reset control registers
     TCCR2 = 0x00u;
     ASSR  = 0x00u;
 
     // Waveform Generation Mode: Normal, update of OCR2 Immediate
-    BIT_CLR(TCCR2, WGM21);
-    BIT_CLR(TCCR2, WGM20);
+    U__BIT_CLR(TCCR2, WGM21);
+    U__BIT_CLR(TCCR2, WGM20);
 
     // Compare Output Mode: Normal port operation, OC2 disconnected
-    BIT_CLR(TCCR2, COM21);
-    BIT_CLR(TCCR2, COM20);
+    U__BIT_CLR(TCCR2, COM21);
+    U__BIT_CLR(TCCR2, COM20);
 
     // Clock Celect: CLK / 128 = 256Hz = 3.90625ms
-    BIT_SET(TCCR2, CS22);
-    BIT_CLR(TCCR2, CS21);
-    BIT_SET(TCCR2, CS20);
+    U__BIT_SET(TCCR2, CS22);
+    U__BIT_CLR(TCCR2, CS21);
+    U__BIT_SET(TCCR2, CS20);
 
     // Reset Timer Register
     TCNT2 = 0u;
@@ -251,17 +251,17 @@ void MCH_Init_Timer2(void)
     OCR2 = 0u;
 
     // Asynchronous Timer2: Clocked from external Crystal Oscillator connected to TOSC1 pin
-    BIT_SET(ASSR,AS2);
+    U__BIT_SET(ASSR,AS2);
 
     // Output Compare Match Interrupt: Disabled
-    BIT_CLR(TIMSK, OCIE2);
+    U__BIT_CLR(TIMSK, OCIE2);
     // Timer Overflow Interrupt: Enabled
-    BIT_SET(TIMSK, TOIE2);
+    U__BIT_SET(TIMSK, TOIE2);
 }
 
 
 /*
- * Name: MCH_Init_ADC
+ * Name: MCH_InitADC
  *
  * Description: This function initializes the ADC peripheral of the MCU.
  *
@@ -269,44 +269,44 @@ void MCH_Init_Timer2(void)
  *
  * Output: None
  */
-void MCH_Init_ADC(void)
+void MCH_InitADC(void)
 {
     // Reset control registers
     ADMUX  = 0x00u;
     ADCSRA = 0x00u; 
     
     // Reference Selection: Internal 2.56V Voltage Reference
-    BIT_SET(ADMUX, REFS1);
-    BIT_SET(ADMUX, REFS0);
+    U__BIT_SET(ADMUX, REFS1);
+    U__BIT_SET(ADMUX, REFS0);
     
     // ADC Left Adjust Result: Enabled
-    BIT_SET(ADMUX, ADLAR);
+    U__BIT_SET(ADMUX, ADLAR);
     
     // Analog Channel and Gain Selection Bits: Single mode
-    BIT_CLR(ADMUX, MUX4);
-    BIT_CLR(ADMUX, MUX3);
-    BIT_CLR(ADMUX, MUX2);
-    BIT_CLR(ADMUX, MUX1);
-    BIT_CLR(ADMUX, MUX0);
+    U__BIT_CLR(ADMUX, MUX4);
+    U__BIT_CLR(ADMUX, MUX3);
+    U__BIT_CLR(ADMUX, MUX2);
+    U__BIT_CLR(ADMUX, MUX1);
+    U__BIT_CLR(ADMUX, MUX0);
 
     // ADC Auto Trigger: Disabled 
-    BIT_CLR(ADCSRA, ADATE);
+    U__BIT_CLR(ADCSRA, ADATE);
     
     // ADC Interrupt: Disabled
-    BIT_CLR(ADCSRA, ADIE);
+    U__BIT_CLR(ADCSRA, ADIE);
     
     // ADC Prescaler Select: CLK / 128 = 62.5kHz
-    BIT_SET(ADCSRA, ADPS2);
-    BIT_SET(ADCSRA, ADPS1);
-    BIT_SET(ADCSRA, ADPS0);
+    U__BIT_SET(ADCSRA, ADPS2);
+    U__BIT_SET(ADCSRA, ADPS1);
+    U__BIT_SET(ADCSRA, ADPS0);
    
     // ADC: Enabled
-    BIT_SET(ADCSRA, ADEN); 
+    U__BIT_SET(ADCSRA, ADEN); 
 }
 
 
 /*
- * Name: MCH_Read_ADC
+ * Name: MCH_ReadADC
  *
  * Description: This function performs an AD conversion with the given channel.
  *              The result is stored in 8-bit precision (lower 2 bits of 10-bit ADC are not used).
@@ -315,31 +315,31 @@ void MCH_Init_ADC(void)
  *
  * Output: Result of the AD conversion with 8-bit precision
  */
-uint8 MCH_Read_ADC(uint8 _channel)
+uint8 MCH_ReadADC(uint8 _Channel)
 {
-    uint8 _ret = INIT_VALUE_UINT;
+    uint8 _Ret = U__INIT_VALUE_UINT;
 
 
     // Only the 7 single channels can be selected
-    _channel &= 0x07u;
+    _Channel &= 0x07u;
 
     // Set the desired channel
-    ADMUX = (ADMUX & 0xF8u) | _channel;
+    ADMUX = (ADMUX & 0xF8u) | _Channel;
 
     // Start AD conversion
-    BIT_SET(ADCSRA, ADSC);
+    U__BIT_SET(ADCSRA, ADSC);
     
     // Wait for the conversion to complete
     loop_until_bit_is_clear(ADCSRA, ADSC);
 
-    _ret = ADCH;
+    _Ret = ADCH;
 
 
-    return _ret;
+    return _Ret;
 }
 
 /*
-* Name: MCH_Init_I2C
+* Name: MCH_InitI2C
  *
  * Description: This function initializes the I2C peripheral of the MCU.
  *
@@ -347,13 +347,13 @@ uint8 MCH_Read_ADC(uint8 _channel)
  *
  * Output: None
  */
-void MCH_Init_I2C(uint16 _scl_freq_in_khz)
+void MCH_InitI2C(uint16 _SCLFreqKHZ)
 {
     // Enable internal pull-up resistors
-    BIT_CLR(DDR_I2C,  P_I2C_SCL);
-    BIT_SET(PORT_I2C, P_I2C_SCL);
-    BIT_CLR(DDR_I2C,  P_I2C_SDA);
-    BIT_SET(PORT_I2C, P_I2C_SDA);
+    U__BIT_CLR(MCH__DDR_I2C,  MCH__P_I2C_SCL);
+    U__BIT_SET(MCH__PORT_I2C, MCH__P_I2C_SCL);
+    U__BIT_CLR(MCH__DDR_I2C,  MCH__P_I2C_SDA);
+    U__BIT_SET(MCH__PORT_I2C, MCH__P_I2C_SDA);
 
     // Reset control registers
     TWBR = 0x00u;
@@ -362,24 +362,24 @@ void MCH_Init_I2C(uint16 _scl_freq_in_khz)
     // Bit Rate Register
     // SCL [Hz] = CPU [Hz] / (16 + 2x(TWBR)x4^(TWPS))
     // 100 kHz => BitRate = 18 / Prescaler = 1
-    TWBR = (uint8)((((uint8)(F_CPU / 1000UL / _scl_freq_in_khz)) - 16u) / 2u);
+    TWBR = (uint8)((((uint8)(F_CPU / 1000UL / _SCLFreqKHZ)) - 16u) / 2u);
     
     // TWI Acknowledge: Enabled
-    BIT_SET(TWCR, TWEA);
+    U__BIT_SET(TWCR, TWEA);
     // TWI: Enabled
-    BIT_SET(TWCR, TWEN);
+    U__BIT_SET(TWCR, TWEN);
 
     // TWI Interrupt: Disabled
-    BIT_CLR(TWCR, TWIE);    
+    U__BIT_CLR(TWCR, TWIE);    
    
     // TWI Prescaler: 1 
-    BIT_CLR(TWSR, TWPS0);
-    BIT_CLR(TWSR, TWPS1);
+    U__BIT_CLR(TWSR, TWPS0);
+    U__BIT_CLR(TWSR, TWPS1);
 }
 
 
 /*
- * Name: MCH_I2C_Start
+ * Name: MCH_I2CStart
  *
  * Description: This function starts a read or write I2C package.
  *
@@ -388,66 +388,64 @@ void MCH_Init_I2C(uint16 _scl_freq_in_khz)
  *
  * Output: status of the I2C action (ERROR or NO_ERROR)
  */
-uint8 MCH_I2C_Start(uint8 address, uint8 read_or_write)
+uint8 MCH_I2CStart(uint8 _Address, uint8 _ReadWrite)
 {
-    uint8 _status               = INIT_VALUE_UINT;
-    uint8 _res                  = MCH_I2C_ERROR;
-    static uint16 _loop_counter = INIT_VALUE_UINT;
+    uint8 _Status               = U__INIT_VALUE_UINT;
+    uint8 _Res                  = MCH__I2C_ERROR;
+    static uint16 L_LoopCounter = U__INIT_VALUE_UINT;
 
     
-    address |= read_or_write;
+    _Address |= _ReadWrite;
 
     // Repeat start 1000 times if it is needed
-    for (_loop_counter = 0u; _loop_counter < L_I2C_RETRY_MAX_NUMBER; _loop_counter++)
+    for (L_LoopCounter = 0u; L_LoopCounter < L__I2C_RETRY_MAX_NUMBER; L_LoopCounter++)
     {
         // Send START condition
-        BIT_SET(TWCR, TWSTA);
-        BIT_SET(TWCR, TWINT);
-        BIT_SET(TWCR, TWEA);
-        BIT_SET(TWCR, TWEN);
+        U__BIT_SET(TWCR, TWSTA);
+        U__BIT_SET(TWCR, TWINT);
+        U__BIT_SET(TWCR, TWEA);
+        U__BIT_SET(TWCR, TWEN);
         
         loop_until_bit_is_set(TWCR,TWINT);
 
-        _status = TWSR & L_I2C_TWSR_STATUS_MASK;
+        _Status = TWSR & L__I2C_TWSR_STATUS_MASK;
         
-        if ((L_I2C_STATUS_START     == _status) ||
-            (L_I2C_STATUS_REP_START == _status))
+        if ((L__I2C_STATUS_START     == _Status) ||
+            (L__I2C_STATUS_REP_START == _Status))
         {
-            TWDR = address;
+            TWDR = _Address;
             
-            BIT_CLR(TWCR, TWSTA);
-            BIT_SET(TWCR, TWINT);
-            BIT_SET(TWCR, TWEA);
-            BIT_SET(TWCR, TWEN);
+            U__BIT_CLR(TWCR, TWSTA);
+            U__BIT_SET(TWCR, TWINT);
+            U__BIT_SET(TWCR, TWEA);
+            U__BIT_SET(TWCR, TWEN);
             
             loop_until_bit_is_set(TWCR,TWINT);
             
-            _status = TWSR & L_I2C_TWSR_STATUS_MASK;
+            _Status = TWSR & L__I2C_TWSR_STATUS_MASK;
             
-            if ( ((MCH_I2C_START_WRITE      == read_or_write) &&
-                  (L_I2C_STATUS_W_ADDR_ACK  == _status)) ||
-                 ((MCH_I2C_START_READ       == read_or_write) &&
-                  (L_I2C_STATUS_R_ADDR_ACK  == _status)) )
+            if ( ((MCH__I2C_START_WRITE == _ReadWrite) && (L__I2C_STATUS_W_ADDR_ACK == _Status)) ||
+                 ((MCH__I2C_START_READ  == _ReadWrite) && (L__I2C_STATUS_R_ADDR_ACK == _Status)) )
             {
-                return MCH_I2C_NO_ERROR;
+                return MCH__I2C_NO_ERROR;
             }
             else
             {
-                _res = MCH_I2C_ERROR;
+                _Res = MCH__I2C_ERROR;
             }
 
-            _loop_counter = 2000u;
+            L_LoopCounter = 2000u;
         }
     }
 
-    _res = MCH_I2C_ERROR;
+    _Res = MCH__I2C_ERROR;
 
-    return _res;
+    return _Res;
 }
 
 
 /*
- * Name: MCH_I2C_Write
+ * Name: MCH_I2CWrite
  *
  * Description: This function writes a byte to the I2C peripheral.
  *
@@ -455,37 +453,37 @@ uint8 MCH_I2C_Start(uint8 address, uint8 read_or_write)
  *
  * Output: status of the I2C action (ERROR or NO_ERROR)
  */
-uint8 MCH_I2C_Write(uint8 data)
+uint8 MCH_I2CWrite(uint8 _Data)
 {
-    uint8 _status   = INIT_VALUE_UINT;
-    uint8 _res      = MCH_I2C_ERROR;
+    uint8 _Status   = U__INIT_VALUE_UINT;
+    uint8 _Res      = MCH__I2C_ERROR;
 
     
-    TWDR = data;
+    TWDR = _Data;
     
-    BIT_SET(TWCR, TWINT);
-    BIT_SET(TWCR, TWEA);
-    BIT_SET(TWCR, TWEN);
+    U__BIT_SET(TWCR, TWINT);
+    U__BIT_SET(TWCR, TWEA);
+    U__BIT_SET(TWCR, TWEN);
     
     loop_until_bit_is_set(TWCR, TWINT);
 
-    _status = TWSR & L_I2C_TWSR_STATUS_MASK;
+    _Status = TWSR & L__I2C_TWSR_STATUS_MASK;
     
-    if (L_I2C_STATUS_W_DATA_ACK == _status)
+    if (L__I2C_STATUS_W_DATA_ACK == _Status)
     {
-        _res = MCH_I2C_NO_ERROR;
+        _Res = MCH__I2C_NO_ERROR;
     }
     else
     {
-        _res = MCH_I2C_ERROR;
+        _Res = MCH__I2C_ERROR;
     }
 
-    return _res;
+    return _Res;
 }
 
 
 /*
- * Name: MCH_I2C_Read
+ * Name: MCH_I2CRead
  *
  * Description: This function reads a data byte from the I2C peripheral.
  *
@@ -494,19 +492,19 @@ uint8 MCH_I2C_Write(uint8 data)
  *
  * Output: status of the I2C action (ERROR or NO_ERROR)
  */
-void MCH_I2C_Read(uint8 *data, uint8 read_status)
+void MCH_I2CRead(uint8 *_Data, uint8 _ReadStatus)
 {
-    switch (read_status)
+    switch (_ReadStatus)
     {
-        case MCH_I2C_READ_PENDING:
+        case MCH__I2C_READ_PENDING:
         {
-            BIT_SET(TWCR, TWEA);
+            U__BIT_SET(TWCR, TWEA);
         }
         break;
 
-        case MCH_I2C_READ_STOP:
+        case MCH__I2C_READ_STOP:
         {
-            BIT_CLR(TWCR, TWEA);
+            U__BIT_CLR(TWCR, TWEA);
         }
         break;
         
@@ -516,17 +514,17 @@ void MCH_I2C_Read(uint8 *data, uint8 read_status)
         }
         break;
     }
-    BIT_SET(TWCR, TWINT);
-    BIT_SET(TWCR, TWEN);
+    U__BIT_SET(TWCR, TWINT);
+    U__BIT_SET(TWCR, TWEN);
 
     loop_until_bit_is_set(TWCR, TWINT);
 
-    *data = ((sint8) TWDR);
+    *_Data = ((sint8) TWDR);
 }
 
 
 /*
- * Name: MCH_I2C_Stop
+ * Name: MCH_I2CStop
  *
  * Description: This function stops the communication with I2C peripheral.
  *
@@ -534,12 +532,12 @@ void MCH_I2C_Read(uint8 *data, uint8 read_status)
  *
  * Output: None
  */
-void MCH_I2C_Stop(void)
+void MCH_I2CStop(void)
 {
-    BIT_SET(TWCR, TWSTO);
-    BIT_SET(TWCR, TWEA);
-    BIT_SET(TWCR, TWINT);
-    BIT_SET(TWCR, TWEN);
+    U__BIT_SET(TWCR, TWSTO);
+    U__BIT_SET(TWCR, TWEA);
+    U__BIT_SET(TWCR, TWINT);
+    U__BIT_SET(TWCR, TWEN);
 
     loop_until_bit_is_clear(TWCR, TWSTO);
 }

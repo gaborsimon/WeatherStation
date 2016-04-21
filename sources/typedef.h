@@ -17,14 +17,14 @@ typedef enum
 {
     Flag_SET   = 1u,
     Flag_CLEAR = 2u
-} Flag;
+} G_Flag_e;
 
 
 typedef enum
 {
     Signal_RELIABLE     = 1u,
     Signal_NOT_RELIABLE = 2u
-} Qualifier;
+} G_Qualifier_e;
 
 
 #endif /* TYPEDEF_H_ */

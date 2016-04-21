@@ -12,18 +12,24 @@
 #include "RealTimeClock.h"
 
 
-
 //====== Public Constants ======================================================
-#define DCF77_CONTROL(ctrl) ( ((ctrl) == ENABLE) ? \
-                              GPIO_WRITE(PORT_DCF77_CTRL, P_DCF77_CTRL, LOW) : \
-                              GPIO_WRITE(PORT_DCF77_CTRL, P_DCF77_CTRL, HIGH) )
+#define DCF77__CONTROL(ctrl) ( ((ctrl) == U__ENABLE) ? \
+                               MCH__GPIO_WRITE(MCH__PORT_DCF77_CTRL, MCH__P_DCF77_CTRL, U__LOW) : \
+                               MCH__GPIO_WRITE(MCH__PORT_DCF77_CTRL, MCH__P_DCF77_CTRL, U__HIGH) )
 
 
 //====== Public Signals ========================================================
-#define XDCF77_SYNC_DONE ((Flag) DCF77_SyncDone)
+typedef enum
+{
+    DCF77_Status_INIT           = 1u,
+    DCF77_Status_SYNCH_ONGOING,
+    DCF77_Status_SYNCH_DONE,
+    DCF77_Status_SYNCHRONIZED
+} DCF77_Status_e;
 
-extern Flag DCF77_SyncDone;
-extern uint8 BitPos; 
+#define XDCF77__STATUS    ((DCF77_Status_e) DCF77_Status)
+
+extern DCF77_Status_e DCF77_Status;
 
 //====== Public Functions ======================================================
 #ifdef __cplusplus
@@ -32,7 +38,8 @@ extern "C" {
 
     extern void DCF77_Callback_TimerOverflow(void);
     extern void DCF77_Callback_InputCapture(void);
-    extern void DCF77_Receiving(uint8 _control);
+    extern void DCF77_Receiving(uint8 _Control);
+    extern void DCF77_Refresh(void);
 
 #ifdef __cplusplus
 } // extern "C"

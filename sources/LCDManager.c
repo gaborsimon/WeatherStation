@@ -3,42 +3,42 @@
 
 
 //====== Private Constants =====================================================
-#define L_POS_ROW_RX                 (2u)
-#define L_POS_COL_RX                 (18u)
+#define L__POS_ROW_RX                    (2u)
+#define L__POS_COL_RX                   (18u)
 
-#define L_POS_ROW_DATE               (1u)
-#define L_POS_COL_DATE               (1u)
+#define L__POS_ROW_DATE                  (1u)
+#define L__POS_COL_DATE                  (1u)
 
-#define L_POS_ROW_DAYNAME            (1u)
-#define L_POS_COL_DAYNAME           (12u)
+#define L__POS_ROW_DAYNAME               (1u)
+#define L__POS_COL_DAYNAME              (12u)
 
-#define L_POS_ROW_TIME               (1u)
-#define L_POS_COL_TIME              (16u)
+#define L__POS_ROW_TIME                  (1u)
+#define L__POS_COL_TIME                 (16u)
 
-#define L_POS_ROW_SUN_TIME_RISE      (3u)
-#define L_POS_COL_SUN_TIME_RISE      (1u)
-#define L_POS_ROW_SUN_TIME_SET       (4u)
-#define L_POS_COL_SUN_TIME_SET       (1u)
+#define L__POS_ROW_SUN_TIME_RISE         (3u)
+#define L__POS_COL_SUN_TIME_RISE         (1u)
+#define L__POS_ROW_SUN_TIME_SET          (4u)
+#define L__POS_COL_SUN_TIME_SET          (1u)
 
-#define L_POS_ROW_MOON_ICON          (3u)
-#define L_POS_COL_MOON_ICON         (10u)
-#define L_POS_ROW_MOON_PERC          (4u)
-#define L_POS_COL_MOON_PERC          (9u)
+#define L__POS_ROW_MOON_ICON             (3u)
+#define L__POS_COL_MOON_ICON            (10u)
+#define L__POS_ROW_MOON_PERC             (4u)
+#define L__POS_COL_MOON_PERC             (9u)
 
-#define L_POS_ROW_DS1621_TEMP        (2u)
-#define L_POS_COL_DS1621_TEMP       (15u)
+#define L__POS_ROW_DS1621_TEMP           (2u)
+#define L__POS_COL_DS1621_TEMP          (15u)
 
-#define L_POS_ROW_DHT22_TEMP         (3u)
-#define L_POS_COL_DHT22_TEMP        (15u)
-#define L_POS_ROW_DHT22_HUM          (4u)
-#define L_POS_COL_DHT22_HUM         (15u)
+#define L__POS_ROW_DHT22_TEMP            (3u)
+#define L__POS_COL_DHT22_TEMP           (15u)
+#define L__POS_ROW_DHT22_HUM             (4u)
+#define L__POS_COL_DHT22_HUM            (15u)
 
-#define L_CUSTOM_CHAR_POS_SUNRISE       (1u)
-#define L_CUSTOM_CHAR_POS_SUNSET        (2u)
-#define L_CUSTOM_CHAR_POS_MOON_L        (3u)
-#define L_CUSTOM_CHAR_POS_MOON_R        (4u)
-#define L_CUSTOM_CHAR_POS_DCF77_RX_OK   (5u)
-#define L_CUSTOM_CHAR_POS_DCF77_RX_NO   (6u)
+#define L__CUSTOM_CHAR_POS_SUNRISE       (1u)
+#define L__CUSTOM_CHAR_POS_SUNSET        (2u)
+#define L__CUSTOM_CHAR_POS_MOON_L        (3u)
+#define L__CUSTOM_CHAR_POS_MOON_R        (4u)
+#define L__CUSTOM_CHAR_POS_DCF77_RX_OK   (5u)
+#define L__CUSTOM_CHAR_POS_DCF77_RX_NO   (6u)
 
 
 //====== Private Signals =======================================================
@@ -48,145 +48,155 @@
 
 
 //====== Private Functions =====================================================
-void RefreshRxOK(void)
+void L_RefreshRxOK(void)
 {
-    LCD_SetCursor(L_POS_ROW_RX, L_POS_COL_RX);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_OK);
+    LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
+    LCD_WriteString("   ");
+    LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_OK);
 }
 
-void RefreshRxNO(void)
+void L_RefreshRxNO(void)
 {
-    LCD_SetCursor(L_POS_ROW_RX, L_POS_COL_RX);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_NO);
+    LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
+    LCD_WriteString("   ");
+    LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_NO);
 }
 
-void RefreshYear(void)
+void L_RefreshRxNONE(void)
 {
-    LCD_SetCursor(L_POS_ROW_DATE, L_POS_COL_DATE);
-    LCD_WriteInt(XRTC_TIMEDATE_YEAR);
+    LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
+    LCD_WriteString("   ");
+}
+
+void L_RefreshYear(void)
+{
+    LCD_SetCursor(L__POS_ROW_DATE, L__POS_COL_DATE);
+    LCD_WriteInt(XRTC__TIMEDATE_YEAR);
     LCD_WriteChar('-');
 }
 
-void RefreshMonth(void)
+void L_RefreshMonth(void)
 {
-    LCD_SetCursor(L_POS_ROW_DATE, L_POS_COL_DATE + 5u);
-    if (XRTC_TIMEDATE_MONTH < 10u)
+    LCD_SetCursor(L__POS_ROW_DATE, L__POS_COL_DATE + 5u);
+    if (XRTC__TIMEDATE_MONTH < 10u)
     {
         LCD_WriteChar('0');
     }
-    LCD_WriteInt(XRTC_TIMEDATE_MONTH);
+    LCD_WriteInt(XRTC__TIMEDATE_MONTH);
     LCD_WriteChar('-');
 }
 
-void RefreshDay(void)
+void L_RefreshDay(void)
 {
-    LCD_SetCursor(L_POS_ROW_DATE, L_POS_COL_DATE + 8u);
-    if (XRTC_TIMEDATE_DAY < 10u)
+    LCD_SetCursor(L__POS_ROW_DATE, L__POS_COL_DATE + 8u);
+    if (XRTC__TIMEDATE_DAY < 10u)
     {
         LCD_WriteChar('0');
     }
-    LCD_WriteInt(XRTC_TIMEDATE_DAY);
+    LCD_WriteInt(XRTC__TIMEDATE_DAY);
     
-    LCD_SetCursor(L_POS_ROW_DAYNAME, L_POS_COL_DAYNAME);
+    LCD_SetCursor(L__POS_ROW_DAYNAME, L__POS_COL_DAYNAME);
     
-    if ((0u < XRTC_TIMEDATE_DAYNUMBER) && (XRTC_TIMEDATE_DAYNUMBER < 9u))
+    if ((0u < XRTC__TIMEDATE_DAYNUMBER) && (XRTC__TIMEDATE_DAYNUMBER < 9u))
     {
-        LCD_WriteString(XRTC_DAYNAME(XRTC_TIMEDATE_DAYNUMBER));
+        LCD_WriteString(XRTC__DAYNAME(XRTC__TIMEDATE_DAYNUMBER));
     }
     else
     {
-        LCD_WriteString(XRTC_DAYNAME(0u));
+        LCD_WriteString(XRTC__DAYNAME(0u));
     }
 }
 
-void RefreshHour(void)
+void L_RefreshHour(void)
 {
-    LCD_SetCursor(L_POS_ROW_TIME, L_POS_COL_TIME);
-    if (XRTC_TIMEDATE_HOUR < 10u)
+    LCD_SetCursor(L__POS_ROW_TIME, L__POS_COL_TIME);
+    if (XRTC__TIMEDATE_HOUR < 10u)
     {
         LCD_WriteChar(' ');
     }
-    LCD_WriteInt(XRTC_TIMEDATE_HOUR);
+    LCD_WriteInt(XRTC__TIMEDATE_HOUR);
 
-    LCD_SetCursor(L_POS_ROW_TIME, L_POS_COL_TIME + 2u);
+    LCD_SetCursor(L__POS_ROW_TIME, L__POS_COL_TIME + 2u);
     LCD_WriteChar(':');
 }
 
-void RefreshMinute(void)
+void L_RefreshMinute(void)
 {
-    LCD_SetCursor(L_POS_ROW_TIME, L_POS_COL_TIME + 3u);
-    if (XRTC_TIMEDATE_MINUTE < 10u)
+    LCD_SetCursor(L__POS_ROW_TIME, L__POS_COL_TIME + 3u);
+    if (XRTC__TIMEDATE_MINUTE < 10u)
     {
         LCD_WriteChar('0');
     }
-    LCD_WriteInt(XRTC_TIMEDATE_MINUTE);
+    LCD_WriteInt(XRTC__TIMEDATE_MINUTE);
 }
 
-void RefreshSunTime(void)
+void L_RefreshSunTime(void)
 {
-    LCD_SetCursor(L_POS_ROW_SUN_TIME_RISE, L_POS_COL_SUN_TIME_RISE);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_SUNRISE);
+    LCD_SetCursor(L__POS_ROW_SUN_TIME_RISE, L__POS_COL_SUN_TIME_RISE);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_SUNRISE);
 
-    LCD_SetCursor(L_POS_ROW_SUN_TIME_SET, L_POS_COL_SUN_TIME_SET);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_SUNSET);
+    LCD_SetCursor(L__POS_ROW_SUN_TIME_SET, L__POS_COL_SUN_TIME_SET);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_SUNSET);
 
-    LCD_SetCursor(L_POS_ROW_SUN_TIME_RISE, L_POS_COL_SUN_TIME_RISE + 1u);
-    if (XSTC_SUN_RISEHOUR < 10u)
+    LCD_SetCursor(L__POS_ROW_SUN_TIME_RISE, L__POS_COL_SUN_TIME_RISE + 1u);
+    if (XSTC__SUN_RISEHOUR < 10u)
     {
         LCD_WriteChar(' ');
     }
-    LCD_WriteInt(XSTC_SUN_RISEHOUR);
+    LCD_WriteInt(XSTC__SUN_RISEHOUR);
     LCD_WriteChar(':');
-    if (XSTC_SUN_RISEMINUTE < 10u)
+    if (XSTC__SUN_RISEMINUTE < 10u)
     {
         LCD_WriteChar('0');
     }
-    LCD_WriteInt(XSTC_SUN_RISEMINUTE);
+    LCD_WriteInt(XSTC__SUN_RISEMINUTE);
 
-    LCD_SetCursor(L_POS_ROW_SUN_TIME_SET, L_POS_COL_SUN_TIME_SET + 1u);
-    if (XSTC_SUN_SETHOUR < 10u)
+    LCD_SetCursor(L__POS_ROW_SUN_TIME_SET, L__POS_COL_SUN_TIME_SET + 1u);
+    if (XSTC__SUN_SETHOUR < 10u)
     {
         LCD_WriteChar(' ');
     }
-    LCD_WriteInt(XSTC_SUN_SETHOUR);
+    LCD_WriteInt(XSTC__SUN_SETHOUR);
     LCD_WriteChar(':');
-    if (XSTC_SUN_SETMINUTE < 10u)
+    if (XSTC__SUN_SETMINUTE < 10u)
     {
         LCD_WriteChar('0');
     }
-    LCD_WriteInt(XSTC_SUN_SETMINUTE);
+    LCD_WriteInt(XSTC__SUN_SETMINUTE);
 }
 
-void RefreshMoonFraction(void)
+void L_RefreshMoonFraction(void)
 {
-    switch (XMFC_MOON_DIRECTION)
+    switch (XMFC__MOON_DIRECTION)
     {
-        case (MOON_WAXES):
+        case (MFC__MOON_WAXES):
         {
-            if (XMFC_MOON_FRACTION <= 10u)
+            if (XMFC__MOON_FRACTION <= 10u)
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight100);
             }
-            else if ((XMFC_MOON_FRACTION > 10u) && (XMFC_MOON_FRACTION <= 40u))
+            else if ((10u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 40u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_75);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight75);
             }
-            else if ((XMFC_MOON_FRACTION > 40u) && (XMFC_MOON_FRACTION <= 60u))
+            else if ((40u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 60u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight0);
             }
-            else if ((XMFC_MOON_FRACTION > 60u) && (XMFC_MOON_FRACTION <= 90u))
+            else if ((60u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 90u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_25);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft25);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight0);
             }
-            else if (XMFC_MOON_FRACTION > 90u)
+            else if (90u < XMFC__MOON_FRACTION)
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight0);
             }
             else
             {
@@ -195,32 +205,32 @@ void RefreshMoonFraction(void)
         }
         break;
 
-        case (MOON_WANES):
+        case (MFC__MOON_WANES):
         {
-            if (XMFC_MOON_FRACTION <= 10u)
+            if (XMFC__MOON_FRACTION <= 10u)
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight100);
             }
-            else if ((XMFC_MOON_FRACTION > 10u) && (XMFC_MOON_FRACTION <= 40u))
+            else if ((10u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 40u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_75);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft75);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight100);
             }
-            else if ((XMFC_MOON_FRACTION > 40u) && (XMFC_MOON_FRACTION <= 60u))
+            else if ((40u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 60u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight100);
             }
-            else if ((XMFC_MOON_FRACTION > 60u) && (XMFC_MOON_FRACTION <= 90u))
+            else if ((60u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION <= 90u))
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_25);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight25);
             }
-            else if (XMFC_MOON_FRACTION > 90u)
+            else if (90u < XMFC__MOON_FRACTION)
             {
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_0);
-                LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft0);
+                LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight0);
             }
             else
             {
@@ -231,23 +241,23 @@ void RefreshMoonFraction(void)
 
         default:
         {
-            LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_L, lcd_char_moon_left_100);
-            LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_MOON_R, lcd_char_moon_right_100);
+            LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_L, LCD_CharMoonLeft100);
+            LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_MOON_R, LCD_CharMoonRight100);
         }
         break;
     } 
 
-    LCD_SetCursor(L_POS_ROW_MOON_ICON, L_POS_COL_MOON_ICON);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_MOON_L);
-    LCD_SetCursor(L_POS_ROW_MOON_ICON, L_POS_COL_MOON_ICON + 1u);
-    LCD_WriteCustomChar(L_CUSTOM_CHAR_POS_MOON_R);
+    LCD_SetCursor(L__POS_ROW_MOON_ICON, L__POS_COL_MOON_ICON);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_MOON_L);
+    LCD_SetCursor(L__POS_ROW_MOON_ICON, L__POS_COL_MOON_ICON + 1u);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_MOON_R);
 
-    LCD_SetCursor(L_POS_ROW_MOON_PERC, L_POS_COL_MOON_PERC);
-    if ((100u > XMFC_MOON_FRACTION) && (10u < XMFC_MOON_FRACTION))
+    LCD_SetCursor(L__POS_ROW_MOON_PERC, L__POS_COL_MOON_PERC);
+    if ((10u < XMFC__MOON_FRACTION) && (XMFC__MOON_FRACTION < 100u))
     {
         LCD_WriteChar(' ');
     } 
-    else if (10u > XMFC_MOON_FRACTION)
+    else if (XMFC__MOON_FRACTION < 10u)
     {
         LCD_WriteChar(' ');
         LCD_WriteChar(' ');
@@ -256,30 +266,28 @@ void RefreshMoonFraction(void)
     {
         ; // No additional character is needed. 
     }
-    LCD_WriteInt(XMFC_MOON_FRACTION);
+    LCD_WriteInt(XMFC__MOON_FRACTION);
     LCD_WriteChar('%');
 }
 
-void RefreshDHT22(void)
+void L_RefreshDHT22(void)
 {
     //**************************************************************************
     //****** TEMPERATURE - DHT22
     //**************************************************************************
-    if (Signal_RELIABLE == XDHT22_DATA_QUALIFIER)
+    if (Signal_RELIABLE == XDHT22__DATA_QUALIFIER)
     {
-        LCD_SetCursor(L_POS_ROW_DHT22_TEMP, L_POS_COL_DHT22_TEMP);
-        if (XDHT22_TEMPERATURE_VALUE >= 10.0f)
+        LCD_SetCursor(L__POS_ROW_DHT22_TEMP, L__POS_COL_DHT22_TEMP);
+        if (10.0f <= XDHT22__TEMPERATURE_VALUE)
         {
             LCD_WriteChar(' ');
         }
-        else if ((XDHT22_TEMPERATURE_VALUE < 10.0f) &&
-                 (XDHT22_TEMPERATURE_VALUE >= 0.0f))
+        else if ((0.0f <= XDHT22__TEMPERATURE_VALUE) && (XDHT22__TEMPERATURE_VALUE < 10.0f))
         {
             LCD_WriteChar(' ');
             LCD_WriteChar(' ');
         }
-        else if ((XDHT22_TEMPERATURE_VALUE < 0.0f) &&
-                 (XDHT22_TEMPERATURE_VALUE < -10.0f))
+        else if ((-10.0f < XDHT22__TEMPERATURE_VALUE) && (XDHT22__TEMPERATURE_VALUE < 0.0f))
         {
             LCD_WriteChar(' ');
         }
@@ -289,14 +297,14 @@ void RefreshDHT22(void)
             ;
         }
 
-        LCD_WriteInt((sint8) XDHT22_TEMPERATURE_VALUE);
+        LCD_WriteInt((sint8)XDHT22__TEMPERATURE_VALUE);
         LCD_WriteChar('.');
-        LCD_WriteInt((uint8)((XDHT22_TEMPERATURE_VALUE - ((sint8)XDHT22_TEMPERATURE_VALUE)) * 10.0f));
+        LCD_WriteInt((uint8)((XDHT22__TEMPERATURE_VALUE - ((sint8)XDHT22__TEMPERATURE_VALUE)) * 10.0f));
         LCD_WriteChar('C');
     }
     else
     {
-        LCD_SetCursor(L_POS_ROW_DHT22_TEMP, L_POS_COL_DHT22_TEMP);
+        LCD_SetCursor(L__POS_ROW_DHT22_TEMP, L__POS_COL_DHT22_TEMP);
         LCD_WriteString("  -- C");
     }
 
@@ -304,21 +312,19 @@ void RefreshDHT22(void)
     //**************************************************************************
     //****** HUMIDITY - DHT22
     //**************************************************************************
-    if (Signal_RELIABLE == XDHT22_DATA_QUALIFIER)
+    if (Signal_RELIABLE == XDHT22__DATA_QUALIFIER)
     {
-        LCD_SetCursor(L_POS_ROW_DHT22_HUM, L_POS_COL_DHT22_HUM);
-        if (XDHT22_HUMIDITY_VALUE >= 10.0f)
+        LCD_SetCursor(L__POS_ROW_DHT22_HUM, L__POS_COL_DHT22_HUM);
+        if (10.0f <= XDHT22__HUMIDITY_VALUE)
         {
             LCD_WriteChar(' ');
         }
-        else if ((XDHT22_HUMIDITY_VALUE < 10.0f) &&
-                 (XDHT22_HUMIDITY_VALUE >= 0.0f))
+        else if ((0.0f <= XDHT22__HUMIDITY_VALUE) && (XDHT22__HUMIDITY_VALUE < 10.0f))
         {
             LCD_WriteChar(' ');
             LCD_WriteChar(' ');
         }
-        else if ((XDHT22_HUMIDITY_VALUE < 0.0f) &&
-                 (XDHT22_HUMIDITY_VALUE < -10.0f))
+        else if ((-10.0f < XDHT22__HUMIDITY_VALUE) && (XDHT22__HUMIDITY_VALUE < 0.0f))
         {
             LCD_WriteChar(' ');
         }
@@ -328,14 +334,14 @@ void RefreshDHT22(void)
             ;
         }
 
-        LCD_WriteInt((sint8) XDHT22_HUMIDITY_VALUE);
+        LCD_WriteInt((sint8)XDHT22__HUMIDITY_VALUE);
         LCD_WriteChar('.');
-        LCD_WriteInt((uint8)((XDHT22_HUMIDITY_VALUE - ((sint8)XDHT22_HUMIDITY_VALUE)) * 10.0f));
+        LCD_WriteInt((uint8)((XDHT22__HUMIDITY_VALUE - ((sint8)XDHT22__HUMIDITY_VALUE)) * 10.0f));
         LCD_WriteChar('%');
     }
     else
     {
-        LCD_SetCursor(L_POS_ROW_DHT22_HUM, L_POS_COL_DHT22_HUM);
+        LCD_SetCursor(L__POS_ROW_DHT22_HUM, L__POS_COL_DHT22_HUM);
         LCD_WriteString("  -- %");
     }
 }
@@ -361,10 +367,10 @@ void LCM_Init(void)
     LCD_SwitchOn();
     LCD_Clear();
 
-    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_SUNRISE, lcd_char_sunrise);
-    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_SUNSET, lcd_char_sunset);
-    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_OK, lcd_char_dcf77_rx_ok);
-    LCD_StoreCustomChar(L_CUSTOM_CHAR_POS_DCF77_RX_NO, lcd_char_dcf77_rx_no);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_SUNRISE, LCD_CharSunRise);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_SUNSET, LCD_CharSunSet);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_OK, LCD_CharDCF77RxOK);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_NO, LCD_CharDCF77RxNO);
 }
 
 
@@ -374,84 +380,148 @@ void LCM_Init(void)
  * Description: This is the main function that is responsible for putting
  *              the information into the LCD display.
  *
- * Input: None
+ * Input: element name that has to be updated 
  *
  * Output: None
  */
-void LCM_Refresh(uint8 element)
+void LCM_Refresh(uint8 _Element)
 {
-    switch (element)
+    switch (_Element)
     {
-        case LCM_RX_OK:
+        case LCM__RX_OK:
         {
-            RefreshRxOK();
+            L_RefreshRxOK();
         }
         break;
 
-        case LCM_RX_NO:
+        case LCM__RX_NO:
         {
-            RefreshRxNO();
+            L_RefreshRxNO();
         }
         break;
 
-        case LCM_DATETIME:
+        case LCM__RX_NONE:
         {
-            RefreshYear();
-            RefreshMonth();
-            RefreshDay();
-
-            RefreshHour();
-            RefreshMinute();
+            L_RefreshRxNONE();
         }
         break;
 
-        case LCM_YEAR:
+        case LCM__DATETIME:
         {
-            RefreshYear();
+            L_RefreshYear();
+            L_RefreshMonth();
+            L_RefreshDay();
+
+            L_RefreshHour();
+            L_RefreshMinute();
+        }
+        break;
+
+        case LCM__YEAR:
+        {
+            L_RefreshYear();
         }
         break;
 
 
-        case LCM_MONTH:
+        case LCM__MONTH:
         {
-            RefreshMonth();
+            L_RefreshMonth();
         }
         break;
 
-        case LCM_DAY:
+        case LCM__DAY:
         {
-            RefreshDay();
+            L_RefreshDay();
         }
         break;
 
-        case LCM_HOUR:
+        case LCM__HOUR:
         {
-            RefreshHour();
+            L_RefreshHour();
         }
         break;
         
-        case LCM_MINUTE:
+        case LCM__MINUTE:
         {
-            RefreshMinute();
+            L_RefreshMinute();
         }
         break;
         
-        case LCM_SUNTIME:
+        case LCM__SUNTIME:
         {
-            RefreshSunTime();
+            L_RefreshSunTime();
         }
         break;
         
-        case LCM_MOONFRACTION:
+        case LCM__MOONFRACTION:
         {
-            RefreshMoonFraction();
+            L_RefreshMoonFraction();
         }
         break;
         
-        case LCM_DHT22:
+        case LCM__DHT22:
         {
-            RefreshDHT22();
+            L_RefreshDHT22();
         }
         break;
     } 
+}
+
+
+/*
+ * Name: LCM_BackLightControl
+ *
+ * Description: This function is used for LCD backlight control via PWM.
+ *              The brightness can be set statically by direct control or
+ *              dinamically by ambient light sensor.
+ *
+ * Input: method of the control (direct or adaptive control)
+ *
+ * Output: None
+ */
+void LCM_BackLightControl(uint8 _ControlMethod, uint8 _PWMDutyCycle)
+{
+    uint8 _AmbientLight = U__INIT_VALUE_UINT;
+
+
+    if (LCM__CONTROL_METHOD_ADAPTIVE == _ControlMethod)
+    {
+        //#define DEMO
+
+#ifndef DEMO
+        if (DCF77_Status_SYNCHRONIZED == XDCF77__STATUS)
+        {
+#endif
+            _AmbientLight = MCH_ReadADC(MCH__ADC_CHANNEL_7);
+
+            if                                  (_AmbientLight < 100u)      { _PWMDutyCycle =  40u; }
+            else if ((100u <= _AmbientLight) && (_AmbientLight < 150u))     { _PWMDutyCycle =  60u; }
+            else if ((150u <= _AmbientLight) && (_AmbientLight < 200u))     { _PWMDutyCycle =  80u; }
+            else if  (200u <= _AmbientLight)                                { _PWMDutyCycle = 100u; }
+#ifndef DEMO
+        }
+        else
+        {
+            _PWMDutyCycle = 0u;
+        }
+#endif
+
+    }
+    else if (LCM__CONTROL_METHOD_STATIC == _ControlMethod)
+    {
+        /* No additional logic is needed */
+    }
+
+    OCR0 = (uint8)(_PWMDutyCycle / 100.0f * 255.0f);
+
+/* DEBUG */
+    _AmbientLight = MCH_ReadADC(MCH__ADC_CHANNEL_7);
+    LCD_SetCursor(2u,1u);
+    LCD_WriteString("          ");
+    LCD_SetCursor(2u,1u);
+    LCD_WriteInt(_AmbientLight);
+    LCD_SetCursor(2u,5u);
+    LCD_WriteInt(OCR0);
+/* DEBUG */
 }

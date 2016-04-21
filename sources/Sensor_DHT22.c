@@ -4,35 +4,35 @@
 
 //====== Private Constants =====================================================
 // Read sensor in every N second
-#define L_DHT22_READ_PERIOD_SEC     (10u)
+#define L__DHT22_READ_PERIOD_SEC     (10u)
 
-#define L_DHT22_BIT_TIME_THRESHOLD  (25u)
-#define L_DHT22_DATA_BIT_COUNT      (40u)
+#define L__DHT22_BIT_TIME_THRESHOLD  (25u)
+#define L__DHT22_DATA_BIT_COUNT      (40u)
 
 // Port macros
-#define L_DHT22_OUTPUT    GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, OUTPUT)
-#define L_DHT22_INPUT     GPIO_DIRECTION(DDR_DHT22, P_DHT22_DATA, INPUT)
-#define L_DHT22_HIGH      GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, HIGH)    
-#define L_DHT22_LOW       GPIO_WRITE(PORT_DHT22, P_DHT22_DATA, LOW)    
-#define L_DHT22_READ      GPIO_READ(PIN_DHT22, P_DHT22_DATA) 
+#define L__DHT22_OUTPUT    MCH__GPIO_DIRECTION(MCH__DDR_DHT22, MCH__P_DHT22_DATA, U__OUTPUT)
+#define L__DHT22_INPUT     MCH__GPIO_DIRECTION(MCH__DDR_DHT22, MCH__P_DHT22_DATA, U__INPUT)
+#define L__DHT22_HIGH      MCH__GPIO_WRITE(MCH__PORT_DHT22, MCH__P_DHT22_DATA, U__HIGH)    
+#define L__DHT22_LOW       MCH__GPIO_WRITE(MCH__PORT_DHT22, MCH__P_DHT22_DATA, U__LOW)    
+#define L__DHT22_READ      MCH__GPIO_READ(MCH__PIN_DHT22, MCH__P_DHT22_DATA) 
 
 
 //====== Private Signals =======================================================
-typedef enum L_Error_enum
+typedef enum
 {
     L_Error_NONE        = 1u,
     L_Error_CUT_OFF     = 2u,
     L_Error_CHECKSUM    = 3u
-} L_Error_t;
+} L_Error_e;
 
 
 //====== Private Function Prototypes ===========================================
-static L_Error_t ReadSensor(void);
+static L_Error_e L_ReadSensor(void);
 
 
 //====== Private Functions =====================================================
 /*
- * Name: ReadSensor
+ * Name: L_ReadSensor
  *
  * Description: The function reads out the temperature and relative humidity
 *               data of DHT22 sensor via special 1-wire communication interface.
@@ -41,135 +41,135 @@ static L_Error_t ReadSensor(void);
  *
  * Output: Error state
  */
-static L_Error_t ReadSensor(void)
+static L_Error_e L_ReadSensor(void)
 {
-    uint8  _bitTime      = INIT_VALUE_UINT;
-    uint8  _loopCounter  = INIT_VALUE_UINT;
-    uint8  _calculatedCS = INIT_VALUE_UINT;
-    uint16 _dataRH       = INIT_VALUE_UINT;
-    uint16 _dataT        = INIT_VALUE_UINT;
-    uint8  _dataCS       = INIT_VALUE_UINT;
+    uint8  _BitTime     = U__INIT_VALUE_UINT;
+    uint8  _LoopCounter = U__INIT_VALUE_UINT;
+    uint8  _CalcCS      = U__INIT_VALUE_UINT;
+    uint16 _DataRH      = U__INIT_VALUE_UINT;
+    uint16 _DataT       = U__INIT_VALUE_UINT;
+    uint8  _DataCS      = U__INIT_VALUE_UINT;
 
 
     //****** STEP 1. **********************************************************/
     // Send activate signal
-    L_DHT22_OUTPUT;
-    L_DHT22_HIGH;
+    L__DHT22_OUTPUT;
+    L__DHT22_HIGH;
     _delay_ms(1u);
-    L_DHT22_LOW;
+    L__DHT22_LOW;
     _delay_ms(10u);
-    L_DHT22_HIGH;
+    L__DHT22_HIGH;
     _delay_us(40u);
-    L_DHT22_INPUT;
+    L__DHT22_INPUT;
 
     //****** STEP 2. **********************************************************/
     // Find the start of the ACK signal
-    _bitTime = INIT_VALUE_UINT;
+    _BitTime = U__INIT_VALUE_UINT;
     do
     {
-        if (_bitTime > 50u)
+        if (_BitTime > 50u)
         {
             return L_Error_CUT_OFF;
         }
-        _bitTime++;
+        _BitTime++;
         _delay_us(1u);
-    } while(L_DHT22_READ == HIGH);
+    } while(L__DHT22_READ == U__HIGH);
 
     //****** STEP 3. **********************************************************/
     // Response signal: 80us LOW
-    _bitTime = INIT_VALUE_UINT;
+    _BitTime = U__INIT_VALUE_UINT;
     do
     {
-        if (_bitTime > 150u)
+        if (_BitTime > 150u)
         {
             return L_Error_CUT_OFF;
         }
-        _bitTime++;
+        _BitTime++;
         _delay_us(1u);
-    } while(L_DHT22_READ == LOW);
+    } while(L__DHT22_READ == U__LOW);
     
     // Response signal: 80us HIGH
-    _bitTime = INIT_VALUE_UINT;
+    _BitTime = U__INIT_VALUE_UINT;
     do
     {
-        if (_bitTime > 150u)
+        if (_BitTime > 150u)
         {
             return L_Error_CUT_OFF;
         }
-        _bitTime++;
+        _BitTime++;
         _delay_us(1u);
-    } while(L_DHT22_READ == HIGH);
+    } while(L__DHT22_READ == U__HIGH);
     
     //****** STEP 4. **********************************************************/
     // Read the 40 bit data stream
-    for(_loopCounter = INIT_VALUE_UINT; _loopCounter < L_DHT22_DATA_BIT_COUNT; _loopCounter++)
+    for(_LoopCounter = U__INIT_VALUE_UINT; _LoopCounter < L__DHT22_DATA_BIT_COUNT; _LoopCounter++)
     {
         // Measure the width of the data pulse
-        _bitTime = INIT_VALUE_UINT;
+        _BitTime = U__INIT_VALUE_UINT;
         do
         {
-            if (_bitTime > 150u)
+            if (_BitTime > 150u)
             {
                 return L_Error_CUT_OFF;
             }
-            _bitTime++;
+            _BitTime++;
             _delay_us(1u);
-        } while(L_DHT22_READ == LOW);
+        } while(L__DHT22_READ == U__LOW);
 
         // Measure the width of the data pulse
-        _bitTime = INIT_VALUE_UINT;
+        _BitTime = U__INIT_VALUE_UINT;
 
         do
         {
-            if (_bitTime > 150u)
+            if (_BitTime > 150u)
             {
                 return L_Error_CUT_OFF;
             }
-            _bitTime++;
+            _BitTime++;
             _delay_us(1u);
-        } while(L_DHT22_READ == HIGH);
+        } while(L__DHT22_READ == U__HIGH);
 
         // Identify the bit values
-        if (_bitTime > L_DHT22_BIT_TIME_THRESHOLD)
+        if (_BitTime > L__DHT22_BIT_TIME_THRESHOLD)
         {
             // Relative Humidity
-            if (_loopCounter < 16u)
+            if (_LoopCounter < 16u)
             {
-                _dataRH |= (1u << (15u - _loopCounter));
+                _DataRH |= (1u << (15u - _LoopCounter));
             }
             // Temperature
-            else if ((_loopCounter > 15u) && (_loopCounter < 32u))
+            else if ((_LoopCounter > 15u) && (_LoopCounter < 32u))
             {
-                _dataT |= (1u << (31u - _loopCounter));
+                _DataT |= (1u << (31u - _LoopCounter));
             }
             // Check Sum
-            else if ((_loopCounter > 31u) && (_loopCounter < 40u))
+            else if ((_LoopCounter > 31u) && (_LoopCounter < 40u))
             {
-                _dataCS |= (1u << (39u - _loopCounter));
+                _DataCS |= (1u << (39u - _LoopCounter));
             }
         }
     }
 
     //****** STEP 5. **********************************************************/
     // Release the bus - idle state
-    L_DHT22_OUTPUT;
-    L_DHT22_HIGH;
+    L__DHT22_OUTPUT;
+    L__DHT22_HIGH;
 
     //****** STEP 6. **********************************************************/
     // Calculate the Check Sum
-    _calculatedCS += ((uint8)((_dataRH & 0xFF00u) >> 8u));    
-    _calculatedCS += ((uint8) (_dataRH & 0x00FFu));    
-    _calculatedCS += ((uint8)((_dataT  & 0xFF00u) >> 8u));    
-    _calculatedCS += ((uint8) (_dataT  & 0x00FFu));    
+    _CalcCS += ((uint8)((_DataRH & 0xFF00u) >> 8u));    
+    _CalcCS += ((uint8) (_DataRH & 0x00FFu));    
+    _CalcCS += ((uint8)((_DataT  & 0xFF00u) >> 8u));    
+    _CalcCS += ((uint8) (_DataT  & 0x00FFu));    
 
     //****** STEP 7. **********************************************************/
     // Convert the raw data into physical values
-    if(_dataCS == _calculatedCS) 
+    if(_DataCS == _CalcCS) 
     {
-        DHT22_Data.HumidityValue    = ((float32)(_dataRH / 10.0f));
-        DHT22_Data.TemperatureValue = ((float32)((_dataT & 0x7FFFu) / 10.0f));
+        DHT22_Data.HumidityValue    = ((float32)(_DataRH / 10.0f));
+        DHT22_Data.TemperatureValue = ((float32)((_DataT & 0x7FFFu) / 10.0f));
 
-        if(_dataT & 0x8000u)
+        if(_DataT & 0x8000u)
         {
             DHT22_Data.TemperatureValue *= -1.0f;
         }
@@ -184,7 +184,7 @@ static L_Error_t ReadSensor(void)
 
 
 //====== Public Signals ========================================================
-DHT22_data DHT22_Data;
+DHT22_Data_s DHT22_Data;
 
 
 //====== Public Functions ======================================================
@@ -200,8 +200,8 @@ DHT22_data DHT22_Data;
 void DHT22_Init(void)
 {
     DHT22_Data.Qualifier        = Signal_NOT_RELIABLE;
-    DHT22_Data.TemperatureValue = INIT_VALUE_FLOAT;
-    DHT22_Data.HumidityValue    = INIT_VALUE_FLOAT;
+    DHT22_Data.TemperatureValue = U__INIT_VALUE_FLOAT;
+    DHT22_Data.HumidityValue    = U__INIT_VALUE_FLOAT;
     DHT22_Data.Updated          = Flag_CLEAR;
 }
 
@@ -218,25 +218,25 @@ void DHT22_Init(void)
  */
 void DHT22_Refresh(void)
 {
-    static uint8        L_DHT22_Counter = INIT_VALUE_UINT;
-           L_Error_t    _res            = INIT_VALUE_UINT;
+    static uint8        L_TickCounter   = U__INIT_VALUE_UINT;
+           L_Error_e    _Res            = U__INIT_VALUE_UINT;
 
 
-    L_DHT22_Counter++;
+    L_TickCounter++;
     
     // Turn on the sensor, measurement needs 2-3 seconds
-    if ((L_DHT22_READ_PERIOD_SEC - 3u) == L_DHT22_Counter)
+    if ((L__DHT22_READ_PERIOD_SEC - 3u) == L_TickCounter)
     {
-        DHT22_CONTROL(ENABLE);
+        DHT22__CONTROL(U__ENABLE);
     }
     // Read out the conversion data
-    else if (L_DHT22_READ_PERIOD_SEC == L_DHT22_Counter)
+    else if (L__DHT22_READ_PERIOD_SEC == L_TickCounter)
     {
-        L_DHT22_Counter = INIT_VALUE_UINT;
+        L_TickCounter = U__INIT_VALUE_UINT;
         
-        _res = ReadSensor();
+        _Res = L_ReadSensor();
 
-        if (L_Error_NONE == _res)
+        if (L_Error_NONE == _Res)
         {
             DHT22_Data.Qualifier = Signal_RELIABLE; 
         }
@@ -247,7 +247,7 @@ void DHT22_Refresh(void)
         
         DHT22_Data.Updated = Flag_SET;
 
-        DHT22_CONTROL(DISABLE);
+        DHT22__CONTROL(U__DISABLE);
     }
     /* IDLE mode */
     else

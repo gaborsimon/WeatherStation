@@ -6,7 +6,7 @@
 
 
 //====== Public Constants ======================================================
-#define L_LCD_CHARACTER_ROW_SIZE (8u)
+#define LCD__CHARACTER_ROW_SIZE (8u)
 
 
 /*
@@ -14,7 +14,7 @@
  * SUN TIME
  *******************************************************************************
  */
-static const uint8 lcd_char_sunrise[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharSunRise[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00100,
     0b01110,
@@ -26,7 +26,7 @@ static const uint8 lcd_char_sunrise[L_LCD_CHARACTER_ROW_SIZE] =
     0b00000
 };
 
-static const uint8 lcd_char_sunset[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharSunSet[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00000,
     0b00100,
@@ -44,7 +44,7 @@ static const uint8 lcd_char_sunset[L_LCD_CHARACTER_ROW_SIZE] =
  * MOON
  *******************************************************************************
  */
-static const uint8 lcd_char_moon_left_100[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonLeft100[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00011,
     0b00111,
@@ -56,7 +56,7 @@ static const uint8 lcd_char_moon_left_100[L_LCD_CHARACTER_ROW_SIZE] =
     0b00011
 };
 
-static const uint8 lcd_char_moon_left_25[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonLeft25[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00011,
     0b00110,
@@ -68,7 +68,7 @@ static const uint8 lcd_char_moon_left_25[L_LCD_CHARACTER_ROW_SIZE] =
     0b00011
 };
 
-static const uint8 lcd_char_moon_left_75[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonLeft75[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00011,
     0b00101,
@@ -80,7 +80,7 @@ static const uint8 lcd_char_moon_left_75[L_LCD_CHARACTER_ROW_SIZE] =
     0b00011
 };
 
-static const uint8 lcd_char_moon_left_0[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonLeft0[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00011,
     0b00100,
@@ -92,7 +92,7 @@ static const uint8 lcd_char_moon_left_0[L_LCD_CHARACTER_ROW_SIZE] =
     0b00011
 };
 
-static const uint8 lcd_char_moon_right_100[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonRight100[LCD__CHARACTER_ROW_SIZE] =
 {
     0b11000,
     0b11100,
@@ -104,19 +104,19 @@ static const uint8 lcd_char_moon_right_100[L_LCD_CHARACTER_ROW_SIZE] =
     0b11000
 };
 
-static const uint8 lcd_char_moon_right_25[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonRight25[LCD__CHARACTER_ROW_SIZE] =
 {
-   0b11000,
-   0b01100,
-   0b00110,
-   0b00110,
-   0b00110,
-   0b00110,
-   0b01100,
-   0b11000
+    0b11000,
+    0b01100,
+    0b00110,
+    0b00110,
+    0b00110,
+    0b00110,
+    0b01100,
+    0b11000
 };
 
-static const uint8 lcd_char_moon_right_75[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonRight75[LCD__CHARACTER_ROW_SIZE] =
 {
     0b11000,
     0b10100,
@@ -128,7 +128,7 @@ static const uint8 lcd_char_moon_right_75[L_LCD_CHARACTER_ROW_SIZE] =
     0b11000
 };
 
-static const uint8 lcd_char_moon_right_0[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharMoonRight0[LCD__CHARACTER_ROW_SIZE] =
 {
     0b11000,
     0b00100,
@@ -146,7 +146,7 @@ static const uint8 lcd_char_moon_right_0[L_LCD_CHARACTER_ROW_SIZE] =
  * DCF77
  *******************************************************************************
  */
-static const uint8 lcd_char_dcf77_rx_ok[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharDCF77RxOK[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b10001,
@@ -158,7 +158,7 @@ static const uint8 lcd_char_dcf77_rx_ok[L_LCD_CHARACTER_ROW_SIZE] =
     0b00100
 };
 
-static const uint8 lcd_char_dcf77_rx_no[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharDCF77RxNO[LCD__CHARACTER_ROW_SIZE] =
 {
     0b00000,
     0b00000,
@@ -177,7 +177,7 @@ static const uint8 lcd_char_dcf77_rx_no[L_LCD_CHARACTER_ROW_SIZE] =
  *******************************************************************************
  */
 /*
-static const uint8 lcd_char_battery_0[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery0[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -189,7 +189,7 @@ static const uint8 lcd_char_battery_0[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_10[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery10[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -201,7 +201,7 @@ static const uint8 lcd_char_battery_10[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_30[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery30[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -213,7 +213,7 @@ static const uint8 lcd_char_battery_30[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_50[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery50[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -225,7 +225,7 @@ static const uint8 lcd_char_battery_50[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_70[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery70[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -237,7 +237,7 @@ static const uint8 lcd_char_battery_70[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_90[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery90[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11011,
@@ -249,7 +249,7 @@ static const uint8 lcd_char_battery_90[L_LCD_CHARACTER_ROW_SIZE] =
     0b11111
 };
 
-static const uint8 lcd_char_battery_100[L_LCD_CHARACTER_ROW_SIZE] =
+static const uint8 LCD_CharBattery100[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
     0b11111,

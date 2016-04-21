@@ -4,65 +4,65 @@
 
 //====== Private Constants =====================================================
 // LCD size (e.g.: 4x20)
-#define L_LCD_DISPLAY_ROW ( 4u)
-#define L_LCD_DISPLAY_COL (20u)
+#define L__DISPLAY_ROW ( 4u)
+#define L__DISPLAY_COL (20u)
 
 // Commands
-#define L_LCD_CMD_CLEAR_DISPLAY     (0x01u)
-#define L_LCD_CMD_RETURN_HOME       (0x02u)
-#define L_LCD_CMD_ENTRY_MODE_SET    (0x04u)
-#define L_LCD_CMD_DISPLAY_CONTROL   (0x08u)
-#define L_LCD_CMD_CURSOR_SHIFT      (0x10u)
-#define L_LCD_CMD_FUNCTION_SET      (0x20u)
-#define L_LCD_CMD_SET_CGRAM         (0x40u)
-#define L_LCD_CMD_SET_DDRAM         (0x80u)
+#define L__CMD_CLEAR_DISPLAY     (0x01u)
+#define L__CMD_RETURN_HOME       (0x02u)
+#define L__CMD_ENTRY_MODE_SET    (0x04u)
+#define L__CMD_DISPLAY_CONTROL   (0x08u)
+#define L__CMD_CURSOR_SHIFT      (0x10u)
+#define L__CMD_FUNCTION_SET      (0x20u)
+#define L__CMD_SET_CGRAM         (0x40u)
+#define L__CMD_SET_DDRAM         (0x80u)
 
 // Entry mode set configurations
-#define L_LCD_ENTRY_MODE_INCREMENT  (0x02u)
-#define L_LCD_ENTRY_MODE_DECREMENT  (0x00u)
+#define L__ENTRY_MODE_INCREMENT  (0x02u)
+#define L__ENTRY_MODE_DECREMENT  (0x00u)
 
 // Display control configurations
-#define L_LCD_DISPLAY_ON            (0x04u)
-#define L_LCD_DISPLAY_OFF           (0x00u)
-#define L_LCD_CURSOR_ON             (0x02u)
-#define L_LCD_CURSOR_OFF            (0x00u)
-#define L_LCD_CURSOR_BLINK_ON       (0x01u)
-#define L_LCD_CURSOR_BLINK_OFF      (0x00u)
+#define L__DISPLAY_ON            (0x04u)
+#define L__DISPLAY_OFF           (0x00u)
+#define L__CURSOR_ON             (0x02u)
+#define L__CURSOR_OFF            (0x00u)
+#define L__CURSOR_BLINK_ON       (0x01u)
+#define L__CURSOR_BLINK_OFF      (0x00u)
 
 // Cursor shift control configurations
-#define L_LCD_DISPLAY_SHIFT         (0x08u)
-#define L_LCD_CURSOR_MOVE           (0x00u)
-#define L_LCD_SHIFT_TO_RIGHT        (0x04u)
-#define L_LCD_SHIFT_TO_LEFT         (0x00u)
+#define L__DISPLAY_SHIFT         (0x08u)
+#define L__CURSOR_MOVE           (0x00u)
+#define L__SHIFT_TO_RIGHT        (0x04u)
+#define L__SHIFT_TO_LEFT         (0x00u)
 
 // Function set configuration
-#define L_LCD_FUNCTION_8BIT_MODE    (0x10u)
-#define L_LCD_FUNCTION_4BIT_MODE    (0x00u)
-#define L_LCD_FUNCTION_2LINE        (0x08u)
-#define L_LCD_FUNCTION_1LINE        (0x00u)
-#define L_LCD_FUNCTION_5x10_DOTS    (0x04u)
-#define L_LCD_FUNCTION_5x8_DOTS     (0x00u)
+#define L__FUNCTION_8BIT_MODE    (0x10u)
+#define L__FUNCTION_4BIT_MODE    (0x00u)
+#define L__FUNCTION_2LINE        (0x08u)
+#define L__FUNCTION_1LINE        (0x00u)
+#define L__FUNCTION_5x10_DOTS    (0x04u)
+#define L__FUNCTION_5x8_DOTS     (0x00u)
 
-#define L_LCD_RS_COMMAND (0u)
-#define L_LCD_RS_DATA    (1u)
-#define L_LCD_RW_WRITE   (0u)
-#define L_LCD_RW_READ    (1u)
+#define L__RS_COMMAND (0u)
+#define L__RS_DATA    (1u)
+#define L__RW_WRITE   (0u)
+#define L__RW_READ    (1u)
 
-#define L_COMMAND        (0u)
-#define L_DATA           (1u)
+#define L__COMMAND        (0u)
+#define L__DATA           (1u)
 
 
 //====== Private Signals =======================================================
 
 
 //====== Private Function Prototypes ===========================================
-static void EnableTransfer(void);
-static void Send(uint8 type, uint8 package);
+static void L_EnableTransfer(void);
+static void L_Send(uint8 type, uint8 package);
 
 
 //====== Private Functions =====================================================
 /*
- * Name: EnableTransfer
+ * Name: L_EnableTransfer
  *
  * Description: This function sends an enable pulse to the LCD controller in
  *              order to confirm a data/command transfer.
@@ -72,17 +72,17 @@ static void Send(uint8 type, uint8 package);
  *
  * Output: None
  */
-static void EnableTransfer(void)
+static void L_EnableTransfer(void)
 {
     // Enable the sending
-    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_EN, U__LOW);
     _delay_us(1u);
 
     // EN pulse shall be greater than 450ns
-    GPIO_WRITE(PORT_LCD, P_LCD_EN, HIGH);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_EN, U__HIGH);
     _delay_us(1u);
 
-    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_EN, U__LOW);
 
     // Commands need more than 37us to settle
     _delay_us(100u);
@@ -90,7 +90,7 @@ static void EnableTransfer(void)
 
 
 /*
- * Name: Send
+ * Name: L_Send
  *
  * Description: This function sends the given command or data to the LCD
  *              controller in 4-bit mode.
@@ -101,47 +101,47 @@ static void EnableTransfer(void)
  *
  * Output: None
  */
-static void Send(uint8 type, uint8 package)
+static void L_Send(uint8 type, uint8 package)
 {
     
     // Command/Data & Write
     switch (type)
     {
-        case L_COMMAND:
+        case L__COMMAND:
         {
-            GPIO_WRITE(PORT_LCD, P_LCD_RS, L_LCD_RS_COMMAND);
+            MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RS, L__RS_COMMAND);
         }
         break;
         
-        case L_DATA:
+        case L__DATA:
         {
-            GPIO_WRITE(PORT_LCD, P_LCD_RS, L_LCD_RS_DATA);
+            MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RS, L__RS_DATA);
         }
         break;
     }    
-    GPIO_WRITE(PORT_LCD, P_LCD_RW, L_LCD_RW_WRITE);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RW, L__RW_WRITE);
 
     // Just to be sure, set data pins to output
-    GPIO_DIRECTION(DDR_LCD, P_LCD_D4, OUTPUT);
-    GPIO_DIRECTION(DDR_LCD, P_LCD_D5, OUTPUT);
-    GPIO_DIRECTION(DDR_LCD, P_LCD_D6, OUTPUT);
-    GPIO_DIRECTION(DDR_LCD, P_LCD_D7, OUTPUT);
+    MCH__GPIO_DIRECTION(MCH__DDR_LCD, MCH__P_LCD_D4, U__OUTPUT);
+    MCH__GPIO_DIRECTION(MCH__DDR_LCD, MCH__P_LCD_D5, U__OUTPUT);
+    MCH__GPIO_DIRECTION(MCH__DDR_LCD, MCH__P_LCD_D6, U__OUTPUT);
+    MCH__GPIO_DIRECTION(MCH__DDR_LCD, MCH__P_LCD_D7, U__OUTPUT);
 
     // Send the MSB 4 bits
-    GPIO_WRITE(PORT_LCD, P_LCD_D4, ((package >> 4u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D5, ((package >> 5u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D6, ((package >> 6u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D7, ((package >> 7u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D4, ((package >> 4u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D5, ((package >> 5u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D6, ((package >> 6u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D7, ((package >> 7u) & 0x01u));
 
-    EnableTransfer();
+    L_EnableTransfer();
 
     // Send the LSB 4 bits
-    GPIO_WRITE(PORT_LCD, P_LCD_D4, ((package >> 0u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D5, ((package >> 1u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D6, ((package >> 2u) & 0x01u));
-    GPIO_WRITE(PORT_LCD, P_LCD_D7, ((package >> 3u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D4, ((package >> 0u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D5, ((package >> 1u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D6, ((package >> 2u) & 0x01u));
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_D7, ((package >> 3u) & 0x01u));
 
-    EnableTransfer();
+    L_EnableTransfer();
 }
 
 
@@ -166,41 +166,41 @@ void LCD_Init(void)
     // Wait more than 15ms after Vdd rises to 4.5V
     _delay_ms(50u);
 
-    GPIO_WRITE(PORT_LCD, P_LCD_RS, LOW);
-    GPIO_WRITE(PORT_LCD, P_LCD_RW, LOW);
-    GPIO_WRITE(PORT_LCD, P_LCD_EN, LOW);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RS, U__LOW);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RW, U__LOW);
+    MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_EN, U__LOW);
 
     //****** STEP 2. **********************************************************/
     // 4-bit mode initialization according to datasheet p46
-    Send(L_COMMAND, 0x03u);
+    L_Send(L__COMMAND, 0x03u);
     _delay_ms(5u);
-    Send(L_COMMAND, 0x03u);
+    L_Send(L__COMMAND, 0x03u);
     _delay_ms(5u);
-    Send(L_COMMAND, 0x03u);
+    L_Send(L__COMMAND, 0x03u);
     _delay_us(500u);
-    Send(L_COMMAND, 0x02u);
+    L_Send(L__COMMAND, 0x02u);
 
     //****** STEP 3. **********************************************************/
     // Function set: 0 0 1 DL N F 0 0
     //                      | | |------ = 0 : 5x8 dots character font
     //                      | |-------- = 1 : 2-line mode
     //                      |---------- = 0 : 4-bit mode
-    Send(L_COMMAND,
-         L_LCD_CMD_FUNCTION_SET   |
-         L_LCD_FUNCTION_4BIT_MODE |
-         L_LCD_FUNCTION_2LINE     |
-         L_LCD_FUNCTION_5x8_DOTS);
+    L_Send(L__COMMAND,
+           L__CMD_FUNCTION_SET   |
+           L__FUNCTION_4BIT_MODE |
+           L__FUNCTION_2LINE     |
+           L__FUNCTION_5x8_DOTS);
 
     //****** STEP 4. **********************************************************/
     // Display control: 0 0 0 0 1 D C B
     //                            | | |-- = 0 : Cursor Blink OFF
     //                            | |---- = 0 : Cursor OFF
     //                            |------ = 0 : Display OFF
-    Send(L_COMMAND,
-         L_LCD_CMD_DISPLAY_CONTROL |
-         L_LCD_DISPLAY_OFF         |
-         L_LCD_CURSOR_OFF          |
-         L_LCD_CURSOR_BLINK_OFF);
+    L_Send(L__COMMAND,
+           L__CMD_DISPLAY_CONTROL |
+           L__DISPLAY_OFF         |
+           L__CURSOR_OFF          |
+           L__CURSOR_BLINK_OFF);
 
     //****** STEP 5. **********************************************************/
     // Display clear
@@ -210,10 +210,10 @@ void LCD_Init(void)
     // Entry mode set: 0 0 0 0 0 0 1 I/D S
     //                                |  |-- = 0 : Cursor moves not the display
     //                                |----- = 1 : Increment cursor move
-    Send(L_COMMAND,
-         L_LCD_CMD_ENTRY_MODE_SET   |
-         L_LCD_ENTRY_MODE_INCREMENT |
-         L_LCD_CURSOR_MOVE);
+    L_Send(L__COMMAND,
+           L__CMD_ENTRY_MODE_SET   |
+           L__ENTRY_MODE_INCREMENT |
+           L__CURSOR_MOVE);
 }
 
 
@@ -229,7 +229,7 @@ void LCD_Init(void)
  */
 void LCD_SwitchOn(void)
 {
-    Send(L_COMMAND, L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_ON);
+    L_Send(L__COMMAND, L__CMD_DISPLAY_CONTROL | L__DISPLAY_ON);
 }
 
 
@@ -245,7 +245,7 @@ void LCD_SwitchOn(void)
  */
 void LCD_SwitchOff(void)
 {
-    Send(L_COMMAND, L_LCD_CMD_DISPLAY_CONTROL | L_LCD_DISPLAY_OFF);
+    L_Send(L__COMMAND, L__CMD_DISPLAY_CONTROL | L__DISPLAY_OFF);
 }
 
 
@@ -261,7 +261,7 @@ void LCD_SwitchOff(void)
  */
 void LCD_Clear(void)
 {
-    Send(L_COMMAND, L_LCD_CMD_CLEAR_DISPLAY);
+    L_Send(L__COMMAND, L__CMD_CLEAR_DISPLAY);
     _delay_ms(2u);
 }
 
@@ -279,32 +279,32 @@ void LCD_Clear(void)
  *
  * Output: None
  */
-void LCD_SetCursor(uint8 row, uint8 column)
+void LCD_SetCursor(uint8 _Row, uint8 _Column)
 {
-    uint8 _position_address = INIT_VALUE_UINT;
+    uint8 _PositionAddress = U__INIT_VALUE_UINT;
 
     
     // Saturation of row and column
-    if (row    > L_LCD_DISPLAY_ROW) { row    = L_LCD_DISPLAY_ROW; }
-    if (column > L_LCD_DISPLAY_COL) { column = L_LCD_DISPLAY_COL; }
+    if (_Row    > L__DISPLAY_ROW) { _Row    = L__DISPLAY_ROW; }
+    if (_Column > L__DISPLAY_COL) { _Column = L__DISPLAY_COL; }
 
     // Setting the row DDRAM address
-    switch (row)
+    switch (_Row)
     {
-      case 1u: { row = 0x00u; } break;
-      case 2u: { row = 0x40u; } break;
-      case 3u: { row = 0x14u; } break;
-      case 4u: { row = 0x54u; } break;
+      case 1u: { _Row = 0x00u; } break;
+      case 2u: { _Row = 0x40u; } break;
+      case 3u: { _Row = 0x14u; } break;
+      case 4u: { _Row = 0x54u; } break;
     }
 
     // Setting the column DDRAM address
-    column--;
+    _Column--;
 
     // Calculation of the DDRAM address
-    _position_address = row + column;
+    _PositionAddress = _Row + _Column;
 
     // Sending the DDRAM address to the LCD controller
-    Send(L_COMMAND, L_LCD_CMD_SET_DDRAM | _position_address);
+    L_Send(L__COMMAND, L__CMD_SET_DDRAM | _PositionAddress);
 }
 
 
@@ -317,9 +317,9 @@ void LCD_SetCursor(uint8 row, uint8 column)
  *
  * Output: None
  */
-void LCD_WriteChar(uint8 character)
+void LCD_WriteChar(uint8 _Character)
 {
-    Send(L_DATA, character);
+    L_Send(L__DATA, _Character);
 }
 
 
@@ -332,22 +332,22 @@ void LCD_WriteChar(uint8 character)
  *
  * Output: None
  */
-void LCD_WriteString(const char *poi_string)
+void LCD_WriteString(const char* _PoiString)
 {
-    while(*poi_string)
+    while(*_PoiString)
     {
-        LCD_WriteChar(*poi_string);
-        poi_string++;
+        LCD_WriteChar(*_PoiString);
+        _PoiString++;
     }
 }
 
 
-void LCD_WriteStringM(const char *poi_string)
+void LCD_WriteStringM(const char* _PoiString)
 {
-    while(pgm_read_byte(poi_string))
+    while(pgm_read_byte(_PoiString))
     {
-        LCD_WriteChar(pgm_read_byte(poi_string));
-        poi_string++;
+        LCD_WriteChar(pgm_read_byte(_PoiString));
+        _PoiString++;
     }
 }
 
@@ -361,13 +361,13 @@ void LCD_WriteStringM(const char *poi_string)
  *
  * Output: None
  */
-void LCD_WriteInt(sint16 number)
+void LCD_WriteInt(sint16 _Number)
 {
-    char _string[L_LCD_DISPLAY_COL];
+    char _String[L__DISPLAY_COL];
 
     
-    itoa(number, _string, 10);
-    LCD_WriteString(_string);
+    itoa(_Number, _String, 10);
+    LCD_WriteString(_String);
 }
 
 
@@ -383,18 +383,18 @@ void LCD_WriteInt(sint16 number)
  *
  * Output: None
  */
-void LCD_StoreCustomChar(uint8 location, const uint8 custom_charmap[])
+void LCD_StoreCustomChar(uint8 _Location, const uint8 _CustomCharMap[])
 {
-    uint8 _loop_counter = INIT_VALUE_UINT;
+    uint8 _LoopCounter = U__INIT_VALUE_UINT;
 
     
-    location &= 0x07u;
+    _Location &= 0x07u;
 
-    Send(L_COMMAND, L_LCD_CMD_SET_CGRAM | (location << 3u));
+    L_Send(L__COMMAND, L__CMD_SET_CGRAM | (_Location << 3u));
 
-    for (_loop_counter = 0u; _loop_counter < 8u; _loop_counter++)
+    for (_LoopCounter = 0u; _LoopCounter < 8u; _LoopCounter++)
     {
-        Send(L_DATA, custom_charmap[_loop_counter]);
+        L_Send(L__DATA, _CustomCharMap[_LoopCounter]);
     }
 }
 
@@ -409,7 +409,7 @@ void LCD_StoreCustomChar(uint8 location, const uint8 custom_charmap[])
  *
  * Output: None
  */
-void LCD_WriteCustomChar(uint8 location)
+void LCD_WriteCustomChar(uint8 _Location)
 {
-    Send(L_DATA, location);
+    L_Send(L__DATA, _Location);
 }

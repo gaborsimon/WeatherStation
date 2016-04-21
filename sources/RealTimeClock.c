@@ -3,11 +3,11 @@
 
 
 //====== Private Constants =====================================================
-#define L_FEB_IN_LEAP_YEAR (0u)
-#define L_FEB              (2u)
+#define L__FEB_IN_LEAP_YEAR (0u)
+#define L__FEB              (2u)
 
 
-static const uint8 L_DayNumberOfMonth[13] =
+static const uint8 L_DayNumberOfMonth[13u] =
 {
     29u,    // February in a leap Year
     31u,    // January
@@ -29,13 +29,13 @@ static const uint8 L_DayNumberOfMonth[13] =
 
 
 //====== Private Function Prototypes ===========================================
-static uint8 EndDayOfMonth(void);
-static uint8 IsLeapYear(void);
+static uint8 L_EndDayOfMonth(void);
+static uint8 L_IsLeapYear(void);
 
 
 //====== Private Functions =====================================================
 /*
- * Name: EndDayOfMonth
+ * Name: L_EndDayOfMonth
  *
  * Description: This function calculates the last day of the current month.
  *              It considers the leap year for February.
@@ -44,27 +44,28 @@ static uint8 IsLeapYear(void);
  *
  * Output: Last day number of the current month
  */
-static uint8 EndDayOfMonth(void)
+static uint8 L_EndDayOfMonth(void)
 {
-    uint8 _result = INIT_VALUE_UINT;
+    uint8 _Result = U__INIT_VALUE_UINT;
 
     
     // If there is February and Leap Year then February contains 29 days
-    if ((L_FEB == RTC_TimeDate.Month) && (IsLeapYear()))
+    if ((L__FEB == RTC_TimeDate.Month) && (L_IsLeapYear()))
     {
-        _result = L_DayNumberOfMonth[L_FEB_IN_LEAP_YEAR];
+        _Result = L_DayNumberOfMonth[L__FEB_IN_LEAP_YEAR];
     }
     else
     {
-        _result = L_DayNumberOfMonth[RTC_TimeDate.Month];
+        _Result = L_DayNumberOfMonth[RTC_TimeDate.Month];
     }
 
-    return _result;
+
+    return _Result;
 }
 
 
 /*
- * Name: IsLeapYear
+ * Name: L_IsLeapYear
  *
  * Description: This function calculates whether the given year is a leap
  *              year or not.
@@ -73,22 +74,24 @@ static uint8 EndDayOfMonth(void)
  *
  * Output: TRUE or FALSE
  */
-static uint8 IsLeapYear(void)
+static uint8 L_IsLeapYear(void)
 {
-    uint8 _result = FALSE;
+    uint8 _Result = U__FALSE;
 
-    if      ((RTC_TimeDate.Year % 400u) == 0u) { _result = TRUE;  }
-    else if ((RTC_TimeDate.Year % 100u) == 0u) { _result = FALSE; }
-    else if ((RTC_TimeDate.Year %   4u) == 0u) { _result = TRUE;  }
-    else                                       { _result = FALSE; }
 
-    return _result;
+    if      ((RTC_TimeDate.Year % 400u) == 0u) { _Result = U__TRUE;  }
+    else if ((RTC_TimeDate.Year % 100u) == 0u) { _Result = U__FALSE; }
+    else if ((RTC_TimeDate.Year %   4u) == 0u) { _Result = U__TRUE;  }
+    else                                       { _Result = U__FALSE; }
+
+
+    return _Result;
 }
 
 
 //====== Public Signals ========================================================
-TimeDate RTC_TimeDate;
-const char* RTC_DayName[8u] = {"ER","MO","TU","WE","TH","FR","SA","SU"};
+RTC_TimeDate_s RTC_TimeDate;
+const char*    RTC_DayName[8u] = {"ER","MO","TU","WE","TH","FR","SA","SU"};
 
 
 //====== Public Functions ======================================================
@@ -160,7 +163,7 @@ void RTC_Refresh(void)
                 //**************************************************************
                 //****** Counting the months
                 //**************************************************************
-                if ((EndDayOfMonth() + 1) == RTC_TimeDate.Day)
+                if ((L_EndDayOfMonth() + 1) == RTC_TimeDate.Day)
                 {
                     RTC_TimeDate.Day = 1u;
                     RTC_TimeDate.Month++;
@@ -196,15 +199,15 @@ void RTC_Refresh(void)
  *
  * Output: None
  */
-void RTC_SetDate(uint16 year, uint8 month,  uint8 day,
-                 uint8  daynumber,
-                 uint8  hour, uint8 minute, uint8 second)
+void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
+                 uint8  _DayNumber,
+                 uint8  _Hour, uint8 _Minute, uint8 _Second)
 {
-    RTC_TimeDate.Year       = year;
-    RTC_TimeDate.Month      = month;
-    RTC_TimeDate.Day        = day;
-    RTC_TimeDate.DayNumber  = daynumber;
-    RTC_TimeDate.Hour       = hour;
-    RTC_TimeDate.Minute     = minute;
-    RTC_TimeDate.Second     = second;
+    RTC_TimeDate.Year       = _Year;
+    RTC_TimeDate.Month      = _Month;
+    RTC_TimeDate.Day        = _Day;
+    RTC_TimeDate.DayNumber  = _DayNumber;
+    RTC_TimeDate.Hour       = _Hour;
+    RTC_TimeDate.Minute     = _Minute;
+    RTC_TimeDate.Second     = _Second;
 }

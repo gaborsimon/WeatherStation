@@ -28,13 +28,13 @@ extern "C" {
     extern void LCD_SwitchOn(void);
     extern void LCD_SwitchOff(void);
     extern void LCD_Clear(void);
-    extern void LCD_SetCursor(uint8 row, uint8 column);
-    extern void LCD_WriteChar(uint8 character);
-    extern void LCD_WriteString(const char *poi_string);
-    extern void LCD_WriteStringM(const char *poi_string);
-    extern void LCD_WriteInt(sint16 number);
-    extern void LCD_StoreCustomChar(uint8 location, const uint8 custom_charmap[]);
-    extern void LCD_WriteCustomChar(uint8 location);
+    extern void LCD_SetCursor(uint8 _Row, uint8 _Column);
+    extern void LCD_WriteChar(uint8 _Character);
+    extern void LCD_WriteString(const char *_PoiString);
+    extern void LCD_WriteStringM(const char *_PoiString);
+    extern void LCD_WriteInt(sint16 _Number);
+    extern void LCD_StoreCustomChar(uint8 _Location, const uint8 _CustomCharMap[]);
+    extern void LCD_WriteCustomChar(uint8 _Location);
 
 #ifdef __cplusplus
 } // extern "C"

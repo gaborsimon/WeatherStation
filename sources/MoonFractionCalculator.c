@@ -3,22 +3,22 @@
 
 
 //====== Private Constants =====================================================
-#define L_JAN (1u)
-#define L_FEB (2u)
+#define L__JAN (1u)
+#define L__FEB (2u)
 
 
 //====== Private Signals =======================================================
 
 
 //====== Private Function Prototypes ===========================================
-static float32 CalculateJDE(uint16 year, uint16 month, uint16 day);
-static void    CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
-                                  uint8 *fraction, uint8 *direction);
+static float32 L_CalculateJDE(uint16 _Year, uint16 _Month, uint16 _Day);
+static void    L_CalculateMoonFraction(uint16 _Year, uint16 _Month, uint16 _Day,
+                                  uint8 *_Fraction, uint8 *_Direction);
 
 
 //====== Private Functions =====================================================
 /*
- * Name: CalculateJDE
+ * Name: L_CalculateJDE
  *
  * Description: This function calculates the Julian Ephemeris Day (JDE) by the
  *              given Gregorian date.
@@ -29,19 +29,19 @@ static void    CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
  *
  * Output: JDE
  */
-static float32 CalculateJDE(uint16 year, uint16 month, uint16 day)
+static float32 L_CalculateJDE(uint16 _Year, uint16 _Month, uint16 _Day)
 {
-    float32 _result = INIT_VALUE_FLOAT;
+    float32 _Result = U__INIT_VALUE_FLOAT;
     float32 _B      = -13.0f;
 
     
     //****** STEP 1. ***********************************************************
     // If Month is equal to the 1st or 2nd month of the year then Month shall be
     // the 13th or 14th month of the previous year.
-    if ((L_JAN == month) || (L_FEB == month))
+    if ((L__JAN == _Month) || (L__FEB == _Month))
     {
-        year  = year  -  1u;
-        month = month + 12u;
+        _Year  = _Year  -  1u;
+        _Month = _Month + 12u;
     }
 
     //****** STEP 2. ***********************************************************
@@ -62,18 +62,18 @@ static float32 CalculateJDE(uint16 year, uint16 month, uint16 day)
     //                       DAY +
     //                       B -
     //                       1524.5
-    _result  = (float32) ((uint32) (365.25f   * ((float32) (year)  + 4716.0f)));
-    _result += (float32) ((uint32) ( 30.6001f * ((float32) (month) +    1.0f)));
-    _result += (float32) (day);
-    _result += _B;
-    _result -= 1524.5f;
+    _Result  = (float32) ((uint32) (365.25f   * ((float32) (_Year)  + 4716.0f)));
+    _Result += (float32) ((uint32) ( 30.6001f * ((float32) (_Month) +    1.0f)));
+    _Result += (float32) (_Day);
+    _Result += _B;
+    _Result -= 1524.5f;
 
-    return _result;
+    return _Result;
 }
 
 
 /*
- * Name: CalculateMoonFraction
+ * Name: L_CalculateMoonFraction
  *
  * Description: This function calculates the illuminated fraction (k) of the
  *              disk of the Moon depends on the selenocentric elongation of the
@@ -97,24 +97,24 @@ static float32 CalculateJDE(uint16 year, uint16 month, uint16 day)
  * Output: Fraction  = Illuminated Fraction in % dimension
  *         Direction = Moon wanes (shrinks) or waxes (grows) or full or new
  */
-static void CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
-                                  uint8 *fraction, uint8 *direction)
+static void L_CalculateMoonFraction(uint16 _Year, uint16 _Month, uint16 _Day,
+                                  uint8 *_Fraction, uint8 *_Direction)
 {
-    float32 _JDE = INIT_VALUE_FLOAT;
-    float32 _T   = INIT_VALUE_FLOAT;
-    float32 _T2  = INIT_VALUE_FLOAT;
-    float32 _T3  = INIT_VALUE_FLOAT;
-    float32 _T4  = INIT_VALUE_FLOAT;
-    float32 _D   = INIT_VALUE_FLOAT;
-    float32 _Ms  = INIT_VALUE_FLOAT;
-    float32 _Mm  = INIT_VALUE_FLOAT;
-    float32 _i   = INIT_VALUE_FLOAT;
-    float32 _k   = INIT_VALUE_FLOAT;
+    float32 _JDE = U__INIT_VALUE_FLOAT;
+    float32 _T   = U__INIT_VALUE_FLOAT;
+    float32 _T2  = U__INIT_VALUE_FLOAT;
+    float32 _T3  = U__INIT_VALUE_FLOAT;
+    float32 _T4  = U__INIT_VALUE_FLOAT;
+    float32 _D   = U__INIT_VALUE_FLOAT;
+    float32 _Ms  = U__INIT_VALUE_FLOAT;
+    float32 _Mm  = U__INIT_VALUE_FLOAT;
+    float32 _i   = U__INIT_VALUE_FLOAT;
+    float32 _k   = U__INIT_VALUE_FLOAT;
 
     
     //****** STEP 1. ***********************************************************
     // Calculation of "JDE"
-    _JDE = CalculateJDE(year, month, day);
+    _JDE = L_CalculateJDE(_Year, _Month, _Day);
 
     //****** STEP 2. ***********************************************************
     // Calculation of "T" and its power
@@ -149,30 +149,30 @@ static void CalculateMoonFraction(uint16 year, uint16 month, uint16 day,
     //****** STEP 6. ***********************************************************
     // Calculation of "i": [deg] Phase Angle
     _i  = (180.000f - _D);
-    _i -= (  6.289f * SIND(_Mm));
-    _i += (  2.100f * SIND(_Ms));
-    _i -= (  1.274f * SIND(2 * _D - _Mm));
-    _i -= (  0.658f * SIND(2 * _D));
-    _i -= (  0.214f * SIND(2 * _Mm));
-    _i -= (  0.110f * SIND(_D));
+    _i -= (  6.289f * U__SIND(_Mm));
+    _i += (  2.100f * U__SIND(_Ms));
+    _i -= (  1.274f * U__SIND(2 * _D - _Mm));
+    _i -= (  0.658f * U__SIND(2 * _D));
+    _i -= (  0.214f * U__SIND(2 * _Mm));
+    _i -= (  0.110f * U__SIND(_D));
 
     //****** STEP 7. ***********************************************************
     // Calculation of "k": (1 + cos i) / 2
     // Illuminated Fraction of the disk of the Moon
-    _k = ((1.0f + COSD(_i)) * 0.5f);
+    _k = ((1.0f + U__COSD(_i)) * 0.5f);
 
     // Calculate the fraction in percent dimension
-    *fraction = (uint8)(_k * 100.0f);
+    *_Fraction = (uint8)(_k * 100.0f);
 
     //****** DIRECTION *********************************************************
-    if      (SIND(_i) > 0.001f) { *direction = MOON_WAXES; }
-    else if (SIND(_i) < 0.001f) { *direction = MOON_WANES; }
-    else                        { *direction = MOON_FULL_OR_NEW; }
+    if      (U__SIND(_i) > 0.001f) { *_Direction = MFC__MOON_WAXES; }
+    else if (U__SIND(_i) < 0.001f) { *_Direction = MFC__MOON_WANES; }
+    else                           { *_Direction = MFC__MOON_FULL_OR_NEW; }
 }
 
 
 //====== Public Signals ========================================================
-Moon MFC_Moon;
+MFC_Moon_s MFC_Moon;
 
 
 //====== Public Functions ======================================================
@@ -190,6 +190,6 @@ Moon MFC_Moon;
  */
 void MFC_Refresh(void)
 {
-    CalculateMoonFraction(XRTC_TIMEDATE_YEAR, XRTC_TIMEDATE_MONTH, XRTC_TIMEDATE_DAY,
+    L_CalculateMoonFraction(XRTC__TIMEDATE_YEAR, XRTC__TIMEDATE_MONTH, XRTC__TIMEDATE_DAY,
                           &MFC_Moon.Fraction, &MFC_Moon.Direction);
 }

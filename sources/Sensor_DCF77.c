@@ -3,134 +3,134 @@
 
 
 //====== Private Constants =====================================================
-#define L_PULSE_ZERO_MIN_TIME    ((uint16) (60.0f / 0.032f))
-#define L_PULSE_ZERO_MAX_TIME    ((uint16)(145.0f / 0.032f))
-#define L_PULSE_ONE_MIN_TIME     ((uint16)(155.0f / 0.032f))
-#define L_PULSE_ONE_MAX_TIME     ((uint16)(245.0f / 0.032f))
+#define L__PULSE_ZERO_MIN_TIME    ((uint16) (60.0f / 0.032f))
+#define L__PULSE_ZERO_MAX_TIME    ((uint16)(145.0f / 0.032f))
+#define L__PULSE_ONE_MIN_TIME     ((uint16)(155.0f / 0.032f))
+#define L__PULSE_ONE_MAX_TIME     ((uint16)(245.0f / 0.032f))
 
-#define L_START_MIN     (21u)
-#define L_P1            (28u)
-#define L_START_HOUR    (29u)
-#define L_P2            (35u)
-#define L_START_DAY     (36u)
-#define L_START_DAY_NUM (42u)
-#define L_START_MONTH   (45u)
-#define L_START_YEAR    (50u)
-#define L_P3            (58u)
-#define L_MINUTE_MARK   (59u)
+#define L__START_MIN     (21u)
+#define L__P1            (28u)
+#define L__START_HOUR    (29u)
+#define L__P2            (35u)
+#define L__START_DAY     (36u)
+#define L__START_DAY_NUM (42u)
+#define L__START_MONTH   (45u)
+#define L__START_YEAR    (50u)
+#define L__P3            (58u)
+#define L__MINUTE_MARK   (59u)
 
 
 //====== Private Signals =======================================================
-uint8    BitPos              = INIT_VALUE_UINT;
-static uint8    BitArray[60u]       = { LOW };
-static Flag     DCF77_DecodeDone    = Flag_CLEAR;    
+static uint8    L_BitPos        = U__INIT_VALUE_UINT;
+static uint8    L_BitArray[60u] = { U__LOW };
+static G_Flag_e L_DecodeDone    = Flag_CLEAR;    
 
 
 //====== Private Function Prototypes ===========================================
-static Flag ParityCheck(uint8 start, uint8 stop);
-static Flag SignalParityCheck(void);
+static G_Flag_e L_ParityCheck(uint8 _StartPos, uint8 _StopPos);
+static G_Flag_e L_SignalParityCheck(void);
 
 
 //====== Private Functions =====================================================
-static Flag ParityCheck(uint8 start, uint8 stop)
+static G_Flag_e L_ParityCheck(uint8 _StartPos, uint8 _StopPos)
 {
-    uint8 _loop_cnt = INIT_VALUE_UINT;
-    uint8 _p        = INIT_VALUE_UINT;
-    Flag  _ret      = Flag_SET;
+    uint8    _LoopCnt  = U__INIT_VALUE_UINT;
+    uint8    _P        = U__INIT_VALUE_UINT;
+    G_Flag_e _Ret      = Flag_SET;
 
 
-    for (_loop_cnt = start; _loop_cnt < stop; _loop_cnt++)
+    for (_LoopCnt = _StartPos; _LoopCnt < _StopPos; _LoopCnt++)
     {
-        if (BitArray[_loop_cnt] == HIGH) { _p ^= 1u; }
+        if (L_BitArray[_LoopCnt] == U__HIGH) { _P ^= 1u; }
     }
     
-    if (_p != BitArray[stop])
+    if (_P != L_BitArray[_StopPos])
     {
-        _ret = Flag_SET;
+        _Ret = Flag_SET;
     }
     else
     {
-        _ret = Flag_CLEAR;
+        _Ret = Flag_CLEAR;
     }
    
 
-    return _ret;
+    return _Ret;
 }
 
 
-static Flag SignalParityCheck(void)
+static G_Flag_e L_SignalParityCheck(void)
 {
-    uint8  _error = Flag_SET;
+    uint8  _Error = Flag_SET;
 
     
-    _error = ParityCheck(L_START_MIN, L_P1);        
-    _error = ParityCheck(L_START_HOUR, L_P2);        
-    _error = ParityCheck(L_START_DAY, L_P3);
+    _Error = L_ParityCheck(L__START_MIN, L__P1);        
+    _Error = L_ParityCheck(L__START_HOUR, L__P2);        
+    _Error = L_ParityCheck(L__START_DAY, L__P3);
 
 
-    return _error;
+    return _Error;
 }
 
 
-static void SignalDecode(void)
+static void L_SignalDecode(void)
 {
-    uint8  _min     = INIT_VALUE_UINT;
-    uint8  _h       = INIT_VALUE_UINT;
-    uint8  _d       = INIT_VALUE_UINT;
-    uint8  _dn      = INIT_VALUE_UINT;
-    uint8  _m       = INIT_VALUE_UINT;
-    uint8  _y       = INIT_VALUE_UINT;
+    uint8  _min     = U__INIT_VALUE_UINT;
+    uint8  _h       = U__INIT_VALUE_UINT;
+    uint8  _d       = U__INIT_VALUE_UINT;
+    uint8  _dn      = U__INIT_VALUE_UINT;
+    uint8  _m       = U__INIT_VALUE_UINT;
+    uint8  _y       = U__INIT_VALUE_UINT;
     
     
-    _min  = BitArray[L_START_MIN];
-    _min += BitArray[L_START_MIN + 1u] *  2u;
-    _min += BitArray[L_START_MIN + 2u] *  4u;
-    _min += BitArray[L_START_MIN + 3u] *  8u;
-    _min += BitArray[L_START_MIN + 4u] * 10u;
-    _min += BitArray[L_START_MIN + 5u] * 20u;
-    _min += BitArray[L_START_MIN + 6u] * 40u;
+    _min  = L_BitArray[L__START_MIN];
+    _min += L_BitArray[L__START_MIN + 1u] *  2u;
+    _min += L_BitArray[L__START_MIN + 2u] *  4u;
+    _min += L_BitArray[L__START_MIN + 3u] *  8u;
+    _min += L_BitArray[L__START_MIN + 4u] * 10u;
+    _min += L_BitArray[L__START_MIN + 5u] * 20u;
+    _min += L_BitArray[L__START_MIN + 6u] * 40u;
 
-    _h  = BitArray[L_START_HOUR];
-    _h += BitArray[L_START_HOUR + 1u] *  2u;
-    _h += BitArray[L_START_HOUR + 2u] *  4u;
-    _h += BitArray[L_START_HOUR + 3u] *  8u;
-    _h += BitArray[L_START_HOUR + 4u] * 10u;
-    _h += BitArray[L_START_HOUR + 5u] * 20u;
+    _h  = L_BitArray[L__START_HOUR];
+    _h += L_BitArray[L__START_HOUR + 1u] *  2u;
+    _h += L_BitArray[L__START_HOUR + 2u] *  4u;
+    _h += L_BitArray[L__START_HOUR + 3u] *  8u;
+    _h += L_BitArray[L__START_HOUR + 4u] * 10u;
+    _h += L_BitArray[L__START_HOUR + 5u] * 20u;
 
-    _d  = BitArray[L_START_DAY];
-    _d += BitArray[L_START_DAY + 1u] *  2u;
-    _d += BitArray[L_START_DAY + 2u] *  4u;
-    _d += BitArray[L_START_DAY + 3u] *  8u;
-    _d += BitArray[L_START_DAY + 4u] * 10u;
-    _d += BitArray[L_START_DAY + 5u] * 20u;
+    _d  = L_BitArray[L__START_DAY];
+    _d += L_BitArray[L__START_DAY + 1u] *  2u;
+    _d += L_BitArray[L__START_DAY + 2u] *  4u;
+    _d += L_BitArray[L__START_DAY + 3u] *  8u;
+    _d += L_BitArray[L__START_DAY + 4u] * 10u;
+    _d += L_BitArray[L__START_DAY + 5u] * 20u;
 
-    _dn  = BitArray[L_START_DAY_NUM];
-    _dn += BitArray[L_START_DAY_NUM + 1u] *  2u;
-    _dn += BitArray[L_START_DAY_NUM + 2u] *  4u;
+    _dn  = L_BitArray[L__START_DAY_NUM];
+    _dn += L_BitArray[L__START_DAY_NUM + 1u] *  2u;
+    _dn += L_BitArray[L__START_DAY_NUM + 2u] *  4u;
 
-    _m  = BitArray[L_START_MONTH];
-    _m += BitArray[L_START_MONTH + 1u] *  2u;
-    _m += BitArray[L_START_MONTH + 2u] *  4u;
-    _m += BitArray[L_START_MONTH + 3u] *  8u;
-    _m += BitArray[L_START_MONTH + 4u] * 10u;
+    _m  = L_BitArray[L__START_MONTH];
+    _m += L_BitArray[L__START_MONTH + 1u] *  2u;
+    _m += L_BitArray[L__START_MONTH + 2u] *  4u;
+    _m += L_BitArray[L__START_MONTH + 3u] *  8u;
+    _m += L_BitArray[L__START_MONTH + 4u] * 10u;
 
-    _y  = BitArray[L_START_YEAR];
-    _y += BitArray[L_START_YEAR + 1u] *  2u;
-    _y += BitArray[L_START_YEAR + 2u] *  4u;
-    _y += BitArray[L_START_YEAR + 3u] *  8u;
-    _y += BitArray[L_START_YEAR + 4u] * 10u;
-    _y += BitArray[L_START_YEAR + 5u] * 20u;
-    _y += BitArray[L_START_YEAR + 6u] * 40u;
-    _y += BitArray[L_START_YEAR + 7u] * 80u;
+    _y  = L_BitArray[L__START_YEAR];
+    _y += L_BitArray[L__START_YEAR + 1u] *  2u;
+    _y += L_BitArray[L__START_YEAR + 2u] *  4u;
+    _y += L_BitArray[L__START_YEAR + 3u] *  8u;
+    _y += L_BitArray[L__START_YEAR + 4u] * 10u;
+    _y += L_BitArray[L__START_YEAR + 5u] * 20u;
+    _y += L_BitArray[L__START_YEAR + 6u] * 40u;
+    _y += L_BitArray[L__START_YEAR + 7u] * 80u;
 
     RTC_SetDate((uint16)(2000u + _y), _m, _d, _dn, _h, _min, 0u);
 
-    DCF77_DecodeDone = Flag_SET;
+    L_DecodeDone = Flag_SET;
 }
 
 
 //====== Public Signals ========================================================
-Flag DCF77_SyncDone = Flag_CLEAR;    
+DCF77_Status_e DCF77_Status = DCF77_Status_INIT;
 
 
 //====== Public Functions ======================================================
@@ -138,74 +138,74 @@ void DCF77_Callback_TimerOverflow(void)
 {
     // This is the end of the minute
     // Start parity check and decode the received bits
-    if ((L_MINUTE_MARK == BitPos) &&
-        (Flag_CLEAR    == SignalParityCheck()))
+    if ((L__MINUTE_MARK == L_BitPos) &&
+        (Flag_CLEAR    == L_SignalParityCheck()))
     {
-        SignalDecode();
+        L_SignalDecode();
     }
     // There was some error, reset the receiving procedure 
     else
     {
-        BitPos = INIT_VALUE_UINT;
+        L_BitPos = U__INIT_VALUE_UINT;
     }
 }
 
     
 void DCF77_Callback_InputCapture(void)
 {
-    uint16 _pulse_width = INIT_VALUE_UINT;
+    uint16 _PulseWidth = U__INIT_VALUE_UINT;
     
 
     // Start of pulse - Falling (negative) edge
-    if (LOW == BIT_GET(TCCR1B, ICES1))
+    if (U__LOW == U__BIT_GET(TCCR1B, ICES1))
     {
         // Start the Timer1 from zero
         TCNT1 = 0u;
         
         // Decoding was OK
-        if (Flag_SET == DCF77_DecodeDone)
+        if (Flag_SET == L_DecodeDone)
         {
-            DCF77_DecodeDone = Flag_CLEAR;
+            L_DecodeDone = Flag_CLEAR;
             
             // Reset main scheduler Timer Register
             TCNT2 = 0u;
             
             // Turn off the receiving
-            DCF77_Receiving(DISABLE);
+            DCF77_Receiving(U__DISABLE);
             
             // Synchronization has been finished
-            DCF77_SyncDone = Flag_SET;    
+            DCF77_Status = DCF77_Status_SYNCH_DONE;  
         }
         // Normal receiving
         else
         {
             // Set to rising edge
-            BIT_SET(TCCR1B, ICES1);
+            U__BIT_SET(TCCR1B, ICES1);
         }
     }
     // End of pulse - Rising (positive) edge
     else
     {
         // Capture the timer value
-        _pulse_width = ICR1;
+        _PulseWidth = ICR1;
         
         // Reset Timer Register
         TCNT1 = 0u;
 
         // Set to falling edge
-        BIT_CLR(TCCR1B, ICES1);
+        U__BIT_CLR(TCCR1B, ICES1);
         
         // Captured bit is "0" (~100ms) 
-        if ((L_PULSE_ZERO_MIN_TIME < _pulse_width) && (_pulse_width < L_PULSE_ZERO_MAX_TIME))
+        if ((L__PULSE_ZERO_MIN_TIME < _PulseWidth) && (_PulseWidth < L__PULSE_ZERO_MAX_TIME))
         {
-            BitArray[BitPos] = LOW;
-            BitPos++;
+            L_BitArray[L_BitPos] = U__LOW;
+            L_BitPos++;
         }
         // Captured bit is "1" (~200ms) 
-        else if ((L_PULSE_ONE_MIN_TIME < _pulse_width) && (_pulse_width < L_PULSE_ONE_MAX_TIME))
+        else if ((L__PULSE_ONE_MIN_TIME < _PulseWidth) && (_PulseWidth < L__PULSE_ONE_MAX_TIME))
         {
-            BitArray[BitPos] = HIGH;
-            BitPos++;
+            L_BitArray[L_BitPos] = U__HIGH;
+            L_BitPos++;
         }
         else
         {
@@ -215,48 +215,118 @@ void DCF77_Callback_InputCapture(void)
 }
 
 
-void DCF77_Receiving(uint8 _control)
+void DCF77_Receiving(uint8 _Control)
 {
-    switch (_control)
+    switch (_Control)
     {
-        case ENABLE:
+        case U__ENABLE:
         {
             // Reset decoder array
-            BitPos = INIT_VALUE_UINT;
+            L_BitPos = U__INIT_VALUE_UINT;
         
             // Module turned on
-            DCF77_CONTROL(ENABLE);
+            DCF77__CONTROL(U__ENABLE);
 
             // Reset Timer Register
             TCNT1 = 0u;
             
             // Timer1 turned on
             // Clock Select: CLK / 256 = 31.250kHz = 32us
-            BIT_SET(TCCR1B, CS12);
-            BIT_CLR(TCCR1B, CS11);
-            BIT_CLR(TCCR1B, CS10);
+            U__BIT_SET(TCCR1B, CS12);
+            U__BIT_CLR(TCCR1B, CS11);
+            U__BIT_CLR(TCCR1B, CS10);
     
             // Output Compare Interrupt: Enabled
-            BIT_SET(TIMSK, OCIE1A);
+            U__BIT_SET(TIMSK, OCIE1A);
             // Timer Input Capture Interrupt: Enabled
-            BIT_SET(TIMSK, TICIE1);
+            U__BIT_SET(TIMSK, TICIE1);
         }
         break;
 
-        case DISABLE:
+        case U__DISABLE:
         {
             // Module turned off
-            DCF77_CONTROL(DISABLE);
+            DCF77__CONTROL(U__DISABLE);
     
             // Timer1 turned off
-            BIT_CLR(TCCR1B, CS12);
-            BIT_CLR(TCCR1B, CS11);
-            BIT_CLR(TCCR1B, CS10);
+            U__BIT_CLR(TCCR1B, CS12);
+            U__BIT_CLR(TCCR1B, CS11);
+            U__BIT_CLR(TCCR1B, CS10);
     
             // Output Compare Interrupt: Disabled
-            BIT_CLR(TIMSK, OCIE1A);
+            U__BIT_CLR(TIMSK, OCIE1A);
             // Timer Input Capture Interrupt: Disabled
-            BIT_CLR(TIMSK, TICIE1);
+            U__BIT_CLR(TIMSK, TICIE1);
+        }
+        break;
+    }
+}
+
+
+void DCF77_Refresh(void)
+{
+    static uint8  L_SymbolFlipFlag = U__LOW; 
+    static uint16 L_TickCounter = U__INIT_VALUE_UINT; 
+
+
+    switch (DCF77_Status)
+    {
+        case DCF77_Status_INIT:
+        {
+            L_SymbolFlipFlag = U__LOW;
+            L_TickCounter = U__INIT_VALUE_UINT;
+            DCF77_Receiving(U__ENABLE);
+            DCF77_Status = DCF77_Status_SYNCH_ONGOING;
+        }
+        break;
+        
+        case DCF77_Status_SYNCH_ONGOING:
+        {
+            if (U__HIGH == L_SymbolFlipFlag)
+            {
+                L_SymbolFlipFlag = U__LOW;
+                LCM_Refresh(LCM__RX_OK);
+            }
+            else
+            {
+                L_SymbolFlipFlag = U__HIGH;
+                LCM_Refresh(LCM__RX_NO);
+            }
+
+            if (L_BitPos < 100u)
+            {
+                if (L_BitPos < 10u)
+                {
+                    LCD_WriteChar(' ');   
+                }
+                LCD_WriteInt(L_BitPos);   
+            }
+            else
+            {
+                LCD_WriteString("ER");
+            }
+        }
+        break;
+        
+        case DCF77_Status_SYNCH_DONE:
+        {
+            DCF77_Status = DCF77_Status_SYNCHRONIZED;
+        }
+        break;
+
+        case DCF77_Status_SYNCHRONIZED:
+        {
+            L_TickCounter++;
+
+            if (10u == L_TickCounter)
+            {
+                LCM_Refresh(LCM__RX_NONE);
+            }
+
+            if (20u == L_TickCounter)
+            {
+                DCF77_Status = DCF77_Status_INIT;
+            }
         }
         break;
     }
