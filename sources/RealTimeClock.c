@@ -191,22 +191,25 @@ void RTC_Refresh(void)
  * Description: This function sets the time and date.
  *
  * Input: Second
- *         Minute
- *         Hour
- *         Day
- *         Month
- *         Year
+ *        Minute
+ *        Hour
+ *        Number of the day in the week
+ *        Daylight Saving Time (CET or CEST)
+ *        Day
+ *        Month
+ *        Year
  *
  * Output: None
  */
 void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
-                 uint8  _DayNumber,
+                 uint8  _DayNumber, G_Flag_e _DST,
                  uint8  _Hour, uint8 _Minute, uint8 _Second)
 {
     RTC_TimeDate.Year       = _Year;
     RTC_TimeDate.Month      = _Month;
     RTC_TimeDate.Day        = _Day;
     RTC_TimeDate.DayNumber  = _DayNumber;
+    RTC_TimeDate.DST        = _DST;
     RTC_TimeDate.Hour       = _Hour;
     RTC_TimeDate.Minute     = _Minute;
     RTC_TimeDate.Second     = _Second;

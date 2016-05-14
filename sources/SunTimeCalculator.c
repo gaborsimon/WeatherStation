@@ -7,9 +7,6 @@
 #define L__LONGITUDE ((float32) 19.0f)
 #define L__LATITUDE  ((float32) 47.0f)
 
-// GMT offset is set to Hungary
-#define L__GMT_OFFSET ((uint8) 1u)
-
 #define L__SUN_BELOW_HORIZON_DEG ((float32) -0.8333f)
 
 
@@ -63,6 +60,7 @@ static void L_CalculateSunTime(uint16 _Year, uint16 _Month, uint16 _Day,
     float32 _LHA1_h     = U__INIT_VALUE_FLOAT;
     float32 _SunRise    = U__INIT_VALUE_FLOAT;
     float32 _SunSet     = U__INIT_VALUE_FLOAT;
+    uint8   _GMTOffset  = U__INIT_VALUE_UINT;
 
     
     //****** STEP 1. ***********************************************************
@@ -128,9 +126,18 @@ static void L_CalculateSunTime(uint16 _Year, uint16 _Month, uint16 _Day,
     _SunRise = _UTs_h - _LHA1_h;
     _SunSet  = _UTs_h + _LHA1_h;
 
-    *_RiseHour   = ((uint8)(floor(_SunRise))) + L__GMT_OFFSET;
+    if (Flag_SET == XRTC__TIMEDATE_DST)
+    {
+        _GMTOffset = 2u;
+    }
+    else
+    {
+        _GMTOffset = 1u;
+    }
+
+    *_RiseHour   = ((uint8)(floor(_SunRise))) + _GMTOffset;
     *_RiseMinute = (uint8)(round(59.0f * (_SunRise - floor(_SunRise))));
-    *_SetHour    = ((uint8)(floor(_SunSet))) + L__GMT_OFFSET;
+    *_SetHour    = ((uint8)(floor(_SunSet))) + _GMTOffset;
     *_SetMinute  = (uint8)(round(59.0f * (_SunSet - floor(_SunSet))));
 }
 

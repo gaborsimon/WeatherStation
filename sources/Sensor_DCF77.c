@@ -3,11 +3,16 @@
 
 
 //====== Private Constants =====================================================
+#define L__SYNCH_TIMEOUT_1        ((uint16) 1u * (60u * 60u))    /* 1 hour till synch icon disappers */
+#define L__SYNCH_TIMEOUT_2        ((uint16) 6u * (60u * 60u))    /* 6 hours till new synch starts */
+
 #define L__PULSE_ZERO_MIN_TIME    ((uint16) (60.0f / 0.032f))
 #define L__PULSE_ZERO_MAX_TIME    ((uint16)(145.0f / 0.032f))
 #define L__PULSE_ONE_MIN_TIME     ((uint16)(155.0f / 0.032f))
 #define L__PULSE_ONE_MAX_TIME     ((uint16)(245.0f / 0.032f))
 
+#define L__Z1            (17u)
+#define L__Z2            (18u)
 #define L__START_MIN     (21u)
 #define L__P1            (28u)
 #define L__START_HOUR    (29u)
@@ -63,9 +68,9 @@ static G_Flag_e L_SignalParityCheck(void)
     uint8  _Error = Flag_SET;
 
     
-    _Error = L_ParityCheck(L__START_MIN, L__P1);        
-    _Error = L_ParityCheck(L__START_HOUR, L__P2);        
-    _Error = L_ParityCheck(L__START_DAY, L__P3);
+    _Error = L_ParityCheck(L__START_MIN,  L__P1);
+    _Error = L_ParityCheck(L__START_HOUR, L__P2);
+    _Error = L_ParityCheck(L__START_DAY,  L__P3);
 
 
     return _Error;
@@ -74,56 +79,59 @@ static G_Flag_e L_SignalParityCheck(void)
 
 static void L_SignalDecode(void)
 {
-    uint8  _min     = U__INIT_VALUE_UINT;
-    uint8  _h       = U__INIT_VALUE_UINT;
-    uint8  _d       = U__INIT_VALUE_UINT;
-    uint8  _dn      = U__INIT_VALUE_UINT;
-    uint8  _m       = U__INIT_VALUE_UINT;
-    uint8  _y       = U__INIT_VALUE_UINT;
+    G_Flag_e _DST     = Flag_CLEAR;
+    uint8    _Min     = U__INIT_VALUE_UINT;
+    uint8    _H       = U__INIT_VALUE_UINT;
+    uint8    _D       = U__INIT_VALUE_UINT;
+    uint8    _Dn      = U__INIT_VALUE_UINT;
+    uint8    _M       = U__INIT_VALUE_UINT;
+    uint8    _Y       = U__INIT_VALUE_UINT;
     
+    if (U__TRUE == L_BitArray[L__Z1]) { _DST = Flag_SET; }
+    if (U__TRUE == L_BitArray[L__Z2]) { _DST = Flag_CLEAR; }
     
-    _min  = L_BitArray[L__START_MIN];
-    _min += L_BitArray[L__START_MIN + 1u] *  2u;
-    _min += L_BitArray[L__START_MIN + 2u] *  4u;
-    _min += L_BitArray[L__START_MIN + 3u] *  8u;
-    _min += L_BitArray[L__START_MIN + 4u] * 10u;
-    _min += L_BitArray[L__START_MIN + 5u] * 20u;
-    _min += L_BitArray[L__START_MIN + 6u] * 40u;
+    _Min  = L_BitArray[L__START_MIN];
+    _Min += L_BitArray[L__START_MIN + 1u] *  2u;
+    _Min += L_BitArray[L__START_MIN + 2u] *  4u;
+    _Min += L_BitArray[L__START_MIN + 3u] *  8u;
+    _Min += L_BitArray[L__START_MIN + 4u] * 10u;
+    _Min += L_BitArray[L__START_MIN + 5u] * 20u;
+    _Min += L_BitArray[L__START_MIN + 6u] * 40u;
 
-    _h  = L_BitArray[L__START_HOUR];
-    _h += L_BitArray[L__START_HOUR + 1u] *  2u;
-    _h += L_BitArray[L__START_HOUR + 2u] *  4u;
-    _h += L_BitArray[L__START_HOUR + 3u] *  8u;
-    _h += L_BitArray[L__START_HOUR + 4u] * 10u;
-    _h += L_BitArray[L__START_HOUR + 5u] * 20u;
+    _H  = L_BitArray[L__START_HOUR];
+    _H += L_BitArray[L__START_HOUR + 1u] *  2u;
+    _H += L_BitArray[L__START_HOUR + 2u] *  4u;
+    _H += L_BitArray[L__START_HOUR + 3u] *  8u;
+    _H += L_BitArray[L__START_HOUR + 4u] * 10u;
+    _H += L_BitArray[L__START_HOUR + 5u] * 20u;
 
-    _d  = L_BitArray[L__START_DAY];
-    _d += L_BitArray[L__START_DAY + 1u] *  2u;
-    _d += L_BitArray[L__START_DAY + 2u] *  4u;
-    _d += L_BitArray[L__START_DAY + 3u] *  8u;
-    _d += L_BitArray[L__START_DAY + 4u] * 10u;
-    _d += L_BitArray[L__START_DAY + 5u] * 20u;
+    _D  = L_BitArray[L__START_DAY];
+    _D += L_BitArray[L__START_DAY + 1u] *  2u;
+    _D += L_BitArray[L__START_DAY + 2u] *  4u;
+    _D += L_BitArray[L__START_DAY + 3u] *  8u;
+    _D += L_BitArray[L__START_DAY + 4u] * 10u;
+    _D += L_BitArray[L__START_DAY + 5u] * 20u;
 
-    _dn  = L_BitArray[L__START_DAY_NUM];
-    _dn += L_BitArray[L__START_DAY_NUM + 1u] *  2u;
-    _dn += L_BitArray[L__START_DAY_NUM + 2u] *  4u;
+    _Dn  = L_BitArray[L__START_DAY_NUM];
+    _Dn += L_BitArray[L__START_DAY_NUM + 1u] *  2u;
+    _Dn += L_BitArray[L__START_DAY_NUM + 2u] *  4u;
 
-    _m  = L_BitArray[L__START_MONTH];
-    _m += L_BitArray[L__START_MONTH + 1u] *  2u;
-    _m += L_BitArray[L__START_MONTH + 2u] *  4u;
-    _m += L_BitArray[L__START_MONTH + 3u] *  8u;
-    _m += L_BitArray[L__START_MONTH + 4u] * 10u;
+    _M  = L_BitArray[L__START_MONTH];
+    _M += L_BitArray[L__START_MONTH + 1u] *  2u;
+    _M += L_BitArray[L__START_MONTH + 2u] *  4u;
+    _M += L_BitArray[L__START_MONTH + 3u] *  8u;
+    _M += L_BitArray[L__START_MONTH + 4u] * 10u;
 
-    _y  = L_BitArray[L__START_YEAR];
-    _y += L_BitArray[L__START_YEAR + 1u] *  2u;
-    _y += L_BitArray[L__START_YEAR + 2u] *  4u;
-    _y += L_BitArray[L__START_YEAR + 3u] *  8u;
-    _y += L_BitArray[L__START_YEAR + 4u] * 10u;
-    _y += L_BitArray[L__START_YEAR + 5u] * 20u;
-    _y += L_BitArray[L__START_YEAR + 6u] * 40u;
-    _y += L_BitArray[L__START_YEAR + 7u] * 80u;
+    _Y  = L_BitArray[L__START_YEAR];
+    _Y += L_BitArray[L__START_YEAR + 1u] *  2u;
+    _Y += L_BitArray[L__START_YEAR + 2u] *  4u;
+    _Y += L_BitArray[L__START_YEAR + 3u] *  8u;
+    _Y += L_BitArray[L__START_YEAR + 4u] * 10u;
+    _Y += L_BitArray[L__START_YEAR + 5u] * 20u;
+    _Y += L_BitArray[L__START_YEAR + 6u] * 40u;
+    _Y += L_BitArray[L__START_YEAR + 7u] * 80u;
 
-    RTC_SetDate((uint16)(2000u + _y), _m, _d, _dn, _h, _min, 0u);
+    RTC_SetDate((uint16)(2000u + _Y), _M, _D, _Dn, _DST, _H, _Min, 0u);
 
     L_DecodeDone = Flag_SET;
 }
@@ -318,12 +326,12 @@ void DCF77_Refresh(void)
         {
             L_TickCounter++;
 
-            if (10u == L_TickCounter)
+            if (L__SYNCH_TIMEOUT_1 == L_TickCounter)
             {
                 LCM_Refresh(LCM__RX_NONE);
             }
 
-            if (20u == L_TickCounter)
+            if (L__SYNCH_TIMEOUT_2 == L_TickCounter)
             {
                 DCF77_Status = DCF77_Status_INIT;
             }
