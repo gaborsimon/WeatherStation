@@ -6,10 +6,6 @@
 #define U__BIT_CLR(reg,bit) ((reg) &= ~(1u << (bit)))
 #define U__BIT_GET(reg,bit) (((reg) >> (bit)) & 0x01u)
 
-#define U__DISABLE_INTERRUPT()  __asm__ __volatile__("cli")
-#define U__ENABLE_INTERRUPT()   __asm__ __volatile__("sei")
-#define U__WD_RESET()           __asm__ __volatile__("wdr")
-
 #define U__INIT_VALUE_FLOAT (0.0f)
 #define U__INIT_VALUE_UINT    (0u)
 #define U__INIT_VALUE_SINT    (0)

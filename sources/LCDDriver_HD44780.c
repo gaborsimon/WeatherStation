@@ -103,7 +103,7 @@ static void L_EnableTransfer(void)
  */
 static void L_Send(uint8 type, uint8 package)
 {
-    
+
     // Command/Data & Write
     switch (type)
     {
@@ -112,13 +112,13 @@ static void L_Send(uint8 type, uint8 package)
             MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RS, L__RS_COMMAND);
         }
         break;
-        
+
         case L__DATA:
         {
             MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RS, L__RS_DATA);
         }
         break;
-    }    
+    }
     MCH__GPIO_WRITE(MCH__PORT_LCD, MCH__P_LCD_RW, L__RW_WRITE);
 
     // Just to be sure, set data pins to output
@@ -283,7 +283,7 @@ void LCD_SetCursor(uint8 _Row, uint8 _Column)
 {
     uint8 _PositionAddress = U__INIT_VALUE_UINT;
 
-    
+
     // Saturation of row and column
     if (_Row    > L__DISPLAY_ROW) { _Row    = L__DISPLAY_ROW; }
     if (_Column > L__DISPLAY_COL) { _Column = L__DISPLAY_COL; }
@@ -365,7 +365,7 @@ void LCD_WriteInt(sint16 _Number)
 {
     char _String[L__DISPLAY_COL];
 
-    
+
     itoa(_Number, _String, 10);
     LCD_WriteString(_String);
 }
@@ -387,7 +387,7 @@ void LCD_StoreCustomChar(uint8 _Location, const uint8 _CustomCharMap[])
 {
     uint8 _LoopCounter = U__INIT_VALUE_UINT;
 
-    
+
     _Location &= 0x07u;
 
     L_Send(L__COMMAND, L__CMD_SET_CGRAM | (_Location << 3u));

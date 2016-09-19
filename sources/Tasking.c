@@ -47,7 +47,7 @@ ISR(TIMER2_OVF_vect)
 //******************************************************************************
 void Task_Init(void)
 {
-    U__DISABLE_INTERRUPT();
+    MCH__INTERRUPT_DISABLED();
 
     MCH_InitPins();
     MCH_InitTimer0();
@@ -55,6 +55,8 @@ void Task_Init(void)
     MCH_InitTimer2();
     MCH_InitADC(); 
     //MCH_InitI2C(100u);
+    MCH_InitWatchdog();
+    MCH_InitSleepMode();
 
     LCM_Init();
     DHT22_Init();
@@ -62,9 +64,7 @@ void Task_Init(void)
 
     RTC_SetDate(2000u,1u,1u,1u,Flag_CLEAR,0u,0u,0u);
 
-    //MCH_InitWatchdog();
-
-    U__ENABLE_INTERRUPT();
+    MCH__INTERRUPT_ENABLED();
 }
 
 
@@ -103,7 +103,7 @@ void Task_Main(void)
         {
 
 #ifdef L__CPU_LOAD_MEASUREMENT
-            L_imerStart = TCNT1;
+            L_TimerStart = TCNT1;
 #endif
             
             L_Task1SEC = Flag_CLEAR;
@@ -189,7 +189,11 @@ void Task_Main(void)
 //******************************************************************************
 #endif
 
+            MCH__SLEEP();
+
         } // Task_1SEC
+
+        MCH__WD_RESET();
 
     } // main end-less loop
     

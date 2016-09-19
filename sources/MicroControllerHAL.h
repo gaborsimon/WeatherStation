@@ -93,6 +93,15 @@
 #define MCH__I2C_ERROR           (2u)
 
 
+/******************************************************************************/
+/****** ASSEMBLY INSTRUCTIONS */
+/******************************************************************************/
+#define MCH__INTERRUPT_ENABLED()    __asm__ __volatile__("sei")
+#define MCH__INTERRUPT_DISABLED()   __asm__ __volatile__("cli")
+#define MCH__WD_RESET()             __asm__ __volatile__("wdr")
+#define MCH__SLEEP()                __asm__ __volatile__("sleep")
+
+
 //====== Public Signals ========================================================
 
 
@@ -103,6 +112,7 @@ extern "C" {
 
     extern void  MCH_InitPins(void);
     extern void  MCH_InitWatchdog(void);
+    extern void  MCH_InitSleepMode(void);
     extern void  MCH_InitTimer0(void);
     extern void  MCH_InitTimer1(void);
     extern void  MCH_InitTimer2(void);

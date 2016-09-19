@@ -81,23 +81,40 @@ void MCH_InitPins(void)
  *
  * Output: None
  */
-/*
 void MCH_InitWatchdog(void)
 {
-    U__WD_RESET();
-
-    // Watchdog Change enabled
-    U__BIT_SET(WDTCSR, WDCE);
-    // Watchdog System Reset enabled
-    U__BIT_SET(WDTCSR, WDE);
-    // Watchdog Timeout: 0110 = 128k (131072 cycle) = 1sec
-    U__BIT_SET(WDTCSR, WDE);
-    U__BIT_CLR(WDTCSR, WDP3);
-    U__BIT_SET(WDTCSR, WDP2);
-    U__BIT_SET(WDTCSR, WDP1);
-    U__BIT_CLR(WDTCSR, WDP0);
+    // Watchdog Timeout by setting 1MHz clock prescaler: 111 = 2048K (2097152 cycles) = ~2.1sec
+    U__BIT_SET(WDTCR, WDP2);
+    U__BIT_SET(WDTCR, WDP1);
+    U__BIT_SET(WDTCR, WDP0);
+    
+    // Watchdog enabled
+    U__BIT_SET(WDTCR, WDE);
 }
-*/
+
+
+/*
+ * Name: MCH_InitSleepMode
+ *
+ * Description: This function initializes and enables the desired Sleep Mode of the device.
+ *              In our application the "Power-save" mode shall be used because the main
+ *              scheduler is clocked from the external watch-clock driven asynchronous
+ *              Timer2.
+ *
+ * Input: None
+ *
+ * Output: None
+ */
+void MCH_InitSleepMode(void)
+{
+    // Setting the "Power-save" mode in sleep mode
+    U__BIT_CLR(MCUCR,SM2);
+    U__BIT_SET(MCUCR,SM1);
+    U__BIT_SET(MCUCR,SM0);
+    
+    // Enable the sleep mode
+    U__BIT_SET(MCUCR,SE);
+}
 
 
 /*
