@@ -45,10 +45,9 @@
  */
 void MCH_InitPins(void)
 {
-    /* DCF77 */
-    MCH__GPIO_DIRECTION  (MCH__DDR_DCF77,         MCH__P_DCF77_DATA,   U__INPUT);
-    MCH__GPIO_DIRECTION  (MCH__DDR_DCF77_CTRL,    MCH__P_DCF77_CTRL,   U__OUTPUT);
-    MCH__GPIO_WRITE      (MCH__PORT_DCF77_CTRL,   MCH__P_DCF77_CTRL,   U__HIGH);
+    /* GPS */
+    MCH__GPIO_DIRECTION  (MCH__DDR_GPS_CTRL,      MCH__P_GPS_CTRL,     U__OUTPUT);
+    MCH__GPIO_WRITE      (MCH__PORT_GPS_CTRL,     MCH__P_GPS_CTRL,     U__HIGH);
 
     /* DHT22 */
     MCH__GPIO_DIRECTION  (MCH__DDR_DHT22,         MCH__P_DHT22_DATA,   U__OUTPUT);
@@ -140,6 +139,7 @@ void MCH_InitTimer0(void)
     U__BIT_SET(TCCR0, COM01);
     U__BIT_CLR(TCCR0, COM00);
 
+//TODO: Clarify this part of the code regarding PWM frequency
 #define PWM_2
 
 #ifdef PWM_1   
@@ -355,8 +355,50 @@ uint8 MCH_ReadADC(uint8 _Channel)
     return _Ret;
 }
 
+
 /*
-* Name: MCH_InitI2C
+ * Name: MCH_InitUSART
+ *
+ * Description: This function initializes the USART peripheral of the MCU.
+ *
+ * Input: intended baud rate of the USART in bps dimension
+ *
+ * Output: None
+ */
+void MCH_InitUSART(uint32 _Baud)
+{
+    uint16 _UBRR = U__INIT_VALUE_UINT;
+    
+
+    // Setting the USART Baud Rate Register 
+    _UBRR = (uint16)((F_CPU / 16u / _Baud) - 1u);
+    UBRRH = (uint8)(_UBRR >> 8u);
+    UBRRL = (uint8)(_UBRR);
+    
+    /* IMPORTANT: UCSRC has to be written in a special way!
+     * The UBRRH Register shares the same I/O location as the UCSRC Register. Therefore some special
+     * consideration must be taken when accessing this I/O location.
+     * When doing a write access of this I/O location, the high bit of the value written, the USART Register Select
+     * (URSEL) bit, controls which one of the two registers that will be written. If URSEL is zero during a write
+     * operation, the UBRRH value will be updated. If URSEL is one, the UCSRC setting will be updated.
+     * This has to be performed in an atomic register write.
+     */
+    // Asynchronous USART
+    // 8-bit data mode
+    // 1 stop bit
+    // Parity mode disabled 
+    UCSRC = (1u << URSEL) | (1u << UCSZ1) | (1u << UCSZ0);
+
+    // Enable interrupt for RX line
+    U__BIT_SET(UCSRB, RXCIE);
+
+    // Enable the Receiver module
+    U__BIT_SET(UCSRB, RXEN);
+}
+
+
+/*
+ * Name: MCH_InitI2C
  *
  * Description: This function initializes the I2C peripheral of the MCU.
  *

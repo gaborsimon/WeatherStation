@@ -3,7 +3,13 @@
 
 
 //====== Private Constants =====================================================
+//TODO: Decide whether it can remain in the final code or not
 //#define L__CPU_LOAD_MEASUREMENT
+
+// Center coordinates are set to Hungary
+#define L__USART_BAUD_RATE   ((uint16) 9600u)
+#define L__LONGITUDE_DEFAULT ((float32) 19.0f)
+#define L__LATITUDE_DEFAULT  ((float32) 47.0f)
 
 
 //====== Private Signals =======================================================
@@ -24,24 +30,18 @@ static volatile G_Flag_e L_Task1SEC = Flag_CLEAR;
 //******************************************************************************
 //****** INTERRUPT HANDLER
 //******************************************************************************
-ISR(TIMER1_COMPA_vect)
-{
-    DCF77_Callback_TimerOverflow();
-}
-
-    
-ISR(TIMER1_CAPT_vect)
-{
-    DCF77_Callback_InputCapture();
-}
-
-
 ISR(TIMER2_OVF_vect)
 {
     L_Task1SEC = Flag_SET;
 }
 
 
+ISR(USART_RXC_vect)
+{
+    GPS_Callback_USART_RXC();
+}
+
+    
 //******************************************************************************
 //****** INIT
 //******************************************************************************
@@ -51,18 +51,17 @@ void Task_Init(void)
 
     MCH_InitPins();
     MCH_InitTimer0();
-    MCH_InitTimer1();
     MCH_InitTimer2();
     MCH_InitADC(); 
-    //MCH_InitI2C(100u);
+    MCH_InitUSART(L__USART_BAUD_RATE);
     MCH_InitWatchdog();
     MCH_InitSleepMode();
 
     LCM_Init();
     DHT22_Init();
-    //DS1621_Init();
 
     RTC_SetDate(2000u,1u,1u,1u,Flag_CLEAR,0u,0u,0u);
+    STC_SetCoordinate(L__LATITUDE_DEFAULT, L__LONGITUDE_DEFAULT);
 
     MCH__INTERRUPT_ENABLED();
 }
@@ -86,22 +85,21 @@ void Task_Main(void)
 /******************************************************************/
 /****** Event Triggered Jobs */
 /******************************************************************/
-        if (DCF77_Status_SYNCH_DONE == XDCF77__STATUS)
+        if (GPS_Status_SYNCH_DONE == XGPS__STATUS)
         {
-            DCF77_Refresh();
+            GPS_Refresh();
             
             LCM_Refresh(LCM__RX_OK);
             LCM_Refresh(LCM__DATETIME);
             
             L_FirstRun = Flag_SET;
         }
-        
+      
 /******************************************************************/
 /****** Time Triggered Jobs */
 /******************************************************************/
         if (Flag_SET == L_Task1SEC)
         {
-
 #ifdef L__CPU_LOAD_MEASUREMENT
             L_TimerStart = TCNT1;
 #endif
@@ -109,10 +107,10 @@ void Task_Main(void)
             L_Task1SEC = Flag_CLEAR;
 
             RTC_Refresh();
-            DCF77_Refresh();
+            GPS_Refresh();
             DHT22_Refresh();
             LCM_BackLightControl(LCM__CONTROL_METHOD_ADAPTIVE, 0u);
-
+            
             if (Flag_SET == XDHT22__DATA_UPDATED)
             {
                 LCM_Refresh(LCM__DHT22);
@@ -188,8 +186,8 @@ void Task_Main(void)
 //****** CPU LOAD
 //******************************************************************************
 #endif
-
-            MCH__SLEEP();
+            //TODO: Decide whether the sleep mode can be used or not (can be GPS dependent)
+            //MCH__SLEEP();
 
         } // Task_1SEC
 

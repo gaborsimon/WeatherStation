@@ -4,7 +4,7 @@
 
 //====== Private Constants =====================================================
 #define L__POS_ROW_RX                    (2u)
-#define L__POS_COL_RX                   (18u)
+#define L__POS_COL_RX                   (20u)
 
 #define L__POS_ROW_DATE                  (1u)
 #define L__POS_COL_DATE                  (1u)
@@ -37,8 +37,8 @@
 #define L__CUSTOM_CHAR_POS_SUNSET        (2u)
 #define L__CUSTOM_CHAR_POS_MOON_L        (3u)
 #define L__CUSTOM_CHAR_POS_MOON_R        (4u)
-#define L__CUSTOM_CHAR_POS_DCF77_RX_OK   (5u)
-#define L__CUSTOM_CHAR_POS_DCF77_RX_NO   (6u)
+#define L__CUSTOM_CHAR_POS_GPS_RX_OK     (5u)
+#define L__CUSTOM_CHAR_POS_GPS_RX_NO     (6u)
 
 
 //====== Private Signals =======================================================
@@ -48,26 +48,27 @@
 
 
 //====== Private Functions =====================================================
+//TODO: Create desciption for the local functions
 void L_RefreshRxOK(void)
 {
     LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
-    LCD_WriteString("   ");
+    LCD_WriteChar(' ');
     LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
-    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_OK);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_GPS_RX_OK);
 }
 
 void L_RefreshRxNO(void)
 {
     LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
-    LCD_WriteString("   ");
+    LCD_WriteChar(' ');
     LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
-    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_NO);
+    LCD_WriteCustomChar(L__CUSTOM_CHAR_POS_GPS_RX_NO);
 }
 
 void L_RefreshRxNONE(void)
 {
     LCD_SetCursor(L__POS_ROW_RX, L__POS_COL_RX);
-    LCD_WriteString("   ");
+    LCD_WriteChar(' ');
 }
 
 void L_RefreshYear(void)
@@ -369,8 +370,8 @@ void LCM_Init(void)
 
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_SUNRISE, LCD_CharSunRise);
     LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_SUNSET, LCD_CharSunSet);
-    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_OK, LCD_CharDCF77RxOK);
-    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_DCF77_RX_NO, LCD_CharDCF77RxNO);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_GPS_RX_OK, LCD_CharGPSRxOK);
+    LCD_StoreCustomChar(L__CUSTOM_CHAR_POS_GPS_RX_NO, LCD_CharGPSRxNO);
 }
 
 
@@ -487,26 +488,12 @@ void LCM_BackLightControl(uint8 _ControlMethod, uint8 _PWMDutyCycle)
 
     if (LCM__CONTROL_METHOD_ADAPTIVE == _ControlMethod)
     {
-        //#define DEMO
+        _AmbientLight = MCH_ReadADC(MCH__ADC_CHANNEL_7);
 
-#ifndef DEMO
-        if (DCF77_Status_SYNCHRONIZED == XDCF77__STATUS)
-        {
-#endif
-            _AmbientLight = MCH_ReadADC(MCH__ADC_CHANNEL_7);
-
-            if                                  (_AmbientLight < 100u)      { _PWMDutyCycle =  40u; }
-            else if ((100u <= _AmbientLight) && (_AmbientLight < 150u))     { _PWMDutyCycle =  60u; }
-            else if ((150u <= _AmbientLight) && (_AmbientLight < 200u))     { _PWMDutyCycle =  80u; }
-            else if  (200u <= _AmbientLight)                                { _PWMDutyCycle = 100u; }
-#ifndef DEMO
-        }
-        else
-        {
-            _PWMDutyCycle = 0u;
-        }
-#endif
-
+        if                                  (_AmbientLight < 100u)      { _PWMDutyCycle = 100u; }
+        else if ((100u <= _AmbientLight) && (_AmbientLight < 150u))     { _PWMDutyCycle =  80u; }
+        else if ((150u <= _AmbientLight) && (_AmbientLight < 200u))     { _PWMDutyCycle =  60u; }
+        else if  (200u <= _AmbientLight)                                { _PWMDutyCycle =   0u; }
     }
     else if (LCM__CONTROL_METHOD_STATIC == _ControlMethod)
     {
@@ -515,7 +502,9 @@ void LCM_BackLightControl(uint8 _ControlMethod, uint8 _PWMDutyCycle)
 
     OCR0 = (uint8)(_PWMDutyCycle / 100.0f * 255.0f);
 
+//TODO: Debug code to be removed from the final version
 /* DEBUG */
+/*
     _AmbientLight = MCH_ReadADC(MCH__ADC_CHANNEL_7);
     LCD_SetCursor(2u,1u);
     LCD_WriteString("          ");
@@ -523,5 +512,6 @@ void LCM_BackLightControl(uint8 _ControlMethod, uint8 _PWMDutyCycle)
     LCD_WriteInt(_AmbientLight);
     LCD_SetCursor(2u,5u);
     LCD_WriteInt(OCR0);
+*/
 /* DEBUG */
 }

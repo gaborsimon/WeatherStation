@@ -39,6 +39,7 @@ extern "C" {
 #endif
 
     extern void STC_Refresh(void);
+    extern void STC_SetCoordinate(float32 _Latitude, float32 _Longitude);
 
 #ifdef __cplusplus
 } // extern "C"

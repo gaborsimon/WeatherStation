@@ -18,13 +18,14 @@
 /******************************************************************************/
 /****** PIN CONFIGURATION */
 /******************************************************************************/
-/* DCF77 receiver */
-#define MCH__P_DCF77_DATA       (PD6)   /* PIN 020 */
-#define MCH__P_DCF77_CTRL       (PD5)   /* PIN 019 */
-#define MCH__DDR_DCF77          (DDRD)
-#define MCH__DDR_DCF77_CTRL     (DDRD)
-#define MCH__PIN_DCF77          (PIND)
-#define MCH__PORT_DCF77_CTRL    (PORTD)
+//TODO: Verify the pin configuration
+/* GPS module */
+#define MCH__P_GPS_DATA         (PD0)   /* PIN 014 */
+#define MCH__P_GPS_CTRL         (PD5)   /* PIN 019 */
+#define MCH__DDR_GPS            (DDRD)
+#define MCH__DDR_GPS_CTRL       (DDRD)
+#define MCH__PIN_GPS            (PIND)
+#define MCH__PORT_GPS_CTRL      (PORTD)
 
 /* LCD panel */
 #define MCH__P_LCD_RS           (PA0)   /* PIN 040 */
@@ -118,6 +119,7 @@ extern "C" {
     extern void  MCH_InitTimer2(void);
     extern void  MCH_InitADC(void);
     extern uint8 MCH_ReadADC(uint8 _Channel);
+    extern void  MCH_InitUSART(uint32 _Baud);
     extern void  MCH_InitI2C(uint16 _SCLFreqKHZ);
     extern uint8 MCH_I2CStart(uint8 _Address, uint8 _ReadWrite);
     extern uint8 MCH_I2CWrite(uint8 _Data);

@@ -6,7 +6,6 @@
 #define L__FEB_IN_LEAP_YEAR (0u)
 #define L__FEB              (2u)
 
-
 static const uint8 L_DayNumberOfMonth[13u] =
 {
     29u,    // February in a leap Year

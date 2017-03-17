@@ -3,14 +3,12 @@
 
 
 //====== Private Constants =====================================================
-// Center coordinates are set to Hungary
-#define L__LONGITUDE ((float32) 19.0f)
-#define L__LATITUDE  ((float32) 47.0f)
-
 #define L__SUN_BELOW_HORIZON_DEG ((float32) -0.8333f)
 
 
 //====== Private Signals =======================================================
+static float32 L_Latitude  = U__INIT_VALUE_FLOAT; 
+static float32 L_Longitude = U__INIT_VALUE_FLOAT; 
 
 
 //====== Private Function Prototypes ===========================================
@@ -116,10 +114,10 @@ static void L_CalculateSunTime(uint16 _Year, uint16 _Month, uint16 _Day,
     // Sun rise/set time
     _GMST0_deg = U__NORMALIZE(_L + 180.0f);
     _GMST0_h   = _GMST0_deg / 15.0f;
-    _UTs_h     = _RA_h - _GMST0_h - (L__LONGITUDE / 15.0f);
+    _UTs_h     = _RA_h - _GMST0_h - (L_Longitude / 15.0f);
     _UTs_h     = _UTs_h - floor(_UTs_h / 24.0f) * 24.0f;
 
-    _X1      = (U__SIND(L__SUN_BELOW_HORIZON_DEG) - U__SIND(L__LATITUDE) * U__SIND(_DEC_deg)) / (U__COSD(L__LATITUDE) * U__COSD(_DEC_deg));
+    _X1      = (U__SIND(L__SUN_BELOW_HORIZON_DEG) - U__SIND(L_Latitude) * U__SIND(_DEC_deg)) / (U__COSD(L_Latitude) * U__COSD(_DEC_deg));
     _LHA1    = U__RAD_TO_DEG(acos(_X1));
     _LHA1_h  = _LHA1 / 15.0f;
 
@@ -164,4 +162,21 @@ void STC_Refresh(void)
     L_CalculateSunTime(XRTC__TIMEDATE_YEAR, XRTC__TIMEDATE_MONTH, XRTC__TIMEDATE_DAY,
                      &STC_Sun.RiseHour, &STC_Sun.RiseMinute,
                      &STC_Sun.SetHour,  &STC_Sun.SetMinute);
+}
+
+
+/*
+ * Name: STC_SetCoordinate
+ *
+ * Description: This function sets the latitude and longitude coordinates.
+ *
+ * Input: Latitude
+ *        Longitude
+ *
+ * Output: None
+ */
+void STC_SetCoordinate(float32 _Latitude, float32 _Longitude)
+{
+    L_Latitude  = _Latitude;
+    L_Longitude = _Longitude;
 }

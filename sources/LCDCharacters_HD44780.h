@@ -146,6 +146,32 @@ static const uint8 LCD_CharMoonRight0[LCD__CHARACTER_ROW_SIZE] =
  * DCF77
  *******************************************************************************
  */
+
+static const uint8 LCD_CharGPSRxOK[LCD__CHARACTER_ROW_SIZE] =
+{
+    0b10101,
+    0b10100,
+    0b10011,
+    0b01000,
+    0b00111,
+    0b00000,
+    0b00000,
+    0b0000
+};
+
+static const uint8 LCD_CharGPSRxNO[LCD__CHARACTER_ROW_SIZE] =
+{
+    0b00001,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000,
+    0b00000
+};
+
+/*
 static const uint8 LCD_CharDCF77RxOK[LCD__CHARACTER_ROW_SIZE] =
 {
     0b01110,
@@ -169,7 +195,7 @@ static const uint8 LCD_CharDCF77RxNO[LCD__CHARACTER_ROW_SIZE] =
     0b00100,
     0b00100
 };
-
+*/
 
 /*
  *******************************************************************************

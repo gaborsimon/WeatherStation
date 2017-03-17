@@ -13,7 +13,7 @@
 #include "MicroControllerHAL.h"
 #include "MoonFractionCalculator.h"
 #include "RealTimeClock.h"
-#include "Sensor_DCF77.h"
+#include "Sensor_GPS.h"
 #include "Sensor_DHT22.h"
 #include "Sensor_DS1621.h"
 #include "SunTimeCalculator.h"
