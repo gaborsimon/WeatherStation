@@ -219,7 +219,7 @@ static uint8 _col = 1u, _row = 1u;
 // Sakamoto's methods
 // 0 = Sunday, 6 = Saturday
             static uint8 t[12] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-            uint16 y,m,d,dow, dst;
+            uint16 y,m,d,dow,dst;
 
             y = GPSdata_RMC.year;
             m = GPSdata_RMC.month;
@@ -227,17 +227,26 @@ static uint8 _col = 1u, _row = 1u;
 
             y -= m < 3;
             dow = (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
-            if (dow == 0u) dow = 7u;
 
-            if ((m  < 3u) || (m > 10u)) dst = 0u;
-            if ((m  > 3u) && (m < 10u)) dst = 1u;
-            if ((m == 3u) && ((d - dow) >= 25u)) dst = 1u;
-            else dst = 0u;
-            if ((m == 10u) && ((d - dow) < 25u)) dst = 1u;
-            else dst = 0u;
+            if ((m < 3u) || (m > 10u)) { dst = 0u;}
+            else if ((m  > 3u) && (m < 10u)) { dst = 1u;}
+            else if (m == 3u)
+            {
+                if ((d - dow) >= 25u) { dst = 1u;}
+                else { dst = 0u;}
+            }  
+            else if (m == 10u)
+            {
+                if ((d - dow) < 25u) { dst = 1u;}
+                else { dst = 0u;}
+            }
 
             if (dst == 1u) GPSdata_RMC.hour += 2u;
             else GPSdata_RMC.hour += 1u;
+
+            if (GPSdata_RMC.hour == 24u) { GPSdata_RMC.hour = 0u;}
+            else if (GPSdata_RMC.hour == 25u) { GPSdata_RMC.hour = 1u;}
+            
 
 // End of calculation
 
