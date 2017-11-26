@@ -307,13 +307,15 @@ void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
         RTC_TimeDate.Hour += 1u;
     }
 
-    // Hour correction at Midnight due to DST offset
+    // Hour and Day correction at Midnight due to DST offset
     if (24u == RTC_TimeDate.Hour)
     {
         RTC_TimeDate.Hour = 0u;
+        RTC_TimeDate.Day++;
     }
     else if (25u == RTC_TimeDate.Hour)
     {
         RTC_TimeDate.Hour = 1u;
+        RTC_TimeDate.Day++;
     }
 }
