@@ -11,8 +11,6 @@
 
 
 //====== Private Signals =======================================================
-static G_Flag_e L_DecodeDone    = Flag_CLEAR;    
-
 typedef enum
 {
     GPS_StateMachine_WAITING_FOR_START_CHAR = 1u,
@@ -116,14 +114,11 @@ void GPS_Callback_USART_RXC(void)
 
 void GPS_Refresh(void)
 {
-    static uint8  L_SymbolFlipFlag  = U__LOW; 
-    static uint16 L_TickCounter     = U__INIT_VALUE_UINT; 
-    
-    static uint8  i = 0u;
-    static uint8  GPSdata_RMC_index = 0u;
+    static uint8  L_SymbolFlipFlag    = U__LOW; 
+    static uint16 L_TickCounter       = U__INIT_VALUE_UINT; 
+    static uint8  L_BufferCounter     = U__INIT_VALUE_UINT;
+    static uint8  L_GPSdata_RMC_index = U__INIT_VALUE_UINT;
 
-static uint8 j = 0u;
-static uint8 _col = 1u, _row = 1u;
 
 //TODO: Remove debug code part in final version
 /* DEBUG */
@@ -139,7 +134,7 @@ static uint8 _col = 1u, _row = 1u;
             L_SymbolFlipFlag = U__LOW;
             L_TickCounter = U__INIT_VALUE_UINT;
             
-            GPSdata_RMC_index = 0u;
+            L_GPSdata_RMC_index = 0u;
             GPS_StateMachine = GPS_StateMachine_WAITING_FOR_START_CHAR;
             GPS__CONTROL(U__ENABLE);
             GPS_Status = GPS_Status_SYNCH_ONGOING;
@@ -173,84 +168,49 @@ static uint8 _col = 1u, _row = 1u;
         
         case GPS_Status_SYNCH_DONE:
         {    
-            for (i=0u; i<L__GPS_MESSAGE_BUFFER_LENGTH; i++)
+            for (L_BufferCounter = 0u; L_BufferCounter < L__GPS_MESSAGE_BUFFER_LENGTH; L_BufferCounter++)
             {
-                if (',' == GPSmessage[i])
+                if (',' == GPSmessage[L_BufferCounter])
                 {
-                    GPSdata_RMC_index++;   
+                    L_GPSdata_RMC_index++;   
 
-                    switch (GPSdata_RMC_index)
+                    switch (L_GPSdata_RMC_index)
                     {
                         case 1u:
                         {
-                            GPSdata_RMC.hour   = (GPSmessage[i+1u] - 48u) * 10u + (GPSmessage[i+2u] - 48u);
-                            GPSdata_RMC.minute = (GPSmessage[i+3u] - 48u) * 10u + (GPSmessage[i+4u] - 48u);
-                            GPSdata_RMC.second = (GPSmessage[i+5u] - 48u) * 10u + (GPSmessage[i+6u] - 48u);
+                            GPSdata_RMC.hour   = (GPSmessage[L_BufferCounter+1u] - 48u) * 10u + (GPSmessage[L_BufferCounter+2u] - 48u);
+                            GPSdata_RMC.minute = (GPSmessage[L_BufferCounter+3u] - 48u) * 10u + (GPSmessage[L_BufferCounter+4u] - 48u);
+                            GPSdata_RMC.second = (GPSmessage[L_BufferCounter+5u] - 48u) * 10u + (GPSmessage[L_BufferCounter+6u] - 48u);
                         }
                         break;
 
                         case 3u:
                         {
-                            GPSdata_RMC.latitude  = (float32)(((GPSmessage[i+1u] - 48u) * 10u) + (GPSmessage[i+2u] - 48u));
-                            GPSdata_RMC.latitude += (float32)(((GPSmessage[i+3u] - 48u) * 10u) + (GPSmessage[i+4u] - 48u)) / 60.0;
+                            GPSdata_RMC.latitude  = (float32)(((GPSmessage[L_BufferCounter+1u] - 48u) * 10u) + (GPSmessage[L_BufferCounter+2u] - 48u));
+                            GPSdata_RMC.latitude += (float32)(((GPSmessage[L_BufferCounter+3u] - 48u) * 10u) + (GPSmessage[L_BufferCounter+4u] - 48u)) / 60.0;
                         }
                         break;
 
                         case 5u:
                         {
-                            GPSdata_RMC.longitude  = (float32)(((GPSmessage[i+1u] - 48u) * 100u) + ((GPSmessage[i+2u] - 48u) * 10u) + (GPSmessage[i+3u] - 48u));
-                            GPSdata_RMC.longitude += (float32)(((GPSmessage[i+4u] - 48u) *  10u) + (GPSmessage[i+5u] - 48u)) / 60.0;
+                            GPSdata_RMC.longitude  = (float32)(((GPSmessage[L_BufferCounter+1u] - 48u) * 100u) + ((GPSmessage[L_BufferCounter+2u] - 48u) * 10u) + (GPSmessage[L_BufferCounter+3u] - 48u));
+                            GPSdata_RMC.longitude += (float32)(((GPSmessage[L_BufferCounter+4u] - 48u) *  10u) + (GPSmessage[L_BufferCounter+5u] - 48u)) / 60.0;
                         }
                         break;
 
                         case 9u:
                         {
-                            GPSdata_RMC.day   = (GPSmessage[i+1u] - 48u) * 10u + (GPSmessage[i+2u] - 48u);
-                            GPSdata_RMC.month = (GPSmessage[i+3u] - 48u) * 10u + (GPSmessage[i+4u] - 48u);
-                            GPSdata_RMC.year  = 2000u + (GPSmessage[i+5u] - 48u) * 10u + (GPSmessage[i+6u] - 48u);
+                            GPSdata_RMC.day   = (GPSmessage[L_BufferCounter+1u] - 48u) * 10u + (GPSmessage[L_BufferCounter+2u] - 48u);
+                            GPSdata_RMC.month = (GPSmessage[L_BufferCounter+3u] - 48u) * 10u + (GPSmessage[L_BufferCounter+4u] - 48u);
+                            GPSdata_RMC.year  = 2000u + (GPSmessage[L_BufferCounter+5u] - 48u) * 10u + (GPSmessage[L_BufferCounter+6u] - 48u);
                         }
                         break;
                     }
                 }
-                GPSmessage[i] = U__INIT_VALUE_UINT;
-            }
-       
-// TODO: Move to the RTC module
-// Sakamoto's methods
-// 0 = Sunday, 6 = Saturday
-            static uint8 t[12] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-            uint16 y,m,d,dow,dst;
-
-            y = GPSdata_RMC.year;
-            m = GPSdata_RMC.month;
-            d = GPSdata_RMC.day;
-
-            y -= m < 3;
-            dow = (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
-
-            if ((m < 3u) || (m > 10u)) { dst = 0u;}
-            else if ((m  > 3u) && (m < 10u)) { dst = 1u;}
-            else if (m == 3u)
-            {
-                if ((d - dow) >= 25u) { dst = 1u;}
-                else { dst = 0u;}
-            }  
-            else if (m == 10u)
-            {
-                if ((d - dow) < 25u) { dst = 1u;}
-                else { dst = 0u;}
+                GPSmessage[L_BufferCounter] = U__INIT_VALUE_UINT;
             }
 
-            if (dst == 1u) GPSdata_RMC.hour += 2u;
-            else GPSdata_RMC.hour += 1u;
-
-            if (GPSdata_RMC.hour == 24u) { GPSdata_RMC.hour = 0u;}
-            else if (GPSdata_RMC.hour == 25u) { GPSdata_RMC.hour = 1u;}
-            
-
-// End of calculation
-
-            RTC_SetDate(GPSdata_RMC.year,GPSdata_RMC.month, GPSdata_RMC.day, dow, dst, GPSdata_RMC.hour, GPSdata_RMC.minute, GPSdata_RMC.second);
+            RTC_SetDate(GPSdata_RMC.year,GPSdata_RMC.month, GPSdata_RMC.day, GPSdata_RMC.hour, GPSdata_RMC.minute, GPSdata_RMC.second);
             STC_SetCoordinate(GPSdata_RMC.latitude, GPSdata_RMC.longitude);
             
             GPS_Status = GPS_Status_SYNCHRONIZED;

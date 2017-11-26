@@ -19,7 +19,7 @@ typedef struct
     G_Flag_e    NewMonth;
     uint8       Day;
     G_Flag_e    NewDay;
-    uint8       DayNumber;
+    uint8       DayOfWeek;
     G_Flag_e    DST;
     uint8       Hour;
     G_Flag_e    NewHour;
@@ -32,7 +32,7 @@ typedef struct
 #define XRTC__TIMEDATE_YEAR         ((uint16)   (RTC_TimeDate.Year))
 #define XRTC__TIMEDATE_MONTH        ((uint8)    (RTC_TimeDate.Month))
 #define XRTC__TIMEDATE_DAY          ((uint8)    (RTC_TimeDate.Day))
-#define XRTC__TIMEDATE_DAYNUMBER    ((uint8)    (RTC_TimeDate.DayNumber))
+#define XRTC__TIMEDATE_DOW          ((uint8)    (RTC_TimeDate.DayOfWeek))
 #define XRTC__TIMEDATE_DST          ((G_Flag_e) (RTC_TimeDate.DST))
 #define XRTC__TIMEDATE_HOUR         ((uint8)    (RTC_TimeDate.Hour))
 #define XRTC__TIMEDATE_MINUTE       ((uint8)    (RTC_TimeDate.Minute))
@@ -58,7 +58,6 @@ extern "C" {
 
     extern void RTC_Refresh(void);
     extern void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
-                             uint8 _DayNumber, G_Flag_e _DST,
                              uint8 _Hour, uint8 _Minute, uint8 _Second);
 
 #ifdef __cplusplus

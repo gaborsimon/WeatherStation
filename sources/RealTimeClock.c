@@ -28,8 +28,10 @@ static const uint8 L_DayNumberOfMonth[13u] =
 
 
 //====== Private Function Prototypes ===========================================
-static uint8 L_EndDayOfMonth(void);
-static uint8 L_IsLeapYear(void);
+static uint8    L_EndDayOfMonth(void);
+static uint8    L_IsLeapYear(void);
+static uint8    L_DayOfWeek(uint16 _Year, uint8 _Month, uint8 _Day);
+static G_Flag_e L_DaylightSavingTime(uint8 _Month, uint8 _Day, uint8 _DoW);
 
 
 //====== Private Functions =====================================================
@@ -85,6 +87,84 @@ static uint8 L_IsLeapYear(void)
 
 
     return _Result;
+}
+
+
+/*
+ * Name: L_DayOfWeek
+ *
+ * Description: This function calculates the day number of the week.
+ *              The method is based on Sakamoto's Algorithm.
+ *
+ * Input: Year
+ *        Month
+ *        Day
+ *
+ * Output: Number of the day of week (0 = Sunday, 6 = Saturday)
+ */
+static uint8 L_DayOfWeek(uint16 _Year, uint8 _Month, uint8 _Day)
+{
+    static uint8 t[12u] = {0u, 3u, 2u, 5u, 0u, 3u, 5u, 1u, 4u, 6u, 2u, 4u};
+           uint8 _DoW   = U__INIT_VALUE_UINT;
+
+
+    _Year -= _Month < 3u;
+    _DoW = (uint8)((_Year + _Year/4u - _Year/100u + _Year/400u + t[_Month - 1u] + _Day) % 7u);
+
+
+    return _DoW;
+}
+
+
+/*
+ * Name: L_DaylightSavingTime
+ *
+ * Description: This function calculates whether it is a DTS time or not.
+ *
+ * Input: Month
+ *        Day
+ *        Day of Week
+ *
+ * Output: DST flag (SET = DST, CLEAR = not DST)
+ */
+static G_Flag_e L_DaylightSavingTime(uint8 _Month, uint8 _Day, uint8 _DoW)
+{
+    static G_Flag_e _DST = Flag_CLEAR;
+
+
+    if ((_Month < 3u) || (10u < _Month))
+    {
+        _DST = Flag_CLEAR;
+    }
+    else if ((3u < _Month) && (_Month < 10u))
+    {
+        _DST = Flag_SET;
+    }
+    else if (3u == _Month)
+    {
+        if ((_Day - _DoW) >= 25u)
+        {
+            _DST = Flag_SET;
+        }
+        else
+        {
+            _DST = Flag_CLEAR;
+        }
+    }  
+    else if (10u == _Month)
+    {
+        if ((_Day - _DoW) < 25u)
+        {
+            _DST = Flag_SET;
+        }
+        else
+        {
+            _DST = Flag_CLEAR;
+        }
+    }
+
+
+    return _DST;
 }
 
 
@@ -152,10 +232,10 @@ void RTC_Refresh(void)
             {
                 RTC_TimeDate.Hour = 0u;
                 RTC_TimeDate.Day++;
-                RTC_TimeDate.DayNumber++;
-                if (8u == RTC_TimeDate.DayNumber)
+                RTC_TimeDate.DayOfWeek++;
+                if (7u == RTC_TimeDate.DayOfWeek)
                 {
-                    RTC_TimeDate.DayNumber = 1u;
+                    RTC_TimeDate.DayOfWeek = 0u;
                 }
                 RTC_TimeDate.NewDay = Flag_SET;
 
@@ -189,27 +269,51 @@ void RTC_Refresh(void)
  *
  * Description: This function sets the time and date.
  *
- * Input: Second
- *        Minute
- *        Hour
- *        Number of the day in the week
- *        Daylight Saving Time (CET or CEST)
- *        Day
+ * Input: Year
  *        Month
- *        Year
+ *        Day
+ *        Hour
+ *        Minute
+ *        Second
  *
  * Output: None
  */
 void RTC_SetDate(uint16 _Year, uint8 _Month,  uint8 _Day,
-                 uint8  _DayNumber, G_Flag_e _DST,
                  uint8  _Hour, uint8 _Minute, uint8 _Second)
 {
+    static uint8    _DoW = U__INIT_VALUE_UINT;
+    static G_Flag_e _DST = Flag_CLEAR;
+   
+
+    _DoW = L_DayOfWeek(_Year, _Month, _Day);
+    _DST = L_DaylightSavingTime(_Month, _Day, _DoW);
+    
     RTC_TimeDate.Year       = _Year;
     RTC_TimeDate.Month      = _Month;
     RTC_TimeDate.Day        = _Day;
-    RTC_TimeDate.DayNumber  = _DayNumber;
+    RTC_TimeDate.DayOfWeek  = _DoW;
     RTC_TimeDate.DST        = _DST;
     RTC_TimeDate.Hour       = _Hour;
     RTC_TimeDate.Minute     = _Minute;
     RTC_TimeDate.Second     = _Second;
+   
+    // Local (Hungary) Time Zone Offset correction according to DST
+    if (Flag_SET == RTC_TimeDate.DST)
+    {
+        RTC_TimeDate.Hour += 2u;
+    }
+    else
+    {
+        RTC_TimeDate.Hour += 1u;
+    }
+
+    // Hour correction at Midnight due to DST offset
+    if (24u == RTC_TimeDate.Hour)
+    {
+        RTC_TimeDate.Hour = 0u;
+    }
+    else if (25u == RTC_TimeDate.Hour)
+    {
+        RTC_TimeDate.Hour = 1u;
+    }
 }

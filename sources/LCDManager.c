@@ -100,9 +100,9 @@ void L_RefreshDay(void)
     
     LCD_SetCursor(L__POS_ROW_DAYNAME, L__POS_COL_DAYNAME);
     
-    if ((0u < XRTC__TIMEDATE_DAYNUMBER) && (XRTC__TIMEDATE_DAYNUMBER < 9u))
+    if ((0u < XRTC__TIMEDATE_DOW) && (XRTC__TIMEDATE_DOW < 9u))
     {
-        LCD_WriteString(XRTC__DAYNAME(XRTC__TIMEDATE_DAYNUMBER));
+        LCD_WriteString(XRTC__DAYNAME(XRTC__TIMEDATE_DOW));
     }
     else
     {
