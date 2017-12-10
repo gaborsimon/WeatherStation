@@ -288,7 +288,12 @@ void L_RefreshDHT22(void)
             LCD_WriteChar(' ');
             LCD_WriteChar(' ');
         }
-        else if ((-10.0f < XDHT22__TEMPERATURE_VALUE) && (XDHT22__TEMPERATURE_VALUE < 0.0f))
+        else if ((-1.0f < XDHT22__TEMPERATURE_VALUE) && (XDHT22__TEMPERATURE_VALUE < 0.0f))
+        {
+            LCD_WriteChar(' ');
+            LCD_WriteChar('-');
+        }
+        else if ((-10.0f < XDHT22__TEMPERATURE_VALUE) && (XDHT22__TEMPERATURE_VALUE <= -1.0f))
         {
             LCD_WriteChar(' ');
         }
@@ -300,7 +305,7 @@ void L_RefreshDHT22(void)
 
         LCD_WriteInt((sint8)XDHT22__TEMPERATURE_VALUE);
         LCD_WriteChar('.');
-        LCD_WriteInt((uint8)((XDHT22__TEMPERATURE_VALUE - ((sint8)XDHT22__TEMPERATURE_VALUE)) * 10.0f));
+        LCD_WriteInt((uint8)((fabs(XDHT22__TEMPERATURE_VALUE) - ((uint8)fabs(XDHT22__TEMPERATURE_VALUE))) * 10.0f));
         LCD_WriteChar('C');
     }
     else
